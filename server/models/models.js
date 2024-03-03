@@ -6,6 +6,7 @@ const User = sequelized.define('user', {
     email: {type: DataTypes.STRING, unique: true},
     password: {type: DataTypes.STRING},
     role: {type: DataTypes.STRING, defaultValue: "USER"},
+    img: {type: DataTypes.STRING, defaultValue: "user_default_image.jpg"}
 })
 
 const Task = sequelized.define('task', {
