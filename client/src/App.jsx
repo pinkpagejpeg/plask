@@ -1,9 +1,21 @@
-import React from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import AppRouter from './components/AppRouter'
 import './styles/App.scss'
+import { observer } from 'mobx-react-lite'
+import { Context } from './main'
+import { check } from './http/userApi'
 
-function App() {
+const App = observer(() => {
+  const {user} = useContext(Context)
+  const[loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    check().then(data => {
+      user.setUser(true)
+      user.setIsAuth(true)
+    }).finally(() => setLoading(false))
+  }, [])
 
   return (
     <div className='App'>
@@ -12,6 +24,6 @@ function App() {
       </BrowserRouter>
     </div>
   )
-}
+})
 
 export default App
