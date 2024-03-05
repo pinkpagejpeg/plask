@@ -1,30 +1,40 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import classes from '../styles/Auth.module.scss'
-import { useLocation } from 'react-router';
-import { LOGIN_ROUTE, REGISTRATION_ROUTE } from '../utils/consts';
-import { NavLink } from 'react-router-dom';
-import { registration, login } from '../http/userApi';
+import { LOGIN_ROUTE, REGISTRATION_ROUTE, WELCOME_ROUTE } from '../utils/consts'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { registration, login } from '../http/userApi'
+import {observer} from 'mobx-react-lite'
+import { Context } from '../main'
 
-const Auth = () => {
+const Auth = observer(() => {
+    const {user} = useContext(Context)
+    const navigate = useNavigate()
     const location = useLocation()
     const isLogin = location.pathname === LOGIN_ROUTE
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const buttonClick = async () => {
-
+    const buttonClick = async (e) => {
+        e.preventDefault()
         try {
+            let data
+
             if (isLogin) {
-                const response = await login(email, password)
-                console.log(response)
+                data = await login(email, password)
             }
             else {
-                const response = await registration(email, password)
-                console.log(response)
+                data = await registration(email, password) 
             }   
+
+            user.setUser(data)
+            user.setIsAuth(true)
+            console.log(user);
+            console.log('Before navigation');
+            navigate(WELCOME_ROUTE)
+            console.log('After navigation');
         }
         catch(e) {
-            console.log(e)
+            alert(e.response.date.message)
         }
     }
     return (
@@ -55,6 +65,6 @@ const Auth = () => {
             </div>
         </div>
     );
-}
+})
 
 export default Auth;
