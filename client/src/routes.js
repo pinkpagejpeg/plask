@@ -1,17 +1,17 @@
 import Admin from './pages/Admin'
-import WelcomPage from './pages/WelcomePage'
+import WelcomePage from './pages/WelcomePage'
 import Auth from './pages/Auth'
 import { ADMIN_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, WELCOME_ROUTE } from './utils/consts'
 
 export const authRoutes = [
     {
-        path: ADMIN_ROUTE,
-        Component: Admin
-    },
-    {
         path: WELCOME_ROUTE,
-        Component: WelcomPage
-    }
+        Component: WelcomePage
+    },
+    // {
+    //     path: ADMIN_ROUTE,
+    //     Component: Admin
+    // }
 ]
 
 export const publicRoutes = [

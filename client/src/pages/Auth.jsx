@@ -28,15 +28,14 @@ const Auth = observer(() => {
 
             user.setUser(data)
             user.setIsAuth(true)
-            console.log(user);
-            console.log('Before navigation');
+            console.log(user.isAuth)
             navigate(WELCOME_ROUTE)
-            console.log('After navigation');
         }
         catch(e) {
-            alert(e.response.date.message)
+            alert(e.response.data.message)
         }
     }
+
     return (
         <div className={classes.container}>
             <div className={classes.auth__wrapper}>

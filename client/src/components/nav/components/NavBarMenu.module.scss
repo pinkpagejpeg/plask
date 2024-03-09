@@ -1,0 +1,33 @@
+$background_menu: #252525;
+
+
+.menu__content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: $background_menu;
+    width: 312px;
+    height: 98vh;
+    padding: 10px;
+    overflow-y: hidden;
+    display: none;
+}
+
+.menu__content.active {
+    display: flex;
+    z-index: 999;
+}
+
+// .menu {
+//     &__content {
+//         position: absolute;
+//         top: 0;
+//         left: 0;
+//         background-color: $background_menu;
+//         width: 312px;
+//         height: 98vh;
+//         padding: 10px;
+//         z-index: 999;
+//         overflow-y: hidden;
+//     }
+// }

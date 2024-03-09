@@ -1,0 +1,39 @@
+@import '../styles/mixins';
+@include container;
+@include plask;
+@include title;
+@include main_text;
+@include button_light;
+
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
+$dark_gray: #252525;
+
+.welcome {
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 66%;
+        text-align: center;
+        margin: 138px auto 0 auto;
+    }
+
+    &__wrapper > h3 {
+        margin: 28px 0 20px 0;
+    }
+
+    &__mainbox {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 80px;
+    }
+
+    &__itembox {
+        width: 43%;
+    }
+
+    &__itembox > h3 {
+        margin: 0 0 20px 0;
+    }
+}

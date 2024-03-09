@@ -7,7 +7,6 @@ $dark_gray: #252525;
         width: 100%;
         max-width: 1320px;
         margin: 0 auto;
-        min-height: 100vh;
     }
 }
 
@@ -15,7 +14,7 @@ $dark_gray: #252525;
     .plask {
         color: $light_gray;
         font-family: 'Ubuntu', sans-serif;
-        font-size: 60px;
+        font-size: 58px;
         font-weight: 700;
         letter-spacing: 5%;
     }
@@ -74,6 +73,7 @@ $dark_gray: #252525;
         font-size: 16px;
         font-weight: 700;
         letter-spacing: 5%;
+        text-decoration: none;
         cursor: pointer;
     }
 }

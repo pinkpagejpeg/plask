@@ -1,0 +1,20 @@
+$background_menu: #252525;
+
+.menu {
+  &__wrapper {
+    position: relative;
+  }
+
+  &__button {
+    margin: 20px 0 0 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  &__button_close {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+}
