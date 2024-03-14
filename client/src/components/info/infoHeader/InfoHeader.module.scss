@@ -1,0 +1,27 @@
+@import '../../../styles/mixins';
+@include container;
+@include main_text;
+@include plask;
+
+.header {
+    &__wrapper {
+        width: 45.5%;
+        margin: 0 auto;
+        padding: 28px 0;
+    }
+
+    &__menu {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        list-style-type: none;
+    }
+
+    &__item > a {
+        text-decoration: none;
+    }
+
+    &__item:nth-child(3) > a {
+        font-size: 32px;
+    }
+}

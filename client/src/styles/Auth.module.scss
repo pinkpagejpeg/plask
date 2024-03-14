@@ -59,4 +59,9 @@ $dark_gray: #252525;
         letter-spacing: 5%;
         text-decoration: none;
     }
+
+    &__back::before {
+        content: url('../assets/images/back_arrow.svg');
+        margin-right: 8px;
+    }
 }

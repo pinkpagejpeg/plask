@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../main'
-import classes from '../styles/WelcomePage.module.scss'
+import classes from '../styles/Welcome.module.scss'
 import { NavLink, Navigate } from 'react-router-dom'
 import NavBar from '../components/nav/NavBar'
 import { LOGIN_ROUTE } from '../utils/consts'
 
-const WelcomePage = observer(() => {
+const Welcome = observer(() => {
     const { user } = useContext(Context)
 
     if (!user) {
@@ -48,4 +48,4 @@ const WelcomePage = observer(() => {
     );
 })
 
-export default WelcomePage;
+export default Welcome;

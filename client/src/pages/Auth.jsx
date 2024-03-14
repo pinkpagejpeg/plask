@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import classes from '../styles/Auth.module.scss'
-import { LOGIN_ROUTE, REGISTRATION_ROUTE, WELCOME_ROUTE } from '../utils/consts'
+import { INFO_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, WELCOME_ROUTE } from '../utils/consts'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { registration, login } from '../http/userApi'
 import {observer} from 'mobx-react-lite'
@@ -60,7 +60,7 @@ const Auth = observer(() => {
                         : <p className={classes.auth__info}>Уже есть аккаунт? <NavLink to={LOGIN_ROUTE}>Войти</NavLink></p>
                     }
                 </form>
-                <a href='#' className={classes.auth__back}>Вернуться на главную</a>
+                <NavLink to={INFO_ROUTE} className={classes.auth__back}>Вернуться на главную</NavLink>
             </div>
         </div>
     );

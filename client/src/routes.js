@@ -1,12 +1,13 @@
+import Info from './pages/Info'
 import Admin from './pages/Admin'
-import WelcomePage from './pages/WelcomePage'
+import Welcome from './pages/Welcome'
 import Auth from './pages/Auth'
-import { ADMIN_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, WELCOME_ROUTE } from './utils/consts'
+import { ADMIN_ROUTE, INFO_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, WELCOME_ROUTE } from './utils/consts'
 
 export const authRoutes = [
     {
         path: WELCOME_ROUTE,
-        Component: WelcomePage
+        Component: Welcome
     },
     // {
     //     path: ADMIN_ROUTE,
@@ -23,5 +24,9 @@ export const publicRoutes = [
     {
         path: REGISTRATION_ROUTE,
         Component: Auth
+    },
+    {
+        path: INFO_ROUTE,
+        Component: Info
     }
 ]
