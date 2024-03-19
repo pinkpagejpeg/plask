@@ -1,0 +1,33 @@
+@import "../../../../../styles/mixins";
+@include title;
+@include input;
+@include button_light;
+
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
+$dark_gray: #252525;
+$background: #191919;
+
+.form {
+    &__form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__form > input[type="email"] {
+        width: 364px;
+        background-color: $background;
+    }
+
+    &__form > textarea {
+        width: 364px;
+        background-color: $background;
+        resize: none;
+    }
+
+    &__form > input[type="submit"] {
+        padding: 11px 104px;
+        margin-top: 25px;
+    }
+}

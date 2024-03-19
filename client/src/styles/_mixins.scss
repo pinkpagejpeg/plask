@@ -20,6 +20,17 @@ $dark_gray: #252525;
     }
 }
 
+@mixin section_title {
+    .section_title {
+        color: $light_gray;
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 48px;
+        font-weight: 500;
+        letter-spacing: 5%;
+        margin-bottom: 40px;
+    }
+}
+
 @mixin title {
     .title {
         color: $light_gray;
