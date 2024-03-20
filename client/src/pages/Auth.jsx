@@ -29,7 +29,7 @@ const Auth = observer(() => {
             user.setUser(data)
             user.setIsAuth(true)
             console.log(user.isAuth)
-            navigate(WELCOME_ROUTE)
+            navigate(`${WELCOME_ROUTE}?from=${isLogin ? 'login' : 'registration'}`)
         }
         catch(e) {
             alert(e.response.data.message)

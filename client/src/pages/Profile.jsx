@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Goal = () => {
+const Profile = () => {
     return ( 
         <div>
             
@@ -8,4 +8,4 @@ const Goal = () => {
      );
 }
  
-export default Goal;
+export default Profile;

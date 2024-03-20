@@ -1,5 +1,6 @@
 $background_menu: #252525;
-
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
 
 .menu__content {
     position: absolute;
@@ -18,16 +19,65 @@ $background_menu: #252525;
     z-index: 999;
 }
 
-// .menu {
-//     &__content {
-//         position: absolute;
-//         top: 0;
-//         left: 0;
-//         background-color: $background_menu;
-//         width: 312px;
-//         height: 98vh;
-//         padding: 10px;
-//         z-index: 999;
-//         overflow-y: hidden;
-//     }
-// }
+.menu {
+    &__wrapper {
+        padding: 20px 0 0 32px;
+    }
+
+    &__topline {
+        display: flex;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    &__button_close {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    &__username {
+        color: $light_gray;
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 5%;
+        margin: 0 10px 0 6px;
+    }
+
+    &__list {
+        list-style-type: none;
+        padding-left: 8px;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    &__item:nth-child(3) {
+        margin-bottom: 32px;
+    }
+
+    &__item > img {
+        width: 16px;
+    }
+
+    &__item > a,
+    &__item > button {
+        color: $middle_gray;
+        font-family: 'Ubuntu', sans-serif;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 5%;
+        margin-left: 6px;
+    }
+
+    &__item > button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+    }
+}

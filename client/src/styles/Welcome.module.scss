@@ -23,6 +23,10 @@ $dark_gray: #252525;
         margin: 28px 0 20px 0;
     }
 
+    &__link {
+        color: $light_gray;
+    }
+
     &__mainbox {
         display: flex;
         justify-content: space-between;
@@ -35,5 +39,41 @@ $dark_gray: #252525;
 
     &__itembox > h3 {
         margin: 0 0 20px 0;
+    }
+
+    &__itembox > a {
+        padding: 11px 57px;
+    }
+
+    &__tasks,
+    &__goals {
+        display: flex;
+        flex-direction: column;
+        padding: 0 97px;
+        margin-bottom: 43px;
+    }
+
+    &__tasks::after {
+        position: absolute;
+        margin: 42px 0 0 164px;
+        content: url('../assets/images/welcome_arrow.svg');
+    }
+
+    &__itembox > h5 {
+        margin: 28px 0 16px 0;
+        font-weight: 500;
+    }
+
+    &__bottom {
+        color: $middle_gray;
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 16px;
+        font-weight: 300;
+        letter-spacing: 5%;
+        margin-top: 175px;
+    }
+
+    &__bottom_link {
+        color: $middle_gray;
     }
 }

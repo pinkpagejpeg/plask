@@ -1,9 +1,15 @@
 import React, { useState, useContext } from 'react'
 import classes from './NavBarMenu.module.scss'
 import menu_close from '../../../assets/images/menu_close.svg'
-import {Context} from '../../../main'
-import { LOGIN_ROUTE } from '../../../utils/consts'
-import { useNavigate } from 'react-router-dom'
+import { Context } from '../../../main'
+import { FEEDBACK_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, TASKS_ROUTE, WELCOME_ROUTE } from '../../../utils/consts'
+import { NavLink, useNavigate } from 'react-router-dom'
+import profile_icon from '../../../assets/images/profile_icon.png'
+import feedback_icon from '../../../assets/images/feedback_icon.png'
+import logout_icon from '../../../assets/images/logout_icon.png'
+import main_icon from '../../../assets/images/main_icon.png'
+import goals_icon from '../../../assets/images/goals_icon.png'
+import tasks_icon from '../../../assets/images/tasks_icon.png'
 
 const NavMenu = ({ show, setShow }) => {
     const { user } = useContext(Context);
@@ -28,37 +34,39 @@ const NavMenu = ({ show, setShow }) => {
     return (
         <div className={rootClasses.join(' ')}>
             <div className={classes.menu__wrapper}>
-                <div>
-                    <p>{user._user.email}</p>
+                <div className={classes.menu__topline}>
+                    {/* Реализовать фото профиля */}
+                    <img src={user._user.img} />
+                    <p className={classes.menu__username}>{user._user.email}</p>
                     <button className={classes.menu__button_close} onClick={closeMenu}>
                         <img src={menu_close} alt='Иконка для скрытия меню' />
                     </button>
                 </div>
 
-                <ul className="burger-menu__list">
-                    <li className="burger-menu__item">
-                        <img />
-                        Профиль
+                <ul className={classes.menu__list}>
+                    <li className={classes.menu__item}>
+                        <img src={profile_icon} />
+                        <NavLink to={PROFILE_ROUTE}>Профиль</NavLink>
                     </li>
-                    <li className="burger-menu__item">
-                        <img />
-                        Обратная связь
+                    <li className={classes.menu__item}>
+                        <img src={feedback_icon} />
+                        <NavLink to={FEEDBACK_ROUTE}>Обратная связь</NavLink>
                     </li>
-                    <li className="burger-menu__item">
-                        <img />
+                    <li className={classes.menu__item}>
+                        <img src={logout_icon} />
                         <button onClick={() => logOut()}>Выход</button>
                     </li>
-                    <li className="burger-menu__item">
-                        <img />
-                        Главная
+                    <li className={classes.menu__item}>
+                        <img src={main_icon} />
+                        <NavLink to={WELCOME_ROUTE}>Главная</NavLink>
                     </li>
-                    <li className="burger-menu__item">
-                        <img />
-                        Цели
+                    <li className={classes.menu__item}>
+                        <img src={goals_icon} />
+                        <NavLink to={GOALS_ROUTE}>Цели</NavLink>
                     </li>
-                    <li className="burger-menu__item">
-                        <img />
-                        Задачи
+                    <li className={classes.menu__item}>
+                        <img src={tasks_icon} />
+                        <NavLink to={TASKS_ROUTE}>Задачи</NavLink>
                     </li>
                 </ul>
             </div>
