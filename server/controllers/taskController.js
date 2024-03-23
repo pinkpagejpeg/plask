@@ -1,11 +1,16 @@
-const {Task} = require('../models/models')
+const { Task } = require('../models/models')
 const ApiError = require('../error/ApiError')
 
 class TaskController {
     async create(req, res) {
-        const {info} = req.body
-        const task = await Task.create({info})
-        return res.json(task)
+        try {
+            const { userId, info } = req.body
+            console.log(userId, info)
+            const task = await Task.create({ userId, info })
+            return res.json(task)
+        } catch (error) {
+            next(ApiError.badRequest(e.message))
+        }
     }
 
     async update(req, res) {
@@ -16,9 +21,15 @@ class TaskController {
 
     }
 
-    async getAll(req, res) {
-        // const tasks = await Task.findAll()
-        // return res.json(tasks)
+    async getAll(req, res, next) {
+        const { userId } = req.params
+
+        try {
+            const tasks = await Task.findAll({ where: { userId } });
+            return res.json(tasks);
+        } catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
     }
 }
 

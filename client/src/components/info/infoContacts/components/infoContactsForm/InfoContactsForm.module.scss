@@ -6,7 +6,6 @@
 $light_gray: #E6E6E6;
 $middle_gray: #6D6D6D;
 $dark_gray: #252525;
-$background: #191919;
 
 .form {
     &__form {
@@ -17,12 +16,10 @@ $background: #191919;
 
     &__form > input[type="email"] {
         width: 364px;
-        background-color: $background;
     }
 
     &__form > textarea {
         width: 364px;
-        background-color: $background;
         resize: none;
     }
 

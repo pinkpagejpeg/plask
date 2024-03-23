@@ -1,6 +1,7 @@
 $light_gray: #E6E6E6;
 $middle_gray: #6D6D6D;
 $dark_gray: #252525;
+$background: #191919;
 
 @mixin container {
     .container {
@@ -45,7 +46,7 @@ $dark_gray: #252525;
     .input {
         width: 400px;
         color: $light_gray;
-        background-color: $dark_gray;
+        background-color: $background;
         font-family: 'Ubuntu', sans-serif;
         border: none;
         border-bottom: solid 1px $middle_gray;

@@ -3,8 +3,8 @@ const router = new Router()
 const taskController = require('../controllers/taskController')
 
 router.post('/', taskController.create)
-router.put('', taskController.update)
+router.put('/', taskController.update)
 router.delete('/:id', taskController.delete)
-router.get('/', taskController.getAll)
+router.get('/:userId', taskController.getAll)
 
 module.exports = router
