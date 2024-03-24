@@ -6,7 +6,7 @@ $dark_gray: #252525;
     &__wrapper {
         display: flex;
         align-items: center;
-        margin-bottom: 14px;
+        margin-bottom: 12px;
 
         input[type="checkbox"] {
             position: absolute;
@@ -54,17 +54,34 @@ $dark_gray: #252525;
         }
     }
 
+    &__wrapper > label {
+        display: flex;
+        align-items: center;
+    }
+
     &__label {
         color: $light_gray;
         font-family: 'Ubuntu', sans-serif;
         font-size: 16px;
         font-weight: 300;
         letter-spacing: 5%;
+        margin-right: 10px;
     }
 
     &__label.checked {
         text-decoration: line-through;
         color: $middle_gray;
+    }
+
+    &__button_delete {
+        background: none;
+        border: none;
+        padding-top: 3px;
+        cursor: pointer;
+    }
+
+    &__button_delete > img {
+        width: 20px;
     }
 }
 

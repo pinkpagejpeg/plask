@@ -10,8 +10,8 @@ export const updateTask = async (id, body) => {
     return data
 }
 
-export const deleteTask = async (id) => {
-    const { data } = await $authHost.delete(`api/task/${id}`)
+export const deleteTask = async (taskId) => {
+    const { data } = await $authHost.delete(`api/task/${taskId}`)
     return data
 }
 

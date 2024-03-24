@@ -15,6 +15,10 @@ export default class TaskStore {
         this._task.push(task)
     }
 
+    removeTask(taskId) {
+        this._task = this._task.filter(task => task.id !== taskId);
+    }
+
     get task() {
         return this._task
     }

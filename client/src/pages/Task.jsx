@@ -33,10 +33,11 @@ const Task = observer(() => {
         e.preventDefault()
         try {
             let data
-            // Не добавляется информация, создается запись со значением null
+
             data = await createTask(user._user.id, info)
 
             task.addTaskList(data)
+            setInfo('')
         }
         catch (e) {
             alert(e.response.data.message)
@@ -53,7 +54,7 @@ const Task = observer(() => {
                         {task._task && task._task.length > 0 ? (
                             <div className={classes.task__list}>
                                 {task._task.map((taskItem) => (
-                                    <TaskCheckBox key={taskItem.id} label={taskItem.info} />
+                                    <TaskCheckBox key={taskItem.id} label={taskItem.info} taskId={taskItem.id} />
                                 ))}
                             </div>
                         ) : (
@@ -66,7 +67,9 @@ const Task = observer(() => {
                             value={info}
                             onChange={e => setInfo(e.target.value)}
                             required />
-                        <input type="submit" className={classes.button_light} value="Добавить задачу" onClick={addTask} />
+                        <input className={classes.button_light}
+                            type="submit" value="Добавить задачу"
+                            onClick={addTask} />
                     </form>
                 </div>
             </div>

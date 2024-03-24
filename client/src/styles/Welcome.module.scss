@@ -59,6 +59,10 @@ $dark_gray: #252525;
         content: url('../assets/images/welcome_arrow.svg');
     }
 
+    &__tasks > div > label > button {
+        display: none;
+    }
+
     &__itembox > h5 {
         margin: 28px 0 16px 0;
         font-weight: 500;
