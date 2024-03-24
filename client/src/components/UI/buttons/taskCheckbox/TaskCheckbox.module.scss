@@ -1,3 +1,6 @@
+@import '../../../../styles/mixins';
+@include input;
+
 $light_gray: #E6E6E6;
 $middle_gray: #6D6D6D;
 $dark_gray: #252525;
@@ -57,6 +60,11 @@ $dark_gray: #252525;
     &__wrapper > label {
         display: flex;
         align-items: center;
+    }
+
+    &__wrapper > input[type="text"] {
+        width: fit-content;
+        margin-top: 0;
     }
 
     &__label {

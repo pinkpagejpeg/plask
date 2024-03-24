@@ -43,9 +43,9 @@ const Welcome = observer(() => {
                                 “Задачи” или нажмите на кнопку ниже</p>
                             <h5 className={classes.main_text}>Задачи</h5>
                             <div className={classes.welcome__tasks}>
-                                <TaskCheckBox label='Зарегистрироваться' сhecked={true} />
-                                <TaskCheckBox label='Добавить задачу' сhecked={false} />
-                                <TaskCheckBox label='Выполнить задачу' сhecked={false} />
+                                <TaskCheckBox label='Зарегистрироваться' сhecked={true} allowEdit={false} />
+                                <TaskCheckBox label='Добавить задачу' сhecked={false} allowEdit={false} />
+                                <TaskCheckBox label='Выполнить задачу' сhecked={false} allowEdit={false} />
                             </div>
                             {/* : <p>Список задач</p>
                             } */}
@@ -60,9 +60,9 @@ const Welcome = observer(() => {
                             {/* Реализовать проценты */}
                             <h5 className={classes.main_text}>Начать пользоваться Plask %</h5>
                             <div className={classes.welcome__tasks}>
-                                <TaskCheckBox label='Зарегистрироваться' сhecked={true} />
-                                <TaskCheckBox label='Добавить цель' сhecked={false} />
-                                <TaskCheckBox label='Достигнуть цель' сhecked={false} />
+                                <TaskCheckBox label='Зарегистрироваться' сhecked={true} allowEdit={false} />
+                                <TaskCheckBox label='Добавить цель' сhecked={false} allowEdit={false} />
+                                <TaskCheckBox label='Достигнуть цель' сhecked={false} allowEdit={false} />
                             </div>
                             {/* : <p>Список целей</p>
                             } */}

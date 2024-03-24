@@ -5,8 +5,13 @@ export const createTask = async (userId, info) => {
     return data
 }
 
-export const updateTask = async (id, body) => {
-    const { data } = await $authHost.put(`api/task/${id}`, body )
+export const updateTask = async (taskId, info) => {
+    const { data } = await $authHost.put(`api/task/`, { taskId, info})
+    return data
+}
+
+export const updateTaskStatus = async (taskId, status) => {
+    const { data } = await $authHost.put(`api/task/status`, { taskId, status })
     return data
 }
 

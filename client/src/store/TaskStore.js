@@ -7,7 +7,6 @@ export default class TaskStore {
     }
 
     setTask(task) {
-        // console.log("Setting task to:", task);
         this._task = task
     }
 
@@ -15,16 +14,24 @@ export default class TaskStore {
         this._task.push(task)
     }
 
-    removeTask(taskId) {
-        this._task = this._task.filter(task => task.id !== taskId);
+    editTask(taskId, updatedTask) {
+        this._task = this._task.map(task => {
+            if (task.id === taskId) {
+                return updatedTask;
+            }
+            return task;
+        });
     }
 
-    get task() {
-        return this._task
+    removeTask(taskId) {
+        this._task = this._task.filter(task => task.id !== taskId);
     }
 
     getTaskByUserId(userId) {
         return this._task.filter(task => task.userId === userId);
     }
-    
+
+    get task() {
+        return this._task
+    }    
 }

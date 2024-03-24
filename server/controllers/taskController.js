@@ -2,10 +2,14 @@ const { Task } = require('../models/models')
 const ApiError = require('../error/ApiError')
 
 class TaskController {
-    async create(req, res) {
+    async create(req, res, next) {
         try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return next(ApiError.badRequest({ message: "Ошибка при добавлении задачи" }))
+            }
+
             const { userId, info } = req.body
-            console.log(userId, info)
             const task = await Task.create({ userId, info })
             return res.json(task)
         } catch (error) {
@@ -13,12 +17,40 @@ class TaskController {
         }
     }
 
-    async update(req, res) {
+    async update(req, res, next) {
+        try {
+            const { taskId, info } = req.body
+            const task = await Task.findByPk(taskId)
 
+            if (!task) {
+                return next(ApiError.badRequest('Задача не найдена'))
+            }
+
+            await task.update({ info })
+            return res.json({ task })
+        } catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
+    }
+
+    async changeStatus(req, res, next) {
+        try {
+            const { taskId, status } = req.body
+            const task = await Task.findByPk(taskId)
+
+            if (!task) {
+                return next(ApiError.badRequest('Задача не найдена'))
+            }
+
+            await task.update({ status })
+            return res.json({ task })
+        } catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
     }
 
     async delete(req, res, next) {
-        try{
+        try {
             const { taskId } = req.params
             const task = await Task.findByPk(taskId)
 
@@ -27,7 +59,6 @@ class TaskController {
             }
 
             await task.destroy()
-
             return res.json({ deletedTaskId: task.id });
         } catch (e) {
             next(ApiError.badRequest(e.message))

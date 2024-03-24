@@ -54,7 +54,7 @@ const Task = observer(() => {
                         {task._task && task._task.length > 0 ? (
                             <div className={classes.task__list}>
                                 {task._task.map((taskItem) => (
-                                    <TaskCheckBox key={taskItem.id} label={taskItem.info} taskId={taskItem.id} />
+                                    <TaskCheckBox key={taskItem.id} label={taskItem.info} сhecked={taskItem.status} taskId={taskItem.id} allowEdit={true} />
                                 ))}
                             </div>
                         ) : (
