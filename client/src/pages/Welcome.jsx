@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../main'
 import classes from '../styles/Welcome.module.scss'
@@ -12,11 +12,26 @@ const Welcome = observer(() => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const from = queryParams.get('from');
-    const { user } = useContext(Context)
+    const { user, task } = useContext(Context)
 
     if (!user) {
         return <Navigate to={LOGIN_ROUTE} />;
     }
+
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                if (user._user.id) {
+                    const tasks = await getTask(user._user.id);
+                    task.setTask(tasks);
+                }
+            } catch (e) {
+                console.error('Ошибка при получении задач:', e);
+            }
+        };
+
+        fetchTasks();
+    }, [task, user])
 
     return (
         <>
@@ -38,34 +53,53 @@ const Welcome = observer(() => {
                     <div className={classes.welcome__mainbox}>
                         <div className={classes.welcome__itembox}>
                             <h3 className={classes.title}>Задачи</h3>
-                            {/* {from === 'registration' ? */}
-                            <p className={classes.main_text}>Для того чтобы добавит вашу первую задачу, перейдите в раздел
-                                “Задачи” или нажмите на кнопку ниже</p>
-                            <h5 className={classes.main_text}>Задачи</h5>
-                            <div className={classes.welcome__tasks}>
-                                <TaskCheckBox label='Зарегистрироваться' сhecked={true} allowEdit={false} />
-                                <TaskCheckBox label='Добавить задачу' сhecked={false} allowEdit={false} />
-                                <TaskCheckBox label='Выполнить задачу' сhecked={false} allowEdit={false} />
-                            </div>
-                            {/* : <p>Список задач</p>
-                            } */}
+                            {from === 'registration' ?
+                                <>
+                                    <p className={classes.main_text}>Для того чтобы добавит вашу первую задачу, перейдите в раздел
+                                        “Задачи” или нажмите на кнопку ниже</p>
+                                    <h5 className={classes.main_text}>Задачи</h5>
+                                    <div className={classes.welcome__tasks}>
+                                        <TaskCheckBox label='Зарегистрироваться' сhecked={true} allowEdit={false} />
+                                        <TaskCheckBox label='Добавить задачу' сhecked={false} allowEdit={false} />
+                                        <TaskCheckBox label='Выполнить задачу' сhecked={false} allowEdit={false} />
+                                    </div>
+                                </>
+                                : <div className={classes.welcome__task_listbox}>
+                                    {/* Слетает список задач при обновлении */}
+                                    {task._task && task._task.length > 0 ? (
+                                        <div className={classes.welcome__task_list}>
+                                            {task._task.map((taskItem) => (
+                                                <TaskCheckBox key={taskItem.id}
+                                                    label={taskItem.info}
+                                                    сhecked={taskItem.status}
+                                                    taskId={taskItem.id}
+                                                    allowEdit={true} />
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <h4 className={classes.title}>Задачи не обнаружены</h4>
+                                    )}
+                                </div>
+                            }
                             <NavLink className={classes.button_light} to={TASKS_ROUTE}>Перейти к задачам</NavLink>
 
                         </div>
                         <div className={classes.welcome__itembox}>
                             <h3 className={classes.title}>Цели</h3>
-                            {/* {from === 'registration' ? */}
-                            <p className={classes.main_text}>Для того чтобы добавит вашу первую цель, перейдите в раздел
-                                “Цели” или нажмите на кнопку ниже</p>
-                            {/* Реализовать проценты */}
-                            <h5 className={classes.main_text}>Начать пользоваться Plask %</h5>
-                            <div className={classes.welcome__tasks}>
-                                <TaskCheckBox label='Зарегистрироваться' сhecked={true} allowEdit={false} />
-                                <TaskCheckBox label='Добавить цель' сhecked={false} allowEdit={false} />
-                                <TaskCheckBox label='Достигнуть цель' сhecked={false} allowEdit={false} />
-                            </div>
-                            {/* : <p>Список целей</p>
-                            } */}
+                            {from === 'registration' ?
+                                <>
+                                    <p className={classes.main_text}>Для того чтобы добавит вашу первую цель, перейдите в раздел
+                                        “Цели” или нажмите на кнопку ниже</p>
+                                    {/* Реализовать проценты */}
+                                    <h5 className={classes.main_text}>Начать пользоваться Plask %</h5>
+                                    <div className={classes.welcome__tasks}>
+                                        <TaskCheckBox label='Зарегистрироваться' сhecked={true} allowEdit={false} />
+                                        <TaskCheckBox label='Добавить цель' сhecked={false} allowEdit={false} />
+                                        <TaskCheckBox label='Достигнуть цель' сhecked={false} allowEdit={false} />
+                                    </div>
+                                </>
+                                : <p>Список целей</p>
+                            }
                             <NavLink className={classes.button_light} to={GOALS_ROUTE}>Перейти к целям</NavLink>
 
                         </div>

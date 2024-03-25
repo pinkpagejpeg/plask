@@ -63,6 +63,24 @@ $dark_gray: #252525;
         display: none;
     }
 
+    &__task_listbox {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 32px;
+    }
+
+    &__task_list {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+
+    &__task_listbox > h4 {
+        font-size: 24px;
+        margin-bottom: 28px;
+        color: $middle_gray;
+    }
+
     &__itembox > h5 {
         margin: 28px 0 16px 0;
         font-weight: 500;
