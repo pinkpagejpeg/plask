@@ -8,6 +8,7 @@
 $light_gray: #E6E6E6;
 $middle_gray: #6D6D6D;
 $dark_gray: #252525;
+// Добавить скролл меню и настроить отображение нижней надписи
 
 .welcome {
     &__wrapper {
@@ -92,7 +93,7 @@ $dark_gray: #252525;
         font-size: 16px;
         font-weight: 300;
         letter-spacing: 5%;
-        margin-top: 175px;
+        margin: 20vh 0 60px 0;
     }
 
     &__bottom_link {

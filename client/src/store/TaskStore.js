@@ -11,7 +11,7 @@ export default class TaskStore {
     }
 
     addTaskList(task) {
-        this._task.push(task)
+        this._task.unshift(task)
     }
 
     editTask(taskId, updatedTask) {

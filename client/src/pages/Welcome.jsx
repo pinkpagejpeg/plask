@@ -7,6 +7,7 @@ import NavBar from '../components/nav/NavBar'
 import { FEEDBACK_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, TASKS_ROUTE } from '../utils/consts'
 import { useLocation } from 'react-router-dom'
 import TaskCheckBox from '../components/UI/buttons/taskCheckbox/TaskCheckbox'
+import { getTask } from '../http/taskApi'
 
 const Welcome = observer(() => {
     const location = useLocation();

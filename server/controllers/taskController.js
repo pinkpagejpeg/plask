@@ -1,18 +1,19 @@
 const { Task } = require('../models/models')
 const ApiError = require('../error/ApiError')
+const {validationResult} = require('express-validator')
 
 class TaskController {
     async create(req, res, next) {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return next(ApiError.badRequest({ message: "Ошибка при добавлении задачи" }))
+                return res.status(400).json({ message: errors.array().map(error => error.msg) });
             }
 
             const { userId, info } = req.body
             const task = await Task.create({ userId, info })
             return res.json(task)
-        } catch (error) {
+        } catch (e) {
             next(ApiError.badRequest(e.message))
         }
     }
@@ -68,7 +69,7 @@ class TaskController {
     async getAll(req, res, next) {
         try {
             const { userId } = req.params
-            const tasks = await Task.findAll({ where: { userId } })
+            const tasks = await Task.findAll({ where: { userId }, order: [['createdAt', 'DESC']] })
             return res.json(tasks)
         } catch (e) {
             next(ApiError.badRequest(e.message))

@@ -29,7 +29,9 @@ const TaskCheckBox = observer(({ label, сhecked, taskId, allowEdit }) => {
         try {
             if (allowEdit) {
                 let data
-
+                    if (info === '') {
+                        destroyTask()
+                    }
                 data = await updateTask(taskId, info)
                 console.log(data.task.id, data.task)
                 task.editTask(data.task.id, data.task)
@@ -86,6 +88,7 @@ const TaskCheckBox = observer(({ label, сhecked, taskId, allowEdit }) => {
                     onChange={e => setInfo(e.target.value)}
                     onBlur={handleInputBlur}
                     autoFocus
+                    required
                 />
             ) : (
                 <span

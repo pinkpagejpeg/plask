@@ -4,8 +4,7 @@ const taskController = require('../controllers/taskController')
 const AuthMiddleware = require('../middleware/AuthMiddleware')
 const { check } = require('express-validator')
 
-router.post('/', [
-    check('info', 'Задача не введена').notEmpty()],
+router.post('/', check('info', 'Задача не введена').notEmpty(),
     AuthMiddleware, taskController.create)
 router.put('/', AuthMiddleware, taskController.update)
 router.put('/status', AuthMiddleware, taskController.changeStatus)
