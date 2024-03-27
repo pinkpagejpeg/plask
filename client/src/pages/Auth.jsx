@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import classes from '../styles/Auth.module.scss'
-import { INFO_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, WELCOME_ROUTE } from '../utils/consts'
+import { ADMIN_ROUTE, INFO_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, WELCOME_ROUTE } from '../utils/consts'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { registration, login } from '../http/userApi'
 import {observer} from 'mobx-react-lite'
@@ -28,8 +28,11 @@ const Auth = observer(() => {
 
             user.setUser(data)
             user.setIsAuth(true)
-            console.log(user.isAuth)
-            navigate(`${WELCOME_ROUTE}?from=${isLogin ? 'login' : 'registration'}`)
+            if (user._user.role === 'ADMIN') {
+                navigate(`${ADMIN_ROUTE}?from=${isLogin ? 'login' : 'registration'}`)
+            } else {
+                navigate(`${WELCOME_ROUTE}?from=${isLogin ? 'login' : 'registration'}`)
+            }
         }
         catch(e) {
             alert(e.response.data.message)

@@ -1,0 +1,66 @@
+@import '../styles/mixins';
+@include container;
+@include plask;
+@include title;
+@include main_text;
+@include button_light;
+
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
+$dark_gray: #252525;
+
+.feedback {
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 80%;
+        text-align: center;
+        margin: 138px auto 0 auto;
+    }
+
+    &__table {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        margin: 20px 0 34px 0;
+    }
+
+    &__table_topline,
+    &__table_main {
+        display: flex;
+        justify-content: space-between;
+        text-align: left;
+        padding: 10px 10px;
+    }
+
+    &__table_topline > th {
+        font-weight: 500;
+    }
+
+    &__table_main > td,
+    &__table_topline > th {
+        width: 15%;
+    }
+
+    &__table_main > td:nth-child(1),
+    &__table_topline > th:nth-child(1) {
+        width: 5%;
+    }
+
+    &__table_main > td:nth-child(3),
+    &__table_topline > th:nth-child(3) {
+        width: 50%;
+    }
+
+    &__wrapper > a {
+        padding: 11px 99px;
+        max-width: 82px;
+        margin: 0 auto;
+    }
+
+    &__button > img{
+        width: 20px;
+    }
+
+}

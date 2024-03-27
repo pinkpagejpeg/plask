@@ -1,5 +1,7 @@
 export const INFO_ROUTE = '/'
 export const ADMIN_ROUTE = '/admin'
+export const ADMIN_USER_ROUTE = '/users'
+export const ADMIN_FEEDBACK_ROUTE = '/feedbacks'
 export const LOGIN_ROUTE = '/login'
 export const REGISTRATION_ROUTE = '/registration'
 export const WELCOME_ROUTE = '/welcome'

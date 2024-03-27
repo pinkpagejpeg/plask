@@ -1,35 +1,35 @@
-const sequelized = require('../db')
+const sequelize = require('../db')
 const {DataTypes} = require('sequelize')
 
-const User = sequelized.define('user', {
+const User = sequelize.define('user', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     email: {type: DataTypes.STRING, unique: true},
     password: {type: DataTypes.STRING},
-    role: {type: DataTypes.STRING, defaultValue: "USER"},
+    role: {type: DataTypes.STRING, defaultValue: "ADMIN"},
     img: {type: DataTypes.STRING, defaultValue: "user_default_image.jpg"}
 })
 
-const Task = sequelized.define('task', {
+const Task = sequelize.define('task', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     info: {type: DataTypes.STRING},
     status: {type: DataTypes.BOOLEAN, defaultValue: false},
 })
 
-const Goal = sequelized.define('goal', {
+const Goal = sequelize.define('goal', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     info: {type: DataTypes.STRING},
 })
 
-const Goal_item = sequelized.define('goal_item', {
+const Goal_item = sequelize.define('goal_item', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     info: {type: DataTypes.STRING},
     status: {type: DataTypes.BOOLEAN, defaultValue: false},
 })
 
-const Feedback = sequelized.define('feedback', {
+const Feedback = sequelize.define('feedback', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     info: {type: DataTypes.STRING},
-    date: {type: DataTypes.DATE},
+    date: {type: DataTypes.DATEONLY, defaultValue: sequelize.literal('CURRENT_DATE')},
     status: {type: DataTypes.BOOLEAN, defaultValue: false},
 })
 

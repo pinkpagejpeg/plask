@@ -92,7 +92,7 @@ const TaskCheckBox = observer(({ label, сhecked, taskId, allowEdit }) => {
                 />
             ) : (
                 <span
-                    className={`${classes.checkbox__label} ${isChecked ? classes.checked : ''}`}
+                    className={`${classes.checkbox__task} ${isChecked ? classes.checked : ''}`}
                     onClick={handleSpanClick}>
                     {info}
                 </span>

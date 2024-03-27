@@ -40,16 +40,17 @@ const Welcome = observer(() => {
             <div className={classes.container}>
                 <div className={classes.welcome__wrapper}>
                     <h2 className={classes.plask}>Plask</h2>
-                    {from === 'registration' || from === 'login' &&
+                    {((from === 'login') || (from === 'registration')) &&
                         <h3 className={classes.title}>Добро пожаловать!</h3>
                     }
                     {from === 'registration' &&
-                        <p className={classes.main_text}>Plask - новый планировщик задач и целей, который поможет вам в организации
-                            вашего рабочего и личного времени и соответственно в достижении поставленных
-                            целей. Простой и интуитивно понятный интерфейс разработан таким образом,
-                            чтобы вы легко смогли в нем разобраться. Однако если у вас возникнут вопросы
-                            или предложения по улучшению сервиса, вы можете обратиться к нашей службе
-                            поддержки в разделе <NavLink to={FEEDBACK_ROUTE} className={classes.welcome__link}>“Обратная связь”</NavLink>. Успехов в достижении ваших целей!</p>
+                        <p className={classes.main_text}>Plask - новый планировщик задач и целей, который поможет вам в
+                            организации вашего рабочего и личного времени и соответственно в достижении поставленных
+                            целей. Простой и интуитивно понятный интерфейс разработан таким образом, чтобы вы легко
+                            смогли в нем разобраться. Однако если у вас возникнут вопросы или предложения по улучшению
+                            сервиса, вы можете обратиться к нашей службе поддержки в разделе
+                            <NavLink to={FEEDBACK_ROUTE} className={classes.welcome__link}>“Обратная связь”</NavLink>.
+                            Успехов в достижении ваших целей!</p>
                     }
                     <div className={classes.welcome__mainbox}>
                         <div className={classes.welcome__itembox}>
@@ -65,8 +66,8 @@ const Welcome = observer(() => {
                                         <TaskCheckBox label='Выполнить задачу' сhecked={false} allowEdit={false} />
                                     </div>
                                 </>
-                                : <div className={classes.welcome__task_listbox}>
-                                    {/* Слетает список задач при обновлении */}
+                                :
+                                <div className={classes.welcome__task_listbox}>
                                     {task._task && task._task.length > 0 ? (
                                         <div className={classes.welcome__task_list}>
                                             {task._task.map((taskItem) => (
@@ -83,8 +84,8 @@ const Welcome = observer(() => {
                                 </div>
                             }
                             <NavLink className={classes.button_light} to={TASKS_ROUTE}>Перейти к задачам</NavLink>
-
                         </div>
+
                         <div className={classes.welcome__itembox}>
                             <h3 className={classes.title}>Цели</h3>
                             {from === 'registration' ?
@@ -99,10 +100,13 @@ const Welcome = observer(() => {
                                         <TaskCheckBox label='Достигнуть цель' сhecked={false} allowEdit={false} />
                                     </div>
                                 </>
-                                : <p>Список целей</p>
+                                :
+                                <div className={classes.welcome__goal_listbox}>
+                                    {/* Не доделано */}
+                                    <h4 className={classes.title}>Цели не обнаружены</h4>
+                                </div>
                             }
                             <NavLink className={classes.button_light} to={GOALS_ROUTE}>Перейти к целям</NavLink>
-
                         </div>
                     </div>
                     {!(from === 'registration') &&
