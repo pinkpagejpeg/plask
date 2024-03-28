@@ -1,20 +1,37 @@
 @import '../styles/mixins';
 @include container;
+@include input;
 @include title;
 @include main_text;
+@include button_light;
 
 $light_gray: #E6E6E6;
 $middle_gray: #6D6D6D;
 $dark_gray: #252525;
 
-.feedback {
+.user {
     &__wrapper {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        width: 80%;
+        width: 89.4%;
         text-align: center;
         margin: 138px auto 0 auto;
+    }
+
+    &__form {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0 32px 0;
+    }
+
+    &__form > input,
+    &__form > select {
+        width: 261px;
+    }
+
+    &__form > button {
+        padding: 11px 35px;
     }
 
     &__table {
@@ -28,7 +45,6 @@ $dark_gray: #252525;
         display: flex;
         justify-content: space-between;
         text-align: left;
-        padding: 15px 10px;
     }
 
     &__table_topline > th {
@@ -36,14 +52,21 @@ $dark_gray: #252525;
     }
 
     &__table_topline > th {
-        width: 15%;
+        word-break: break-all;
+        padding: 15px 10px;
+        width: 55%;
     }
 
-    &__table_topline > th:nth-child(1) {
+    &__table_topline > th:nth-child(1),
+    &__table_topline > th:nth-child(5) {
         width: 5%;
     }
 
-    &__table_topline > th:nth-child(3) {
-        width: 50%;
+    &__table_topline > th:nth-child(4) {
+        width: 15%;
+    }
+
+    &__table_topline > th:nth-child(2) {
+        width: 20%;
     }
 }

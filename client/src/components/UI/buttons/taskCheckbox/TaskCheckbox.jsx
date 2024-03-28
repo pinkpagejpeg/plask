@@ -29,11 +29,12 @@ const TaskCheckBox = observer(({ label, сhecked, taskId, allowEdit }) => {
         try {
             if (allowEdit) {
                 let data
-                    if (info === '') {
-                        destroyTask()
-                    }
+
+                if (info === '') {
+                    destroyTask()
+                }
+                
                 data = await updateTask(taskId, info)
-                console.log(data.task.id, data.task)
                 task.editTask(data.task.id, data.task)
             }
         } catch (e) {
