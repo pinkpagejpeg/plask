@@ -8,7 +8,7 @@ $light_gray: #E6E6E6;
 $middle_gray: #6D6D6D;
 $dark_gray: #252525;
 
-.task {
+.goal {
     &__wrapper {
         display: flex;
         flex-direction: column;
@@ -25,12 +25,12 @@ $dark_gray: #252525;
     &__listbox {
         display: flex;
         justify-content: space-around;
-        margin-bottom: 63px;
+        margin-bottom: 33px;
     }
 
     &__listbox > h4 {
         font-size: 24px;
-        margin-bottom: 12px;
+        margin-bottom: 60px;
         color: $middle_gray;
     }
 

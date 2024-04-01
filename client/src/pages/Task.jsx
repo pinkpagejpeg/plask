@@ -33,7 +33,6 @@ const Task = observer(() => {
         e.preventDefault()
         try {
             let data
-            console.log(user._user.id, info)
 
             data = await createTask(user._user.id, info)
 
