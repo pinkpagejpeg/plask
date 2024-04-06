@@ -70,10 +70,22 @@ $dark_gray: #252525;
         margin-bottom: 32px;
     }
 
-    &__task_list {
+    &__goal_listbox {
+        margin-bottom: 40px;
+    }
+
+    &__task_list,
+    &__goal_list {
         display: flex;
         flex-direction: column;
         align-items: start;
+    }
+
+    &__goal_list > a {
+        color: $light_gray;
+        font-weight: 500;
+        text-decoration: none;
+        margin-bottom: 12px;
     }
 
     &__task_listbox > h4,

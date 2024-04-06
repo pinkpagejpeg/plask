@@ -1,18 +1,17 @@
 import React, { useState, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
-import { Context } from '../../../../main'
+import { Context } from '../../../main'
 import classes from './GoalListItem.module.scss'
-import { deleteGoal, updateGoal } from '../../../../http/goalApi'
-import delete_icon from '../../../../assets/images/delete_icon.png'
+import { deleteGoal, updateGoal } from '../../../http/goalApi'
+import delete_icon from '../../../assets/images/delete_icon.png'
+import { NavLink } from 'react-router-dom'
+import { GOALS_ITEM_ROUTE } from '../../../utils/consts'
 
-const GoalListItem = observer(({ title, goalId }) => {
+const GoalListItem = observer(({ title, goalId, progress}) => {
     const { goal } = useContext(Context)
     const [isEditing, setIsEditing] = useState(false)
     const [info, setInfo] = useState(title)
     const [prevInfo, setPrevInfo] = useState(title)
-
-    // прогресс равен количеству выполненных задач / общее количество задач * 100
-    let progress = 50
 
     const handleSpanClick = () => {
         setIsEditing(true)
@@ -37,20 +36,6 @@ const GoalListItem = observer(({ title, goalId }) => {
             alert(e.response.data.message)
         }
     }
-
-    // const changeStatus = async () => {
-    //     try {
-    //         if (allowEdit) {
-    //             let data
-
-    //             data = await updateTaskStatus(taskId, !isChecked)
-    //             console.log(data.task.id, data.task)
-    //             task.editTask(data.task.id, data.task)
-    //         }
-    //     } catch (e) {
-    //         alert(e.response.data.message)
-    //     }
-    // }
 
     const destroyGoal = async () => {
         try {
@@ -78,7 +63,9 @@ const GoalListItem = observer(({ title, goalId }) => {
                         required
                     />
                 ) : (
-                    <h4 className={classes.title} onClick={handleSpanClick}>{title}</h4>
+                    <NavLink to={GOALS_ITEM_ROUTE + '/' + goalId}>
+                        <h4 className={classes.title} onClick={handleSpanClick}>{title}</h4>
+                    </NavLink>
                 )}
                 <button className={classes.goal__button_delete} onClick={destroyGoal}>
                     <img src={delete_icon} alt='Иконка для удаления задачи' />

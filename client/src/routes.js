@@ -6,9 +6,10 @@ import Feedback from './pages/Feedback'
 import Goal from './pages/Goal'
 import Task from './pages/Task'
 import Profile from './pages/Profile'
-import { ADMIN_FEEDBACK_ROUTE, ADMIN_ROUTE, ADMIN_USER_ROUTE, FEEDBACK_ROUTE, GOALS_ROUTE, INFO_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, REGISTRATION_ROUTE, TASKS_ROUTE, WELCOME_ROUTE } from './utils/consts'
 import AdminUser from './pages/AdminUser'
 import AdminFeedback from './pages/AdminFeedback'
+import GoalItem from './pages/GoalItem'
+import { ADMIN_FEEDBACK_ROUTE, ADMIN_ROUTE, ADMIN_USER_ROUTE, FEEDBACK_ROUTE, GOALS_ITEM_ROUTE, GOALS_ROUTE, INFO_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, REGISTRATION_ROUTE, TASKS_ROUTE, WELCOME_ROUTE } from './utils/consts'
 
 export const authRoutes = [
     {
@@ -26,6 +27,10 @@ export const authRoutes = [
     {
         path: GOALS_ROUTE,
         Component: Goal
+    },
+    {
+        path: GOALS_ITEM_ROUTE + '/:id',
+        Component: GoalItem
     },
     {
         path: TASKS_ROUTE,

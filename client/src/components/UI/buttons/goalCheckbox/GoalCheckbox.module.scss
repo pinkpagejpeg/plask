@@ -1,0 +1,103 @@
+@import '../../../../styles/mixins';
+@include input;
+
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
+$dark_gray: #252525;
+
+.checkbox {
+    &__wrapper {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+
+        input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+
+            + .checkbox__label {
+                &:before {
+                    content: '';
+                    border-radius: 2px;
+                    border: 2px solid $light_gray;
+                    display: inline-block;
+                    width: 16px;
+                    height: 16px;
+                    position: relative;
+                    margin-right: 10px;
+                    vertical-align: top;
+                    cursor: pointer;
+                    text-align: center;
+                    transition: all .3s linear;
+                }
+            }
+
+            &:checked + .checkbox__label:before {
+                background-image: url('../../../../assets/images/checked.svg');
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: 10px;
+            }
+
+            &:hover + .checkbox__label:before {
+                outline: none;
+                border: 2px solid $middle_gray;
+            }
+
+            &:focus + .checkbox__label:before {
+                outline: none;
+                border: 2px solid $light_gray;
+            }
+
+            + .checkbox__label {
+                &:empty:before {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+
+    // &__wrapper {
+    //     word-break: break-all;
+    //     max-width: 100%;
+    // }
+
+    &__wrapper > label {
+        display: flex;
+        align-items: center;
+    }
+
+    &__wrapper > input[type="text"] {
+        width: fit-content;
+        margin-top: 0;
+    }
+
+    &__goal {
+        color: $light_gray;
+        font-family: 'Ubuntu', sans-serif;
+        word-break: break-all;
+        text-align: start;
+        max-width: 100%;
+        font-size: 16px;
+        font-weight: 300;
+        letter-spacing: 5%;
+        margin: 0 10px;
+    }
+
+    &__goal.checked {
+        text-decoration: line-through;
+        color: $middle_gray;
+    }
+
+    &__button_delete {
+        background: none;
+        border: none;
+        padding-top: 3px;
+        cursor: pointer;
+    }
+
+    &__button_delete > img {
+        width: 20px;
+    }
+}
+

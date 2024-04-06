@@ -27,7 +27,6 @@ const NavMenu = ({ show, setShow }) => {
     const logOut = () => {
         user.setUser({})
         user.setIsAuth(false)
-        console.log(user.isAuth)
         navigate(LOGIN_ROUTE)
     }
 

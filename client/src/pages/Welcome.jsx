@@ -4,16 +4,17 @@ import { Context } from '../main'
 import classes from '../styles/Welcome.module.scss'
 import { NavLink, Navigate } from 'react-router-dom'
 import NavBar from '../components/nav/NavBar'
-import { FEEDBACK_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, TASKS_ROUTE } from '../utils/consts'
+import { FEEDBACK_ROUTE, GOALS_ITEM_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, TASKS_ROUTE } from '../utils/consts'
 import { useLocation } from 'react-router-dom'
 import TaskCheckBox from '../components/UI/buttons/taskCheckbox/TaskCheckbox'
 import { getTask } from '../http/taskApi'
+import { getGoals, getGoalProgress } from '../http/goalApi'
 
 const Welcome = observer(() => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const from = queryParams.get('from');
-    const { user, task } = useContext(Context)
+    const { user, task, goal } = useContext(Context)
 
     if (!user) {
         return <Navigate to={LOGIN_ROUTE} />;
@@ -33,6 +34,26 @@ const Welcome = observer(() => {
 
         fetchTasks();
     }, [task, user])
+
+    useEffect(() => {
+        const fetchGoals = async () => {
+            try {
+                if (user._user.id) {
+                    const goals = await getGoals(user._user.id);
+                    goal.setGoal(goals);
+
+                    goals.forEach(async (goalItem) => {
+                        const goalProgress = await getGoalProgress(goalItem.id);
+                        goal.setGoalProgress(goalItem.id, goalProgress.progress);
+                    });
+                }
+            } catch (e) {
+                console.error('Ошибка при получении цели:', e);
+            }
+        };
+
+        fetchGoals();
+    }, [goal, user])
 
     return (
         <>
@@ -102,8 +123,15 @@ const Welcome = observer(() => {
                                 </>
                                 :
                                 <div className={classes.welcome__goal_listbox}>
-                                    {/* Не доделано */}
-                                    <h4 className={classes.title}>Цели не обнаружены</h4>
+                                    {goal._goal && goal._goal.length > 0 ? (
+                                        <div className={classes.welcome__goal_list}>
+                                            {goal._goal.map((goalItem) => (
+                                                <NavLink to={GOALS_ITEM_ROUTE + '/' + goalItem.id} className={classes.main_text} key={goalItem.id}>{goalItem.info} {goal.goalProgress[goalItem.id]}%</NavLink>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <h4 className={classes.title}>Цели не обнаружены</h4>
+                                    )}
                                 </div>
                             }
                             <NavLink className={classes.button_light} to={GOALS_ROUTE}>Перейти к целям</NavLink>

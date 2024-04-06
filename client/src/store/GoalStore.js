@@ -3,11 +3,16 @@ import { makeAutoObservable } from 'mobx'
 export default class GoalStore {
     constructor() {
         this._goal = []
+        this._goalProgress = {}
         makeAutoObservable(this)
     }
 
     setGoal(goal) {
         this._goal = goal
+    }
+
+    setGoalProgress(goalId, progress) { 
+        this._goalProgress[goalId] = progress;
     }
 
     addGoalList(goal) {
@@ -31,7 +36,15 @@ export default class GoalStore {
         return this._goal.filter(goal => goal.userId === userId);
     }
 
+    getGoalById(goalId) {
+        return this._goal.filter(goal => goal.id === goalId);
+    }
+
     get goal() {
         return this._goal
+    }
+
+    get goalProgress() {
+        return this._goalProgress;
     }
 }

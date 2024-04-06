@@ -1,4 +1,4 @@
-@import '../../../../styles/mixins';
+@import '../../../styles/mixins';
 @include container;
 @include title;
 @include input;
@@ -33,9 +33,13 @@ $background: #191919;
         margin-left: 10px;
     }
 
-    &__topline > h4 {
+    &__topline > a > h4 {
         font-size: 24px;
         margin-right: 10px;
+    }
+
+    &__topline > a {
+        text-decoration: none;
     }
 
     &__button_delete {
@@ -54,15 +58,15 @@ progress {
     border-radius: 20px; 
     width: 453px;
     height: 22px;
-  }
+}
 
-  progress::-webkit-progress-bar {
+progress::-webkit-progress-bar {
     background-color: $background;
     border: 3px $middle_gray solid;
     border-radius: 20px;
-  }
+}
 
-  progress::-webkit-progress-value {
+progress::-webkit-progress-value {
     background-color: $light_gray;
     border-radius: 20px;
-  }
+}

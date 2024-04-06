@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../../../../main'
-import classes from './TaskCheckbox.module.scss'
-import { deleteTask, updateTask, updateTaskStatus } from '../../../../http/taskApi'
+import classes from './GoalCheckbox.module.scss'
+import { deleteGoalItem, updateGoalItem, updateGoalItemStatus } from '../../../../http/goalApi'
 import delete_icon from '../../../../assets/images/delete_icon.png'
 
-const TaskCheckBox = observer(({ label, сhecked, taskId, allowEdit }) => {
-    const { task } = useContext(Context)
+const GoalCheckBox = observer(({ label, сhecked, goalItemId, updateProgress }) => {
+    const { goalItem } = useContext(Context)
     const [isChecked, setIsChecked] = useState(сhecked)
     const [isEditing, setIsEditing] = useState(false)
     const [info, setInfo] = useState(label)
@@ -21,22 +21,20 @@ const TaskCheckBox = observer(({ label, сhecked, taskId, allowEdit }) => {
     };
 
     const handleInputBlur = () => {
-        changeTask()
+        changeGoalItem()
         setIsEditing(false)
     };
 
-    const changeTask = async () => {
+    const changeGoalItem = async () => {
         try {
-            if (allowEdit) {
-                let data
+            let data
 
-                if (info === '') {
-                    destroyTask()
-                }
-                
-                data = await updateTask(taskId, info)
-                task.editTask(data.task.id, data.task)
+            if (info === '') {
+                destroyGoalItem()
             }
+
+            data = await updateGoalItem(goalItemId, info)
+            goalItem.editGoalItem(data.goal_item.id, data.goal_item)
         } catch (e) {
             alert(e.response.data.message)
         }
@@ -44,25 +42,23 @@ const TaskCheckBox = observer(({ label, сhecked, taskId, allowEdit }) => {
 
     const changeStatus = async () => {
         try {
-            if (allowEdit) {
-                let data
+            let data
 
-                data = await updateTaskStatus(taskId, !isChecked)
-                task.editTask(data.task.id, data.task)
-            }
+            data = await updateGoalItemStatus(goalItemId, !isChecked)
+            goalItem.editGoalItem(data.goal_item.id, data.goal_item)
+            updateProgress()
         } catch (e) {
             alert(e.response.data.message)
         }
     }
 
-    const destroyTask = async () => {
+    const destroyGoalItem = async () => {
         try {
-            if (allowEdit) {
-                let data
+            let data
 
-                data = await deleteTask(taskId)
-                task.removeTask(data.deletedTaskId)
-            }
+            data = await deleteGoalItem(goalItemId)
+            goalItem.removeGoalItem(data.deletedGoalItemId)
+            updateProgress()
         }
         catch (e) {
             alert(e.response.data.message)
@@ -80,7 +76,7 @@ const TaskCheckBox = observer(({ label, сhecked, taskId, allowEdit }) => {
                 />
                 <span className={classes.checkbox__label}></span>
             </label>
-            {allowEdit && isEditing ? (
+            {isEditing ? (
                 <input
                     type="text"
                     className={classes.input}
@@ -92,16 +88,16 @@ const TaskCheckBox = observer(({ label, сhecked, taskId, allowEdit }) => {
                 />
             ) : (
                 <span
-                    className={`${classes.checkbox__task} ${isChecked ? classes.checked : ''}`}
+                    className={`${classes.checkbox__goal} ${isChecked ? classes.checked : ''}`}
                     onClick={handleSpanClick}>
                     {info}
                 </span>
             )}
-            <button className={classes.checkbox__button_delete} onClick={destroyTask}>
+            <button className={classes.checkbox__button_delete} onClick={destroyGoalItem}>
                 <img src={delete_icon} alt='Иконка для удаления задачи' />
             </button>
         </div>
     );
 })
 
-export default TaskCheckBox;
+export default GoalCheckBox;

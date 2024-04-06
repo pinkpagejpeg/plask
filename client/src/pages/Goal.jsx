@@ -3,8 +3,8 @@ import { observer } from 'mobx-react-lite'
 import { Context } from '../main'
 import classes from '../styles/Goal.module.scss'
 import NavBar from '../components/nav/NavBar'
-import { createGoal, getGoal } from '../http/goalApi'
-import GoalListItem from '../components/UI/items/goalListItem/GoalListItem'
+import { createGoal, getGoals, getGoalProgress } from '../http/goalApi'
+import GoalListItem from '../components/goal/goalListItem/GoalListItem'
 
 const Goal = observer(() => {
     const { goal, user } = useContext(Context)
@@ -18,8 +18,13 @@ const Goal = observer(() => {
         const fetchGoals = async () => {
             try {
                 if (user._user.id) {
-                    const goals = await getGoal(user._user.id);
+                    const goals = await getGoals(user._user.id);
                     goal.setGoal(goals);
+
+                    goals.forEach(async (goalItem) => {
+                        const goalProgress = await getGoalProgress(goalItem.id);
+                        goal.setGoalProgress(goalItem.id, goalProgress.progress);
+                    });
                 }
             } catch (e) {
                 console.error('Ошибка при получении задач:', e);
@@ -37,6 +42,7 @@ const Goal = observer(() => {
             data = await createGoal(user._user.id, info)
 
             goal.addGoalList(data)
+            goal.setGoalProgress(data.id, 0);
             setInfo('')
         }
         catch (e) {
@@ -54,7 +60,7 @@ const Goal = observer(() => {
                         {goal._goal && goal._goal.length > 0 ? (
                             <div className={classes.goal__list}>
                                 {goal._goal.map((goalItem) => (
-                                    <GoalListItem key={goalItem.id} title={goalItem.info} goalId={goalItem.id} />
+                                    <GoalListItem key={goalItem.id} title={goalItem.info} goalId={goalItem.id} progress={goal.goalProgress[goalItem.id]} />
                                 ))}
                             </div>
                         ) : (

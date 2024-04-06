@@ -3,6 +3,7 @@ $background_menu: #252525;
 .menu {
   &__wrapper {
     position: fixed;
+    z-index: 1000;
   }
 
   &__button {
