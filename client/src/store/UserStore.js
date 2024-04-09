@@ -8,13 +8,19 @@ export default class UserStore {
     }
 
     setIsAuth(bool) {
-        // console.log("Setting isAuth to:", bool);
         this._isAuth = bool
     }
 
     setUser(user) {
-        // console.log("Setting user to:", user);
         this._user = user
+    }
+
+    editUser(userId, updatedEmail) {
+        if (this._user.id === userId) {
+            this._user = { ...this._user, email: updatedEmail };
+            return this._user;
+        }
+        return this._user; 
     }
 
     get isAuth() {

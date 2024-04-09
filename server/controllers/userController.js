@@ -69,6 +69,58 @@ class UserController {
         return res.json({ token })
     }
 
+    async updateUserInfo(req, res, next) {
+        try {
+            const { userId, email, password } = req.body
+            const user = await User.findByPk(userId)
+
+            if (!user) {
+                return next(ApiError.badRequest('Пользователь не найден'))
+            }
+
+            if (password) {
+                const hashPassword = await bcrypt.hash(password, 5)
+                await user.update({ email, password: hashPassword })
+            } else {
+                await user.update({ email })
+            }
+
+            return res.json({ user })
+        } catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
+    }
+
+    async updateUserImage(req, res, next) {
+        try {
+            const { userId, img } = req.body
+            const user = await User.findByPk(userId)
+
+            if (!user) {
+                return next(ApiError.badRequest('Пользователь не найден'))
+            }
+
+            await user.update({ img })
+
+            return res.json({ user })
+        } catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
+    }
+
+    async getOne(req, res, next) {
+        try {
+            const { userId } = req.params
+            const user = await User.findByPk(userId)
+            if (!user) {
+                return next(ApiError.badRequest('Пользователь не найден'))
+            }
+            return res.json(user)
+        } catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
+    }
+
     // Панель администратора
 
     async create(req, res, next) {

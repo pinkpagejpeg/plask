@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import classes from '../styles/AdminUser.module.scss'
 import { Context } from '../main'
 import NavBar from '../components/nav/NavBar'
-import { getUser, createUser, deleteUser } from '../http/userApi'
+import { getUsers, createUser } from '../http/userApi'
 import AdminUserItem from '../components/admin/adminUser/AdminUserItem'
 
 const AdminUser = () => {
@@ -19,7 +19,7 @@ const AdminUser = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const users = await getUser()
+                const users = await getUsers()
                 setUsers(users)
             } catch (e) {
                 console.error('Ошибка при получении задач:', e)

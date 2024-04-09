@@ -116,7 +116,8 @@ const AdminUserItem = ({ user }) => {
             )}</td>
             <td className={classes.main_text}>
                 <button className={classes.user__button} onClick={destroyUser}>
-                    <img src={delete_icon} /></button>
+                    <img src={delete_icon} />
+                </button>
             </td>
         </tr>
     );

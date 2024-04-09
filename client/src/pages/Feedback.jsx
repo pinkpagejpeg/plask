@@ -21,7 +21,6 @@ const Feedback = observer(() => {
 
             data = await createFeedback(user._user.id, info)
 
-            // task.addTaskList(data)
             setInfo('')
         }
         catch (e) {

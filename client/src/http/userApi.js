@@ -19,7 +19,24 @@ export const check = async () => {
     return jwtDecode(data.token)
 }
 
-export const getUser = async () => {
+export const getUser = async (userId) => {
+    const {data} = await $authHost.get(`api/user/${userId}`)
+    return data
+}
+
+export const updateUserInfo = async (userId, email, password) => {
+    const { data } = await $authHost.put(`api/user/info`, { userId, email, password })
+    return data
+}
+
+export const updateUserImage = async (userId, img) => {
+    const { data } = await $authHost.put(`api/user/image`, { userId, img })
+    return data
+}
+
+// Панель администратора
+
+export const getUsers = async () => {
     const {data} = await $authHost.get('api/user/')
     return data
 }

@@ -60,6 +60,7 @@ const GoalItem = observer(() => {
 
             goalItem.addGoalItemList(data)
             setInfo('')
+            updateProgress()
         }
         catch (e) {
             alert(e.response.data.message)
