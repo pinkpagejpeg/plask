@@ -29,7 +29,7 @@ const Profile = observer(() => {
                     console.log(userInfo)
                 }
             } catch (e) {
-                console.error('Ошибка при получении задач:', e);
+                alert('Ошибка при получении информации о пользователе:', e.response.data.message);
             }
         };
 

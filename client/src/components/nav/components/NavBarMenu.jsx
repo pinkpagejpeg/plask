@@ -35,7 +35,7 @@ const NavMenu = ({ show, setShow }) => {
                     setUserInfo(data)
                 }
             } catch (e) {
-                console.error('Ошибка при получении задач:', e);
+                alert('Ошибка при получении информации о пользователе:', e.response.data.message);
             }
         };
 

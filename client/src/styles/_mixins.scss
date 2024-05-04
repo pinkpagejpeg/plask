@@ -88,4 +88,14 @@ $background: #191919;
         text-decoration: none;
         cursor: pointer;
     }
+
+    .button_light:hover {
+        background-color: $middle_gray;
+        transition: background-color 0.3s ease;
+    }
+
+    .button_light:active {
+        background-color: $light_gray;
+        transition: background-color 0.3s ease;
+    }
 }

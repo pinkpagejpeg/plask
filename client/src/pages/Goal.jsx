@@ -27,7 +27,7 @@ const Goal = observer(() => {
                     });
                 }
             } catch (e) {
-                console.error('Ошибка при получении задач:', e);
+                alert('Ошибка при получении целей:', e.response.data.message);
             }
         };
 

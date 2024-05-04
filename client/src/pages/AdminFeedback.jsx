@@ -20,7 +20,7 @@ const AdminFeedback = () => {
                 const feedbacks = await getFeedback()
                 setFeedbacks(feedbacks)
             } catch (e) {
-                console.error('Ошибка при получении задач:', e)
+                alert('Ошибка при получении обратной связи:', e.response.data.message.message)
             }
         };
 

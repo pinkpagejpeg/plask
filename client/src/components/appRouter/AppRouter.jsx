@@ -18,7 +18,6 @@ const AppRouter = () => {
             {publicRoutes.map((route) =>
                 <Route key={route.path} path={route.path} element={<route.Component />} exact />
             )}
-            {/* // Добавить главную страницу с общей информацией */}\
             {/* <Route path="/*" element={<Navigate to={LOGIN_ROUTE} />} replace /> */}
             {/* Заменить на 404 редирект */}
         </Routes>

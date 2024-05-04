@@ -5,9 +5,9 @@ import classes from './TaskCheckbox.module.scss'
 import { deleteTask, updateTask, updateTaskStatus } from '../../../../http/taskApi'
 import delete_icon from '../../../../assets/images/delete_icon.png'
 
-const TaskCheckBox = observer(({ label, сhecked, taskId, allowEdit }) => {
+const TaskCheckBox = observer(({ label, checked, taskId, allowEdit }) => {
     const { task } = useContext(Context)
-    const [isChecked, setIsChecked] = useState(сhecked)
+    const [isChecked, setIsChecked] = useState(checked)
     const [isEditing, setIsEditing] = useState(false)
     const [info, setInfo] = useState(label)
 

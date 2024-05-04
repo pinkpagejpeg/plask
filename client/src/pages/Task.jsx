@@ -22,7 +22,7 @@ const Task = observer(() => {
                     task.setTask(tasks);
                 }
             } catch (e) {
-                console.error('Ошибка при получении задач:', e);
+                alert('Ошибка при получении задач:', e.response.data.message);
             }
         };
 

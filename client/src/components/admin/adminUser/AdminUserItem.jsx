@@ -55,7 +55,7 @@ const AdminUserItem = ({ user }) => {
 
             data = await updateUser(user.id, email, password, role)
         } catch (e) {
-            alert(e.response.data.message)
+            alert(e.response.data.message.message)
         }
     };
 
@@ -66,7 +66,7 @@ const AdminUserItem = ({ user }) => {
             data = await deleteUser(user.id)
         }
         catch (e) {
-            alert(e.response.data.message)
+            alert(e.response.data.message.message)
         }
     }
 

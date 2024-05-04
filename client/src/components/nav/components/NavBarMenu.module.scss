@@ -67,6 +67,26 @@ $middle_gray: #6D6D6D;
         margin-bottom: 10px;
     }
 
+    &__item > a:hover {
+        color: $light_gray;
+        transition: color 0.3s ease;
+    }
+
+    &__item > button:hover {
+        color: $light_gray;
+        transition: color 0.3s ease;
+    }
+
+    &__item > a:active {
+        color: $middle_gray;
+        transition: color 0.3s ease;
+    }
+
+    &__item > button:active {
+        color: $middle_gray;
+        transition: color 0.3s ease;
+    }
+
     &__item:nth-child(3) {
         margin-bottom: 32px;
     }

@@ -24,7 +24,7 @@ class TaskController {
             const task = await Task.findByPk(taskId)
 
             if (!task) {
-                return next(ApiError.badRequest('Задача не найдена'))
+            return res.status(404).json({ message:'Задача не найдена'});
             }
 
             await task.update({ info })
@@ -40,7 +40,7 @@ class TaskController {
             const task = await Task.findByPk(taskId)
 
             if (!task) {
-                return next(ApiError.badRequest('Задача не найдена'))
+            return res.status(404).json({ message:'Задача не найдена'});
             }
 
             await task.update({ status })
@@ -56,7 +56,7 @@ class TaskController {
             const task = await Task.findByPk(taskId)
 
             if (!task) {
-                return next(ApiError.badRequest('Задача не найдена'))
+            return res.status(404).json({ message:'Задача не найдена'});
             }
 
             await task.destroy()

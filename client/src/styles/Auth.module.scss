@@ -44,6 +44,10 @@ $dark_gray: #252525;
         background-color: $dark_gray;
     }
 
+    &__form > input[type="password"] {
+        margin-bottom: 25px;
+    }
+
     &__info {
         color: $middle_gray;
         font-family: 'Ubuntu', sans-serif;

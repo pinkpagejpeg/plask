@@ -22,7 +22,7 @@ const AdminUser = () => {
                 const users = await getUsers()
                 setUsers(users)
             } catch (e) {
-                console.error('Ошибка при получении задач:', e)
+                alert('Ошибка при получении пользователей:', e.response.data.message.message)
             }
         };
 
@@ -35,9 +35,11 @@ const AdminUser = () => {
             let data
 
             data = await createUser(email, password, role)
+            setEmail('')
+            setPassword('')
         }
         catch (e) {
-            alert(e.response.data.message)
+            alert(e.response.data.message.message)
         }
     }
 

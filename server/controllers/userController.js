@@ -17,14 +17,15 @@ class UserController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return next(ApiError.badRequest({ message: "Ошибка при регистрации" }))
+                const errorMessages = errors.array().map(error => error.msg);
+            return next(ApiError.badRequest({ message: `Введены некорректные данные: ${errorMessages}` }));
             }
 
             const { email, password, role } = req.body
 
             const candidate = await User.findOne({ where: { email } })
             if (candidate) {
-                return next(ApiError.internal('Пользователь с таким именем уже существует'))
+                return next(ApiError.internal({ message: "Пользователь с таким именем уже существует"}))
             }
 
             const hashPassword = await bcrypt.hash(password, 5)

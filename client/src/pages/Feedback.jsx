@@ -22,6 +22,7 @@ const Feedback = observer(() => {
             data = await createFeedback(user._user.id, info)
 
             setInfo('')
+            alert('Обратная связь отправлена')
         }
         catch (e) {
             alert(e.response.data.message)

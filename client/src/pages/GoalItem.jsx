@@ -4,7 +4,7 @@ import { Context } from '../main'
 import { useParams, useNavigate } from 'react-router-dom'
 import classes from '../styles/GoalItem.module.scss'
 import NavBar from '../components/nav/NavBar'
-import { getGoal, getGoalProgress, getGoalItems, createGoalItem, deleteGoal } from '../http/goalApi'
+import { getGoal, getGoalProgress, getGoalItems, createGoalItem, deleteGoal, updateGoal } from '../http/goalApi'
 import add_icon from '../assets/images/addbutton_icon.png'
 import GoalCheckBox from '../components/UI/buttons/goalCheckbox/GoalCheckbox'
 import delete_icon from '../assets/images/delete_icon.png'
@@ -14,8 +14,11 @@ const GoalItem = observer(() => {
     const { goal, goalItem, user } = useContext(Context)
     const [goalInfo, setGoalInfo] = useState({})
     const navigate = useNavigate()
-    const [info, setInfo] = useState('')
+    const [goalItemInfo, setgoalItemInfo] = useState('')
     const { id } = useParams();
+    const [isEditing, setIsEditing] = useState(false)
+    const [info, setInfo] = useState('')
+    const [prevInfo, setPrevInfo] = useState('')
 
     if (!user) {
         return <Navigate to={LOGIN_ROUTE} />;
@@ -27,12 +30,14 @@ const GoalItem = observer(() => {
                 if (id) {
                     const goalData = await getGoal(id);
                     setGoalInfo(goalData)
+                    setInfo(goalData.info)
+                    setPrevInfo(goalData.info)
 
                     const goalProgress = await getGoalProgress(id);
                     goal.setGoalProgress(id, goalProgress.progress);
                 }
             } catch (e) {
-                console.error('Ошибка при получении задач:', e);
+                alert('Ошибка при получении цели:', e.response.data.message);
             }
         };
 
@@ -43,7 +48,7 @@ const GoalItem = observer(() => {
                     goalItem.setGoalItem(goalItemsData)
                 }
             } catch (e) {
-                console.error('Ошибка при получении задач:', e);
+                alert('Ошибка при получении информации о цели:', e.response.data.message);
             }
         }
 
@@ -56,10 +61,10 @@ const GoalItem = observer(() => {
         try {
             let data
 
-            data = await createGoalItem(id, info)
+            data = await createGoalItem(id, goalItemInfo)
 
             goalItem.addGoalItemList(data)
-            setInfo('')
+            setgoalItemInfo('')
             updateProgress()
         }
         catch (e) {
@@ -81,16 +86,57 @@ const GoalItem = observer(() => {
     }
 
     const updateProgress = async () => {
-        const goalProgress = await getGoalProgress(id);
-        goal.setGoalProgress(id, goalProgress.progress);
+        try {
+            const goalProgress = await getGoalProgress(id);
+            goal.setGoalProgress(id, goalProgress.progress);
+        }
+        catch (e) {
+            alert(e.response.data.message)
+        }
     };
+
+    const handleSpanClick = () => {
+        setIsEditing(true)
+    };
+
+    const handleInputBlur = () => {
+        if (prevInfo !== info && info.trim() !== '') {
+            changeGoal()
+        } else {
+            setInfo(prevInfo)
+        }
+        setIsEditing(false)
+    };
+
+    const changeGoal = async () => {
+        try {
+            let data
+
+            data = await updateGoal(id, info)
+            goal.editGoal(data.goal.id, data.goal)
+        } catch (e) {
+            alert(e.response.data.message);
+        }
+    }
 
     return (
         <>
             <NavBar />
             <div className={classes.container}>
                 <div className={classes.goal__wrapper}>
-                    <h3 className={classes.title}>{goalInfo.info}</h3>
+                    {isEditing ? (
+                        <input
+                            type="text"
+                            className={classes.input}
+                            value={info}
+                            onChange={e => setInfo(e.target.value)}
+                            onBlur={handleInputBlur}
+                            autoFocus
+                            required
+                        />
+                    ) : (
+                        <h3 className={classes.title} onClick={handleSpanClick}>{info}</h3>
+                    )}
                     <h4 className={classes.title}>Так держать!</h4>
                     <div className={classes.goal__progress}>
                         <progress className={classes.goal__progressbar} id="progressbar" value={goal.goalProgress[id]} max="100">{goal.goalProgress[id]}%</progress>
@@ -110,8 +156,8 @@ const GoalItem = observer(() => {
                     <form className={classes.goal__form}>
                         <input className={classes.input}
                             type="text" placeholder="Название"
-                            value={info}
-                            onChange={e => setInfo(e.target.value)}
+                            value={goalItemInfo}
+                            onChange={e => setgoalItemInfo(e.target.value)}
                             required />
                         <img src={add_icon} />
                         <input className={classes.goal__addbutton}

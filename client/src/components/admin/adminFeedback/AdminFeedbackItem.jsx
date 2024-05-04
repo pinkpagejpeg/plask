@@ -12,7 +12,7 @@ const AdminFeedbackItem = ({feedback}) => {
 
             data = await updateFeedbackStatus(feedbackId)
         } catch (e) {
-            alert(e.response.data.message)
+            alert(e.response.data.message.message)
         }
     }
 

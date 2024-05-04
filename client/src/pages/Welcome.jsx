@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../main'
 import classes from '../styles/Welcome.module.scss'
@@ -28,7 +28,7 @@ const Welcome = observer(() => {
                     task.setTask(tasks);
                 }
             } catch (e) {
-                console.error('Ошибка при получении задач:', e);
+                alert('Ошибка при получении задач:', e.response.data.message);
             }
         };
 
@@ -48,7 +48,7 @@ const Welcome = observer(() => {
                     });
                 }
             } catch (e) {
-                console.error('Ошибка при получении цели:', e);
+                alert('Ошибка при получении целей:', e.response.data.message);
             }
         };
 
@@ -82,9 +82,9 @@ const Welcome = observer(() => {
                                         “Задачи” или нажмите на кнопку ниже</p>
                                     <h5 className={classes.main_text}>Задачи</h5>
                                     <div className={classes.welcome__tasks}>
-                                        <TaskCheckBox label='Зарегистрироваться' сhecked={true} allowEdit={false} />
-                                        <TaskCheckBox label='Добавить задачу' сhecked={false} allowEdit={false} />
-                                        <TaskCheckBox label='Выполнить задачу' сhecked={false} allowEdit={false} />
+                                        <TaskCheckBox label='Зарегистрироваться' checked={true} allowEdit={false} />
+                                        <TaskCheckBox label='Добавить задачу' checked={false} allowEdit={false} />
+                                        <TaskCheckBox label='Выполнить задачу' checked={false} allowEdit={false} />
                                     </div>
                                 </>
                                 :
@@ -94,7 +94,7 @@ const Welcome = observer(() => {
                                             {task._task.map((taskItem) => (
                                                 <TaskCheckBox key={taskItem.id}
                                                     label={taskItem.info}
-                                                    сhecked={taskItem.status}
+                                                    checked={taskItem.status}
                                                     taskId={taskItem.id}
                                                     allowEdit={true} />
                                             ))}
@@ -113,12 +113,11 @@ const Welcome = observer(() => {
                                 <>
                                     <p className={classes.main_text}>Для того чтобы добавит вашу первую цель, перейдите в раздел
                                         “Цели” или нажмите на кнопку ниже</p>
-                                    {/* Реализовать проценты */}
-                                    <h5 className={classes.main_text}>Начать пользоваться Plask %</h5>
+                                    <h5 className={classes.main_text}>Начать пользоваться Plask 33%</h5>
                                     <div className={classes.welcome__tasks}>
-                                        <TaskCheckBox label='Зарегистрироваться' сhecked={true} allowEdit={false} />
-                                        <TaskCheckBox label='Добавить цель' сhecked={false} allowEdit={false} />
-                                        <TaskCheckBox label='Достигнуть цель' сhecked={false} allowEdit={false} />
+                                        <TaskCheckBox label='Зарегистрироваться' checked={true} allowEdit={false} />
+                                        <TaskCheckBox label='Добавить цель' checked={false} allowEdit={false} />
+                                        <TaskCheckBox label='Достигнуть цель' checked={false} allowEdit={false} />
                                     </div>
                                 </>
                                 :
