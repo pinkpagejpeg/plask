@@ -3,12 +3,18 @@ import classes from './ProfileInfo.module.scss'
 import { updateUserInfo } from '../../../http/userApi'
 
 const ProfileInfo = ({user, updateUser}) => {
-    const [email, setEmail] = useState(user.email)
-    const [prevEmail, setPrevEmail] = useState(user.email)
+    const [email, setEmail] = useState('')
+    const [prevEmail, setPrevEmail] = useState('')
     const [isEmailEditing, setIsEmailEditing] = useState(false)
     const [password, setPassword] = useState('')
-    const [prevPassword, setPrevPassword] = useState(user.password)
+    const [prevPassword, setPrevPassword] = useState('')
     const [isPasswordEditing, setIsPasswordEditing] = useState(false)
+
+    useEffect(() => {
+        setEmail(user.email)
+        setPrevEmail(user.email)
+        setPrevPassword(user.password)
+    }, [user])
 
     const handleEmailEdit = () => {
         setIsEmailEditing(true);
@@ -40,7 +46,7 @@ const ProfileInfo = ({user, updateUser}) => {
     const changeUserInfo = async () => {
         try {
             let data
-
+            console.log(user.id, email, password)
             data = await updateUserInfo(user.id, email, password)
             updateUser(data)
         } catch (e) {
@@ -70,7 +76,7 @@ const ProfileInfo = ({user, updateUser}) => {
             </div>
             <div className={classes.profile__infoitem}>
                 <p className={classes.main_text}>
-                    Пароль: {user.password}
+                    Пароль:
                     {isPasswordEditing ? (
                         <input
                             type="password"

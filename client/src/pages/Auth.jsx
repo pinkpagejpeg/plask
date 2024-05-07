@@ -19,7 +19,7 @@ const Auth = observer(() => {
     const buttonClick = async (e) => {
         e.preventDefault()
         try {
-            // if (hcaptchaToken) {
+            if (hcaptchaToken) {
                 let data
 
                 if (isLogin) {
@@ -36,10 +36,10 @@ const Auth = observer(() => {
                 } else {
                     navigate(`${WELCOME_ROUTE}?from=${isLogin ? 'login' : 'registration'}`)
                 }
-            // }
-            // else {
-            //     alert('Необходимо пройти капчу')
-            // }
+            }
+            else {
+                alert('Необходимо пройти капчу')
+            }
         }
         catch (e) {
             alert(e.response.data.message.message)

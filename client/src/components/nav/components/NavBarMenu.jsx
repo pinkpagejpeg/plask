@@ -43,8 +43,8 @@ const NavMenu = ({ show, setShow }) => {
     }, [user])
 
     const logOut = () => {
-        user.setUser({})
         user.setIsAuth(false)
+        user.setUser({})
         navigate(LOGIN_ROUTE)
     }
 

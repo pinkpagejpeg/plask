@@ -26,7 +26,8 @@ export const getUser = async (userId) => {
 
 export const updateUserInfo = async (userId, email, password) => {
     const { data } = await $authHost.put(`api/user/info`, { userId, email, password })
-    return data
+    localStorage.setItem('token', data.token)
+    return jwtDecode(data.token)
 }
 
 export const updateUserImage = async (userId, img) => {

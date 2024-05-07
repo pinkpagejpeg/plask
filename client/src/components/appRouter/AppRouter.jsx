@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import { authRoutes, manageRoutes, publicRoutes } from '../../routes'
-import { LOGIN_ROUTE } from '../../utils/consts'
 import { Context } from '../../main'
+import NotFound from '../../pages/NotFound'
 
 const AppRouter = () => {
     const { user } = useContext(Context)
@@ -18,8 +18,7 @@ const AppRouter = () => {
             {publicRoutes.map((route) =>
                 <Route key={route.path} path={route.path} element={<route.Component />} exact />
             )}
-            {/* <Route path="/*" element={<Navigate to={LOGIN_ROUTE} />} replace /> */}
-            {/* Заменить на 404 редирект */}
+            <Route path="/*" element={<NotFound auth={user.isAuth} role={user._user.role}/>} replace />
         </Routes>
     );
 }

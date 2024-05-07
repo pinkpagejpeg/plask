@@ -3,7 +3,7 @@ import classes from './AdminUserItem.module.scss'
 import { deleteUser, updateUser } from '../../../http/userApi'
 import delete_icon from '../../../assets/images/delete_icon.png'
 
-const AdminUserItem = ({ user }) => {
+const AdminUserItem = ({ user, onUserChange }) => {
     const [email, setEmail] = useState(user.email)
     const [prevEmail, setPrevEmail] = useState(user.email)
     const [password, setPassword] = useState('')
@@ -54,6 +54,7 @@ const AdminUserItem = ({ user }) => {
             let data
 
             data = await updateUser(user.id, email, password, role)
+            onUserChange()
         } catch (e) {
             alert(e.response.data.message.message)
         }
@@ -64,9 +65,10 @@ const AdminUserItem = ({ user }) => {
             let data
 
             data = await deleteUser(user.id)
+            onUserChange()
         }
         catch (e) {
-            alert(e.response.data.message.message)
+            alert(e.response.data.message)
         }
     }
 

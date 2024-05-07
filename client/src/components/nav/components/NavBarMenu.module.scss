@@ -43,6 +43,7 @@ $middle_gray: #6D6D6D;
     }
 
     &__username {
+        word-break: break-all;
         color: $light_gray;
         font-family: 'Ubuntu', sans-serif;
         font-size: 16px;
@@ -53,6 +54,7 @@ $middle_gray: #6D6D6D;
 
     &__userimage {
         max-width: 24px;
+        max-height: 24px;
         border-radius: 2px;
     }
 

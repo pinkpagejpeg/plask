@@ -18,14 +18,14 @@ class UserController {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
                 const errorMessages = errors.array().map(error => error.msg);
-            return next(ApiError.badRequest({ message: `Введены некорректные данные: ${errorMessages}` }));
+                return next(ApiError.badRequest({ message: `Введены некорректные данные: ${errorMessages}` }));
             }
 
             const { email, password, role } = req.body
 
             const candidate = await User.findOne({ where: { email } })
             if (candidate) {
-                return next(ApiError.internal({ message: "Пользователь с таким именем уже существует"}))
+                return next(ApiError.internal({ message: "Пользователь с таким именем уже существует" }))
             }
 
             const hashPassword = await bcrypt.hash(password, 5)
@@ -49,12 +49,12 @@ class UserController {
             const { email, password } = req.body
             const user = await User.findOne({ where: { email } })
             if (!user) {
-                return next(ApiError.internal('Пользователь не найден'))
+                return next(ApiError.internal({ message: 'Пользователь не найден' }))
             }
 
             let comparePassword = bcrypt.compareSync(password, user.password)
             if (!comparePassword) {
-                return next(ApiError.internal('Введен неверный пароль'))
+                return next(ApiError.internal({ message: 'Введен неверный пароль' }))
             }
 
             const token = generateJwt(user.id, user.email, user.role)
@@ -73,6 +73,11 @@ class UserController {
     async updateUserInfo(req, res, next) {
         try {
             const { userId, email, password } = req.body
+
+            if (!email) {
+                return next(ApiError.badRequest('Email пользователя не заполнен'))
+            }
+
             const user = await User.findByPk(userId)
 
             if (!user) {
@@ -80,13 +85,22 @@ class UserController {
             }
 
             if (password) {
+                if (password.length < 6 || password.length > 12) {
+                    return next(ApiError.badRequest('Длина пароля должна составлять от 6 до 12 символов'));
+                }
+                
                 const hashPassword = await bcrypt.hash(password, 5)
-                await user.update({ email, password: hashPassword })
+                await user.update({ password: hashPassword })
             } else {
+                const candidate = await User.findOne({ where: { email } })
+                if (candidate) {
+                    return next(ApiError.internal("Пользователь с таким именем уже существует"))
+                }
                 await user.update({ email })
             }
 
-            return res.json({ user })
+            const token = generateJwt(user.id, user.email, user.role)
+            return res.json({ token })
         } catch (e) {
             next(ApiError.badRequest(e.message))
         }
@@ -95,15 +109,15 @@ class UserController {
     async updateUserImage(req, res, next) {
         try {
             const { userId, img } = req.body
-            const user = await User.findByPk(userId)
+            // const user = await User.findByPk(userId)
 
-            if (!user) {
-                return next(ApiError.badRequest('Пользователь не найден'))
-            }
+            // if (!user) {
+            //     return next(ApiError.badRequest('Пользователь не найден'))
+            // }
 
-            await user.update({ img })
+            // await user.update({ img })
 
-            return res.json({ user })
+            // return res.json({ user })
         } catch (e) {
             next(ApiError.badRequest(e.message))
         }
@@ -128,14 +142,15 @@ class UserController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+                const errorMessages = errors.array().map(error => error.msg);
+                return next(ApiError.badRequest({ message: `Введены некорректные данные: ${errorMessages}` }));
             }
 
             const { email, password, role } = req.body
 
             const candidate = await User.findOne({ where: { email } })
             if (candidate) {
-                return next(ApiError.internal('Пользователь с таким именем уже существует'))
+                return next(ApiError.internal({ message: "Пользователь с таким именем уже существует" }))
             }
 
             const hashPassword = await bcrypt.hash(password, 5)
@@ -150,11 +165,22 @@ class UserController {
 
     async update(req, res, next) {
         try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                const errorMessages = errors.array().map(error => error.msg);
+                return next(ApiError.badRequest({ message: `Введены некорректные данные: ${errorMessages}` }));
+            }
+
             const { userId, email, password, role } = req.body
             const user = await User.findByPk(userId)
 
             if (!user) {
                 return next(ApiError.badRequest('Пользователь не найден'))
+            }
+
+            const candidate = await User.findOne({ where: { email } })
+            if (candidate) {
+                return next(ApiError.internal({ message: "Пользователь с таким именем уже существует" }))
             }
 
             if (password) {

@@ -12,8 +12,8 @@ import ProfileInfo from '../components/profile/profileInfo/ProfileInfo'
 
 const Profile = observer(() => {
     const { user } = useContext(Context)
-    const [userInfo, setUserInfo] = useState({})
-    const [img, setImg] = useState('');
+    const [userInfo, setUserInfo] = useState([])
+    const [img, setImg] = useState({})
     const navigate = useNavigate()
 
     if (!user) {
@@ -21,41 +21,28 @@ const Profile = observer(() => {
     }
 
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                if (user._user.id) {
-                    const data = await getUser(user._user.id);
-                    setUserInfo(data)
-                    console.log(userInfo)
-                }
-            } catch (e) {
-                alert('Ошибка при получении информации о пользователе:', e.response.data.message);
+        fetchUser()
+    }, [])
+
+    const fetchUser = async () => {
+        try {
+            if (user._user.id) {
+                const data = await getUser(user._user.id)
+                setUserInfo(data)
             }
-        };
+        } catch (e) {
+            alert('Ошибка при получении информации о пользователе:', e.response.data.message)
+        }
+    };
 
-        fetchUser();
-    }, [user])
-
-    const selectFile = e => {
-        setImg(e.target.files[0]);
-        console.log(img)
+    const selectFile = (e) => {
+        setImg(e.target.files[0])
         changeUserImage()
     };
 
     const changeUserImage = async (e) => {
         try {
-            console.log(img)
-            if (!img) {
-                return;
-            }
             
-            const formData = new FormData();
-            formData.append('img', img);
-            console.log(img)
-            let data
-
-            data = await updateUserImage(user._user.id, formData)
-            setUserInfo((prevUserInfo) => ({ ...prevUserInfo, img: data.img }));
         } catch (e) {
             alert(e.response.data.message)
         }
@@ -64,7 +51,6 @@ const Profile = observer(() => {
     const destroyUser = async () => {
         try {
             const confirmed = window.confirm("Вы уверены, что хотите удалить аккаунт?");
-            // console.log(user._user.id)
             if (confirmed) {
                 let data
 
@@ -79,11 +65,10 @@ const Profile = observer(() => {
         }
     }
 
-    const updateUserStore = (data) => {
-        console.log(data.email)
-        const updatedUser = user.editUser(data.email)
+    const updateUserStore = (userData) => {
+        const updatedUser = user.editUser(user._user.id, userData.email)
         user.setUser(updatedUser)
-        setUserInfo(data)
+        fetchUser()
     }
 
     return (

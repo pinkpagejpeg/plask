@@ -7,7 +7,7 @@ import { Context } from './main'
 import { check } from './http/userApi'
 
 const App = observer(() => {
-  const { user, task } = useContext(Context)
+  const { user } = useContext(Context)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

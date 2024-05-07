@@ -17,17 +17,17 @@ const AdminUser = () => {
     }
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const users = await getUsers()
-                setUsers(users)
-            } catch (e) {
-                alert('Ошибка при получении пользователей:', e.response.data.message.message)
-            }
-        };
-
         fetchUsers();
-    }, [users])
+    }, [])
+
+    const fetchUsers = async () => {
+        try {
+            const users = await getUsers()
+            setUsers(users)
+        } catch (e) {
+            alert('Ошибка при получении пользователей:', e.response.data.message)
+        }
+    };
 
     const addUser = async (e) => {
         e.preventDefault()
@@ -37,6 +37,7 @@ const AdminUser = () => {
             data = await createUser(email, password, role)
             setEmail('')
             setPassword('')
+            fetchUsers();
         }
         catch (e) {
             alert(e.response.data.message.message)
@@ -88,7 +89,7 @@ const AdminUser = () => {
                         </thead>
                         <tbody>
                             {users.map((item) => (
-                                <AdminUserItem key={item.id} user={item}/>
+                                <AdminUserItem key={item.id} user={item} onUserChange={fetchUsers} />
                             ))}
                         </tbody>
                     </table>
