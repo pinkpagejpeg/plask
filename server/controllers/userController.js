@@ -3,6 +3,8 @@ const { User } = require('../models/models')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
+const { v4: uuidv4 } = require('uuid')
+const path = require('path')
 
 const generateJwt = (id, email, role) => {
     return jwt.sign(
@@ -34,7 +36,7 @@ class UserController {
             return res.json({ token })
         }
         catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
 
     }
@@ -61,7 +63,7 @@ class UserController {
             return res.json({ token })
         }
         catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -88,7 +90,7 @@ class UserController {
                 if (password.length < 6 || password.length > 12) {
                     return next(ApiError.badRequest('Длина пароля должна составлять от 6 до 12 символов'));
                 }
-                
+
                 const hashPassword = await bcrypt.hash(password, 5)
                 await user.update({ password: hashPassword })
             } else {
@@ -102,24 +104,45 @@ class UserController {
             const token = generateJwt(user.id, user.email, user.role)
             return res.json({ token })
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
     async updateUserImage(req, res, next) {
         try {
-            const { userId, img } = req.body
-            // const user = await User.findByPk(userId)
+            const { userId } = req.params
+            const user = await User.findByPk(userId)
 
-            // if (!user) {
-            //     return next(ApiError.badRequest('Пользователь не найден'))
-            // }
+            if (!user) {
+                return next(ApiError.badRequest('Пользователь не найден'))
+            }
 
-            // await user.update({ img })
+            const file = req.files.file
 
-            // return res.json({ user })
+            const imageName = uuidv4() + '.jpg'
+            file.mv(path.resolve(__dirname, '..', 'static') + '\\' + imageName);
+
+            await user.update({ img: imageName })
+            return res.json({ user })
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
+        }
+    }
+
+    async deleteUserImage(req, res, next) {
+        try {
+            const { userId } = req.body
+    
+            const user = await User.findByPk(userId)
+
+            if (!user) {
+                return next(ApiError.badRequest('Пользователь не найден'))
+            }
+    
+            await user.update({ img: 'user_default_image.jpg' })
+            return res.json({ user })
+        } catch (e) {
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -132,7 +155,7 @@ class UserController {
             }
             return res.json(user)
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -159,7 +182,7 @@ class UserController {
             return res.json({ token })
         }
         catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -192,7 +215,7 @@ class UserController {
 
             return res.json({ user })
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -208,7 +231,7 @@ class UserController {
             await user.destroy()
             return res.json({ deletedUserId: user.id });
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -219,7 +242,7 @@ class UserController {
             });
             return res.json(users)
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 }

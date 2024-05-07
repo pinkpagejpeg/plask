@@ -30,8 +30,13 @@ export const updateUserInfo = async (userId, email, password) => {
     return jwtDecode(data.token)
 }
 
-export const updateUserImage = async (userId, img) => {
-    const { data } = await $authHost.put(`api/user/image`, { userId, img })
+export const updateUserImage = async (userId, formData) => {
+    const { data } = await $authHost.put(`api/user/${userId}/image`, formData);
+    return data
+}
+
+export const deleteUserImage = async (userId) => {
+    const { data } = await $authHost.put(`api/user/image`, {userId});
     return data
 }
 

@@ -14,7 +14,7 @@ class GoalController {
             const goal = await Goal.create({ userId, info })
             return res.json(goal)
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -30,7 +30,7 @@ class GoalController {
             await goal.update({ info })
             return res.json({ goal })
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -46,7 +46,7 @@ class GoalController {
             await goal.destroy()
             return res.json({ deletedGoalId: goal.id });
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -56,7 +56,7 @@ class GoalController {
             const goals = await Goal.findAll({ where: { userId }, order: [['createdAt', 'DESC']] })
             return res.json(goals)
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -69,7 +69,7 @@ class GoalController {
             }
             return res.json(goal)
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -94,7 +94,7 @@ class GoalController {
 
             return res.json({ progress })
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -111,7 +111,7 @@ class GoalController {
             const goal_item = await Goal_item.create({ goalId, info })
             return res.json(goal_item)
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -127,7 +127,7 @@ class GoalController {
             await goal_item.update({ info })
             return res.json({ goal_item })
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -143,7 +143,7 @@ class GoalController {
             await goal_item.update({ status })
             return res.json({ goal_item })
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -153,7 +153,7 @@ class GoalController {
             const goal_items = await Goal_item.findAll({ where: { goalId }, order: [['createdAt', 'DESC']] })
             return res.json(goal_items)
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -169,7 +169,7 @@ class GoalController {
             await goal_item.destroy()
             return res.json({ deletedGoalItemId: goal_item.id });
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 }

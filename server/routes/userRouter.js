@@ -16,9 +16,10 @@ router.post('/login', [
 ], CaptchaMiddleware, userController.login)
 router.get('/auth', AuthMiddleware, userController.check)
 
-router.put('/info', AuthMiddleware, userController.updateUserInfo)
-router.put('/image', AuthMiddleware, userController.updateUserImage)
 router.get('/:userId', AuthMiddleware, userController.getOne)
+router.put('/info', AuthMiddleware, userController.updateUserInfo)
+router.put('/:userId/image', AuthMiddleware, userController.updateUserImage)
+router.put('/image', AuthMiddleware, userController.deleteUserImage)
 
 // Панель администратора
 

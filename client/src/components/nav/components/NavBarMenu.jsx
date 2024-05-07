@@ -15,7 +15,6 @@ import tasks_icon from '../../../assets/images/tasks_icon.png'
 
 const NavMenu = ({ show, setShow }) => {
     const { user } = useContext(Context)
-    const [userInfo, setUserInfo] = useState({})
     const navigate = useNavigate()
     const rootClasses = [classes.menu__content]
 
@@ -28,19 +27,19 @@ const NavMenu = ({ show, setShow }) => {
     }
 
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                if (user._user.id) {
-                    const data = await getUser(user._user.id);
-                    setUserInfo(data)
-                }
-            } catch (e) {
-                alert('Ошибка при получении информации о пользователе:', e.response.data.message);
-            }
-        };
-
-        fetchUser();
+        fetchUser()
     }, [user])
+
+    const fetchUser = async () => {
+        try {
+            if (user._user.id) {
+                const data = await getUser(user._user.id)
+                user.setUserImage(data.img)
+            }
+        } catch (e) {
+            alert('Ошибка при получении информации о пользователе:', e.response.data.message)
+        }
+    };
 
     const logOut = () => {
         user.setIsAuth(false)
@@ -54,7 +53,7 @@ const NavMenu = ({ show, setShow }) => {
             <div className={classes.menu__wrapper}>
                 <div className={classes.menu__topline}>
                     <div className={classes.menu__topline_info}>
-                        <img className={classes.menu__userimage} src={import.meta.env.VITE_API_URL + 'static/' + userInfo.img} />
+                        <img className={classes.menu__userimage} src={import.meta.env.VITE_API_URL + 'static/' + user._userImage} />
                         <p className={classes.menu__username}>{user._user.email}</p>
                     </div>
                     <button className={classes.menu__button_close} onClick={closeMenu}>

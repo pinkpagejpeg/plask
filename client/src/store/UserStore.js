@@ -4,11 +4,16 @@ export default class UserStore {
     constructor() {
         this._isAuth = false
         this._user = {}
+        this._userImage = ""
         makeAutoObservable(this)
     }
 
     setIsAuth(bool) {
         this._isAuth = bool
+    }
+
+    setUserImage(img) {
+        this._userImage = img
     }
 
     setUser(user) {
@@ -29,5 +34,9 @@ export default class UserStore {
 
     get user() {
         return this._user
+    }
+
+    get userImage() {
+        return this._userImage
     }
 }

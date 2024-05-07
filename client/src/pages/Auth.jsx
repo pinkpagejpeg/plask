@@ -3,7 +3,7 @@ import classes from '../styles/Auth.module.scss'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { ADMIN_ROUTE, INFO_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, WELCOME_ROUTE } from '../utils/consts'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { registration, login } from '../http/userApi'
+import { registration, login, getUser } from '../http/userApi'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../main'
 
@@ -31,6 +31,8 @@ const Auth = observer(() => {
 
                 user.setUser(data)
                 user.setIsAuth(true)
+
+                fetchUser()
                 if (user._user.role === 'ADMIN') {
                     navigate(`${ADMIN_ROUTE}?from=${isLogin ? 'login' : 'registration'}`)
                 } else {
@@ -45,6 +47,17 @@ const Auth = observer(() => {
             alert(e.response.data.message.message)
         }
     }
+
+    const fetchUser = async () => {
+        try {
+            if (user._user.id) {
+                const data = await getUser(user._user.id)
+                user.setUserImage(data.img)
+            }
+        } catch (e) {
+            alert('Ошибка при получении информации о пользователе:', e.response.data.message)
+        }
+    };
 
     return (
         <div className={classes.container}>

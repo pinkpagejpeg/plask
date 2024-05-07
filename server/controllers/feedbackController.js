@@ -14,7 +14,7 @@ class FeedbackController {
             const feedback = await Feedback.create({ userId, info })
             return res.json(feedback)
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -30,7 +30,7 @@ class FeedbackController {
             await feedback.update({ status: true })
             return res.json({ feedback })
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 
@@ -42,7 +42,7 @@ class FeedbackController {
             });
             return res.json(feedbacks)
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            return next(ApiError.badRequest(e.message))
         }
     }
 }
