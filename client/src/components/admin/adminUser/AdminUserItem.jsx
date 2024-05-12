@@ -9,6 +9,7 @@ const AdminUserItem = ({ user, onUserChange }) => {
     const [password, setPassword] = useState('')
     const [prevPassword, setPrevPassword] = useState(user.password)
     const [role, setRole] = useState(user.role)
+    const [prevRole, setPrevRole] = useState(user.role)
     const [isEmailEditing, setIsEmailEditing] = useState(false)
     const [isPasswordEditing, setIsPasswordEditing] = useState(false)
     const [isRoleOpen, setIsRoleOpen] = useState(false)
@@ -20,6 +21,7 @@ const AdminUserItem = ({ user, onUserChange }) => {
     const handleEmailBlur = () => {
         if (prevEmail !== email && email.trim() !== '') {
             changeUser()
+            setPrevEmail(email)
         } else {
             setEmail(prevEmail)
         }
@@ -33,6 +35,7 @@ const AdminUserItem = ({ user, onUserChange }) => {
     const handlePasswordBlur = () => {
         if (prevPassword !== password && password.trim() !== '') {
             changeUser()
+            setPrevPassword(password)
         } else {
             setPassword(prevPassword)
         }
@@ -45,7 +48,12 @@ const AdminUserItem = ({ user, onUserChange }) => {
     };
 
     const handleRoleBlur = () => {
-        changeUser()
+        if (prevRole !== role && role.trim() !== '') {
+            changeUser()
+            setPrevRole(role)
+        } else {
+            setRole(prevRole)
+        }
         setIsRoleOpen(false)
     };
 
@@ -54,9 +62,10 @@ const AdminUserItem = ({ user, onUserChange }) => {
             let data
 
             data = await updateUser(user.id, email, password, role)
+            console.log(role, prevRole)
             onUserChange()
         } catch (e) {
-            alert(e.response.data.message.message)
+            alert(e.response.data.message)
         }
     };
 

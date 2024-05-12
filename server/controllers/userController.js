@@ -75,11 +75,6 @@ class UserController {
     async updateUserInfo(req, res, next) {
         try {
             const { userId, email, password } = req.body
-
-            if (!email) {
-                return next(ApiError.badRequest('Email пользователя не заполнен'))
-            }
-
             const user = await User.findByPk(userId)
 
             if (!user) {
@@ -94,6 +89,10 @@ class UserController {
                 const hashPassword = await bcrypt.hash(password, 5)
                 await user.update({ password: hashPassword })
             } else {
+                if (!email) {
+                    return next(ApiError.badRequest('Email пользователя не заполнен'))
+                }
+
                 const candidate = await User.findOne({ where: { email } })
                 if (candidate) {
                     return next(ApiError.internal("Пользователь с таким именем уже существует"))
@@ -132,13 +131,13 @@ class UserController {
     async deleteUserImage(req, res, next) {
         try {
             const { userId } = req.body
-    
+
             const user = await User.findByPk(userId)
 
             if (!user) {
                 return next(ApiError.badRequest('Пользователь не найден'))
             }
-    
+
             await user.update({ img: 'user_default_image.jpg' })
             return res.json({ user })
         } catch (e) {
@@ -188,29 +187,35 @@ class UserController {
 
     async update(req, res, next) {
         try {
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                const errorMessages = errors.array().map(error => error.msg);
-                return next(ApiError.badRequest({ message: `Введены некорректные данные: ${errorMessages}` }));
-            }
-
             const { userId, email, password, role } = req.body
+
             const user = await User.findByPk(userId)
 
             if (!user) {
                 return next(ApiError.badRequest('Пользователь не найден'))
             }
 
-            const candidate = await User.findOne({ where: { email } })
-            if (candidate) {
-                return next(ApiError.internal({ message: "Пользователь с таким именем уже существует" }))
-            }
-
             if (password) {
+                if (password.length < 6 || password.length > 12) {
+                    return next(ApiError.badRequest('Длина пароля должна составлять от 6 до 12 символов'));
+                }
+
                 const hashPassword = await bcrypt.hash(password, 5)
-                await user.update({ email, role, password: hashPassword })
+                await user.update({ password: hashPassword })
             } else {
-                await user.update({ email, role })
+                if (!email) {
+                    return next(ApiError.badRequest('Email пользователя не заполнен'))
+                }
+
+                if (role === user.role) {
+                    const candidate = await User.findOne({ where: { email } })
+                    if (candidate) {
+                        return next(ApiError.internal("Пользователь с таким именем уже существует"))
+                    }
+                    await user.update({ email })
+                } else {
+                    await user.update({ role })
+                }
             }
 
             return res.json({ user })

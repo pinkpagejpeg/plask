@@ -102,7 +102,7 @@ const Profile = observer(() => {
                         <img src={import.meta.env.VITE_API_URL + 'static/' + user._userImage} />
                         <div className={classes.profile__image_buttons}>
                             <label htmlFor="file-upload" className={classes.profile__image_button}>
-                                <img src={upload_icon} alt="Иконка для загрузки фото профиля" />
+                                <img src={upload_icon} alt="Загрузить фото профиля" />
                             </label>
                             <input
                                 id="file-upload"
@@ -112,7 +112,7 @@ const Profile = observer(() => {
                                 onChange={(e) => selectFile(e)}
                             />
                             <button className={classes.profile__image_button} onClick={destroyUserImage}>
-                                <img src={delete_icon} alt='Иконка для удаления профиля' />
+                                <img src={delete_icon} alt='Удалить фото профиля' />
                             </button>
                         </div>
                     </div>

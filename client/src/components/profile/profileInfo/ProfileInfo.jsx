@@ -23,6 +23,7 @@ const ProfileInfo = ({user, updateUser}) => {
     const handleEmailBlur = () => {
         if (prevEmail !== email && email.trim() !== '') {
             changeUserInfo()
+            setPrevEmail(email)
         } else {
             setEmail(prevEmail)
         }
@@ -36,6 +37,7 @@ const ProfileInfo = ({user, updateUser}) => {
     const handlePasswordBlur = () => {
         if (prevPassword !== password && password.trim() !== '') {
             changeUserInfo()
+            setPrevPassword(password)
         } else {
             setPassword(prevPassword)
         }
@@ -46,7 +48,6 @@ const ProfileInfo = ({user, updateUser}) => {
     const changeUserInfo = async () => {
         try {
             let data
-            console.log(user.id, email, password)
             data = await updateUserInfo(user.id, email, password)
             updateUser(data)
         } catch (e) {
