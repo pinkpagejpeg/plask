@@ -1,5 +1,5 @@
 const ApiError = require('../error/ApiError')
-const { User } = require('../models/models')
+const { User, Feedback, Task, Goal, Goal_item } = require('../models/models')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
@@ -233,7 +233,28 @@ class UserController {
                 return next(ApiError.badRequest('Пользователь не найден'))
             }
 
+            const feedbacks = await Feedback.findAll({ where: { userId } })
+            const tasks = await Task.findAll({ where: { userId } })
+            const goals = await Goal.findAll({ where: { userId } })
+
             await user.destroy()
+
+            for (const feedback of feedbacks) {
+                await feedback.destroy();
+            }
+    
+            for (const task of tasks) {
+                await task.destroy();
+            }
+    
+            for (const goal of goals) {
+                const goalItems = await Goal_item.findAll({ where: { goalId: goal.id } });
+                for (const goalItem of goalItems) {
+                    await goalItem.destroy();
+                }
+                await goal.destroy();
+            }
+            
             return res.json({ deletedUserId: user.id });
         } catch (e) {
             return next(ApiError.badRequest(e.message))

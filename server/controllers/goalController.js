@@ -43,7 +43,14 @@ class GoalController {
                 return res.status(404).json({ message: 'Цель не найдена' });
             }
 
+            const goalItems = await Goal_item.findAll({ where: { goalId } });
+
             await goal.destroy()
+
+            for (const goalItem of goalItems) {
+                await goalItem.destroy();
+            }
+            
             return res.json({ deletedGoalId: goal.id });
         } catch (e) {
             return next(ApiError.badRequest(e.message))
