@@ -4,7 +4,7 @@ import AppRouter from './components/appRouter/AppRouter'
 import './styles/App.scss'
 import { observer } from 'mobx-react-lite'
 import { Context } from './main'
-import { check } from './http/userApi'
+import { check, getUser } from './http/userApi'
 
 const App = observer(() => {
   const { user } = useContext(Context)
@@ -14,8 +14,20 @@ const App = observer(() => {
     check().then((data) => {
       user.setUser(data)
       user.setIsAuth(true)
+      fetchUser()
     }).finally(() => setLoading(false))
   }, [])
+
+  const fetchUser = async () => {
+    try {
+        if (user._user.id) {
+            const data = await getUser(user._user.id)
+            user.setUser(data)
+        }
+    } catch (e) {
+        alert('Ошибка при получении информации о пользователе:', e.response.data.message)
+    }
+};
 
   return (
     <div className='App'>

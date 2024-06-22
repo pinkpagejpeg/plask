@@ -12,28 +12,11 @@ import ProfileInfo from '../components/profile/profileInfo/ProfileInfo'
 
 const Profile = observer(() => {
     const { user } = useContext(Context)
-    const [userInfo, setUserInfo] = useState([])
     const navigate = useNavigate()
 
     if (!user) {
         return <Navigate to={LOGIN_ROUTE} />;
     }
-
-    useEffect(() => {
-        fetchUser()
-    }, [user])
-
-    const fetchUser = async () => {
-        try {
-            if (user._user.id) {
-                const data = await getUser(user._user.id)
-                setUserInfo(data)
-                user.setUserImage(data.img)
-            }
-        } catch (e) {
-            alert('Ошибка при получении информации о пользователе:', e.response.data.message)
-        }
-    };
 
     const selectFile = (e) => {
         const file = e.target.files[0]
@@ -61,7 +44,7 @@ const Profile = observer(() => {
     const destroyUserImage = async () => {
             try {
                 let data
-                data = await deleteUserImage(user._user.id); 
+                data = await deleteUserImage(user._user.id);
                 fetchUser()        
             } catch (e) {
                 alert(e.response.data.message);
@@ -75,9 +58,10 @@ const Profile = observer(() => {
                 let data
 
                 data = await deleteUser(user._user.id)
+                localStorage.removeItem('token')
                 user.setUser({})
                 user.setIsAuth(false)
-                navigate(`${REGISTRATION_ROUTE}`)
+                navigate(REGISTRATION_ROUTE)
             }
         }
         catch (e) {
@@ -85,11 +69,16 @@ const Profile = observer(() => {
         }
     }
 
-    const updateUserStore = (userData) => {
-        const updatedUser = user.editUser(user._user.id, userData.email)
-        user.setUser(updatedUser)
-        fetchUser()
-    }
+    const fetchUser = async () => {
+        try {
+            if (user._user.id) {
+                const data = await getUser(user._user.id)
+                user.setUser(data)
+            }
+        } catch (e) {
+            alert('Ошибка при получении информации о пользователе:', e.response.data.message)
+        }
+    };
 
     return (
         <>
@@ -99,7 +88,7 @@ const Profile = observer(() => {
                 <h3 className={classes.title}>Профиль</h3>
                 <div className={classes.profile__mainbox}>
                     <div className={classes.profile__imagebox}>
-                        <img src={import.meta.env.VITE_API_URL + 'static/' + user._userImage} />
+                        <img src={import.meta.env.VITE_API_URL + 'static/' + user._user.img} />
                         <div className={classes.profile__image_buttons}>
                             <label htmlFor="file-upload" className={classes.profile__image_button}>
                                 <img src={upload_icon} alt="Загрузить фото профиля" />
@@ -117,7 +106,7 @@ const Profile = observer(() => {
                         </div>
                     </div>
                     <div className={classes.profile__infobox}>
-                        <ProfileInfo user={userInfo} updateUser={updateUserStore} />
+                        <ProfileInfo />
                         <button className={classes.profile__button_delete} onClick={destroyUser}>
                             Удалить аккаунт
                         </button>

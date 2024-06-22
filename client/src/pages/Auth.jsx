@@ -29,10 +29,11 @@ const Auth = observer(() => {
                     data = await registration(email, password, hcaptchaToken)
                 }
 
-                user.setUser(data)
                 user.setIsAuth(true)
+                user.setUser(data)
 
                 fetchUser()
+
                 if (user._user.role === 'ADMIN') {
                     navigate(`${ADMIN_ROUTE}?from=${isLogin ? 'login' : 'registration'}`)
                 } else {
@@ -52,7 +53,7 @@ const Auth = observer(() => {
         try {
             if (user._user.id) {
                 const data = await getUser(user._user.id)
-                user.setUserImage(data.img)
+                user.setUser(data)
             }
         } catch (e) {
             alert('Ошибка при получении информации о пользователе:', e.response.data.message)

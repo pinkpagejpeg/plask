@@ -4,7 +4,6 @@ export default class UserStore {
     constructor() {
         this._isAuth = false
         this._user = {}
-        this._userImage = ""
         makeAutoObservable(this)
     }
 
@@ -12,20 +11,15 @@ export default class UserStore {
         this._isAuth = bool
     }
 
-    setUserImage(img) {
-        this._userImage = img
-    }
-
     setUser(user) {
         this._user = user
     }
 
-    editUser(userId, updatedEmail) {
+    editUser(userId, updatedUser) {
         if (this._user.id === userId) {
-            this._user = { ...this._user, email: updatedEmail };
-            return this._user;
+            return updatedUser;
         }
-        return this._user; 
+        return user; 
     }
 
     get isAuth() {
@@ -34,9 +28,5 @@ export default class UserStore {
 
     get user() {
         return this._user
-    }
-
-    get userImage() {
-        return this._userImage
     }
 }

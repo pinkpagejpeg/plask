@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { observer } from 'mobx-react-lite'
+import { Context } from '../../../main'
 import classes from './ProfileInfo.module.scss'
-import { updateUserInfo } from '../../../http/userApi'
+import { updateUserInfo, getUser } from '../../../http/userApi'
 
-const ProfileInfo = ({user, updateUser}) => {
+const ProfileInfo = observer(() => {
+    const { user } = useContext(Context)
     const [email, setEmail] = useState('')
     const [prevEmail, setPrevEmail] = useState('')
     const [isEmailEditing, setIsEmailEditing] = useState(false)
@@ -11,9 +14,9 @@ const ProfileInfo = ({user, updateUser}) => {
     const [isPasswordEditing, setIsPasswordEditing] = useState(false)
 
     useEffect(() => {
-        setEmail(user.email)
-        setPrevEmail(user.email)
-        setPrevPassword(user.password)
+        setEmail(user._user.email)
+        setPrevEmail(user._user.email)
+        setPrevPassword(user._user.password)
     }, [user])
 
     const handleEmailEdit = () => {
@@ -48,10 +51,21 @@ const ProfileInfo = ({user, updateUser}) => {
     const changeUserInfo = async () => {
         try {
             let data
-            data = await updateUserInfo(user.id, email, password)
-            updateUser(data)
+            data = await updateUserInfo(user._user.id, email, password)
+            fetchUser()
         } catch (e) {
             alert(e.response.data.message)
+        }
+    };
+
+    const fetchUser = async () => {
+        try {
+            if (user._user.id) {
+                const data = await getUser(user._user.id)
+                user.setUser(data)
+            }
+        } catch (e) {
+            alert('Ошибка при получении информации о пользователе:', e.response.data.message)
         }
     };
 
@@ -71,7 +85,7 @@ const ProfileInfo = ({user, updateUser}) => {
                             required
                         />
                     ) : (
-                        <span className={classes.profile__info} onClick={handleEmailEdit}> {user.email}</span>
+                        <span className={classes.profile__info} onClick={handleEmailEdit}> {user._user.email}</span>
                     )}
                 </p>
             </div>
@@ -95,6 +109,6 @@ const ProfileInfo = ({user, updateUser}) => {
             </div>
         </div>
     );
-}
+})
 
 export default ProfileInfo;
