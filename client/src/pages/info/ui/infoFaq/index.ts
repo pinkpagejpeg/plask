@@ -1,0 +1,1 @@
+export { InfoFaq } from "./InfoFaq"

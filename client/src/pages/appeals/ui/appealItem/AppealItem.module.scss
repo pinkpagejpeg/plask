@@ -1,0 +1,31 @@
+@import '../../../../shared/ui/index.scss';
+@include main_text;
+
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
+$dark_gray: #252525;
+
+.feedback {
+    &__table_main {
+        display: flex;
+        justify-content: space-between;
+        text-align: left;
+        padding: 15px 10px;
+    }
+
+    &__table_main > td {
+        width: 15%;
+    }
+
+    &__table_main > td:nth-child(1) {
+        width: 5%;
+    }
+
+    &__table_main > td:nth-child(3) {
+        width: 50%;
+    }
+
+    &__button > img{
+        width: 20px;
+    }
+}

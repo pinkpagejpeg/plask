@@ -1,0 +1,1 @@
+export { InfoContactsMap } from "./InfoContactsMap"

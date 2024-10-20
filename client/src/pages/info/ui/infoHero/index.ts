@@ -1,0 +1,1 @@
+export { InfoHero } from "./InfoHero"

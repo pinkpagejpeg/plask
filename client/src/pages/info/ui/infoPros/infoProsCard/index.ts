@@ -1,0 +1,1 @@
+export { InfoProsCard } from "./InfoProsCard"

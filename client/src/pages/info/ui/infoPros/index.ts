@@ -1,0 +1,1 @@
+export { InfoPros } from "./InfoPros"

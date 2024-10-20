@@ -1,0 +1,97 @@
+@import '../../../shared/ui/index.scss';
+@include container;
+@include title;
+@include input;
+@include button_light;
+
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
+$dark_gray: #252525;
+$red: #D83A3A;
+
+.goal {
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 66%;
+        text-align: center;
+        margin: 138px auto 0 auto;
+    }
+
+    &__wrapper > h3 {
+        margin: 0 0 28px 0;
+    }
+
+    &__wrapper > .input {
+        margin: 0 auto 28px auto;
+    }
+
+    &__wrapper > h4 {
+        font-size: 24px;
+        margin-bottom: 18px;
+    }
+
+    &__progress {
+        margin-bottom: 62px;
+    }
+
+    &__progress > label {
+        font-size: 24px;
+        margin-left: 10px;
+    }
+
+    &__listbox {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    &__listbox > h4 {
+        font-size: 24px;
+        margin-bottom: 14px;
+        color: $middle_gray;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+
+    &__form > input[type="text"] {
+        margin-bottom: 20px;
+    }
+
+    &__addbutton {
+        background-color: transparent;
+        border: none;
+        color: $middle_gray;
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 16px;
+        font-weight: 300;
+        letter-spacing: 5%;
+        cursor: pointer;
+    }
+
+    &__form > img {
+        width: 20px;
+        margin: 0 10px -4px 14px;
+    }
+
+    &__button_delete {
+        background: none;
+        border: none;
+        color: $red;
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 16px;
+        font-weight: 300;
+        letter-spacing: 5%;
+        margin-top: 75px;
+        cursor: pointer;
+    }
+
+    &__button_delete > img {
+        width: 20px;
+        margin: 0 10px -4px 0;
+    }
+}

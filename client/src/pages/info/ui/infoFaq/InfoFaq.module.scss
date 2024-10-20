@@ -1,0 +1,41 @@
+@import '../../../../shared/ui/index.scss';
+@include main_text;
+@include section_title;
+@include title;
+
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
+$dark_gray: #252525;
+
+.faq {
+    &__wrapper {
+        text-align: center;
+        margin-bottom: 120px;
+    }
+
+    &__infobox {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-top: 3px solid $dark_gray;
+    }
+
+    &__item {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-bottom: 3px solid $dark_gray;
+        padding: 32px 0;
+    }
+
+    &__item > .title {
+        cursor: pointer;
+    }
+
+    &__item > .main_text {
+        margin-top: 20px;
+        width: 72%;
+        transition: max-height 0.3s ease-out;
+    }
+}

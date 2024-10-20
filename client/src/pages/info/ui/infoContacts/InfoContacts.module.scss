@@ -1,0 +1,25 @@
+@import '../../../../shared/ui/index.scss';
+@include section_title;
+@include main_text;
+
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
+$dark_gray: #252525;
+
+.contacts {
+    &__wrapper {
+        margin-bottom: 120px;
+        text-align: center;
+    }
+
+    &__content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__info {
+        max-width: 46%;
+        margin: 0 80px 0 0;
+    }
+}

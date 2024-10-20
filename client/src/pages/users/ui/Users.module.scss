@@ -1,0 +1,72 @@
+@import '../../../shared/ui/index.scss';
+@include container;
+@include input;
+@include title;
+@include main_text;
+@include button_light;
+
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
+$dark_gray: #252525;
+
+.user {
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 89.4%;
+        text-align: center;
+        margin: 138px auto 0 auto;
+    }
+
+    &__form {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0 32px 0;
+    }
+
+    &__form > input,
+    &__form > select {
+        width: 261px;
+    }
+
+    &__form > button {
+        padding: 11px 35px;
+    }
+
+    &__table {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        margin: 20px 0 34px 0;
+    }
+
+    &__table_topline {
+        display: flex;
+        justify-content: space-between;
+        text-align: left;
+    }
+
+    &__table_topline > th {
+        font-weight: 500;
+    }
+
+    &__table_topline > th {
+        word-break: break-all;
+        padding: 15px 10px;
+        width: 55%;
+    }
+
+    &__table_topline > th:nth-child(1),
+    &__table_topline > th:nth-child(5) {
+        width: 5%;
+    }
+
+    &__table_topline > th:nth-child(4) {
+        width: 15%;
+    }
+
+    &__table_topline > th:nth-child(2) {
+        width: 20%;
+    }
+}

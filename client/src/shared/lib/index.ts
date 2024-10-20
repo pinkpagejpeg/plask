@@ -1,0 +1,1 @@
+export { getMap } from "./getMap"

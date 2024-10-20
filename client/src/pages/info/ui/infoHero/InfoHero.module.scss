@@ -1,0 +1,48 @@
+@import '../../../../shared/ui/index.scss';
+@include plask;
+@include button_light;
+
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
+$dark_gray: #252525;
+
+.hero {
+    &__backgroung {
+        width: 100%;
+        height: 804px;
+        overflow: hidden;
+        background-image: url('../../../../shared/assets/images/hero_background.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        margin-bottom: 120px;
+    }
+
+    &__infobox {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 258px;
+    }
+
+    &__infobox > h1 {
+        text-align: center;
+        width: 40%;
+        font-size: 62px;
+        margin-bottom: 32px;
+        
+    }
+
+    &__infobox > a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 11px 110px
+    }
+
+    &__scroll {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 290px;
+    }
+}

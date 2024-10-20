@@ -1,0 +1,75 @@
+@import '../../../shared/ui/index.scss';
+@include container;
+@include plask;
+@include title;
+@include main_text;
+@include input;
+
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
+$dark_gray: #252525;
+$red: #D83A3A;
+
+.profile {
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 138px auto 0 auto;
+    }
+
+    &__wrapper > h2 {
+        margin-bottom: 28px;
+    }
+
+    &__wrapper > h3 {
+        margin-bottom: 20px;
+    }
+
+    &__mainbox {
+        display: flex;
+    }
+
+    &__imagebox {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__imagebox > img {
+        margin-bottom: 10px;
+        width: 140px;
+        border-radius: 2px;
+    }
+
+    &__infobox {
+        margin: 10px 0 0 32px;
+    }
+
+    &__image_buttons {
+        display: flex;
+    }
+
+    &__image_button {
+        background: none;
+        border: none;
+        padding-top: 3px;
+        cursor: pointer;
+    }
+
+    &__image_button > img {
+        width: 20px;
+    }
+
+    &__button_delete {
+        background: none;
+        border: none;
+        color: $red;
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 16px;
+        font-weight: 300;
+        letter-spacing: 5%;
+        cursor: pointer;
+    }
+}

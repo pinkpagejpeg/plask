@@ -1,0 +1,56 @@
+@import '../../../shared/ui/index.scss';
+@include container;
+@include title;
+@include input;
+@include button_light;
+
+$light_gray: #E6E6E6;
+$middle_gray: #6D6D6D;
+$dark_gray: #252525;
+
+.task {
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 66%;
+        text-align: center;
+        margin: 138px auto 0 auto;
+    }
+
+    &__wrapper > h3 {
+        margin: 0 0 28px 0;
+    }
+
+    &__listbox {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 63px;
+    }
+
+    &__listbox > h4 {
+        font-size: 24px;
+        margin-bottom: 12px;
+        color: $middle_gray;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__form > input[type="text"] {
+        margin-bottom: 20px;
+    }
+
+    &__form > input[type="submit"] {
+        padding: 11px 66px;
+    }
+}
