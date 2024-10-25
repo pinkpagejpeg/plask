@@ -1,2 +1,2 @@
 export { setAuthTrue, setAuthFalse, userReducer } from "./model"
-// export { IUser, IUserState } from "./model"
+export type { IUser, IUserState } from "./model"

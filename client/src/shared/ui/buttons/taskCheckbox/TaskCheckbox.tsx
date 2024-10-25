@@ -4,8 +4,9 @@ import { useState, useContext, FC } from 'react'
 import classes from './TaskCheckbox.module.scss'
 import { deleteTask, updateTask, updateTaskStatus } from '../../../api'
 import { deleteIcon } from '../../../assets'
+import { ITaskCheckbox } from './types'
 
-export const TaskCheckbox: FC = ({ label, checked, taskId, allowEdit }) => {
+export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowEdit }) => {
     // const { task } = useContext(Context)
     // const [isChecked, setIsChecked] = useState(checked)
     // const [isEditing, setIsEditing] = useState(false)

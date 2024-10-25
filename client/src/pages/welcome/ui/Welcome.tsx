@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react'
+import { FC, useContext, useEffect } from 'react'
 // import { observer } from 'mobx-react-lite'
 // import { Context } from '../main'
 import classes from './Welcome.module.scss'
@@ -7,56 +7,65 @@ import { Navbar, TaskCheckbox } from '../../../shared/ui'
 import { FEEDBACK_ROUTE, GOALS_ITEM_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, TASKS_ROUTE } from '../../../shared/config'
 import { useLocation } from 'react-router-dom'
 import { getTask, getGoals, getGoalProgress } from '../../../shared/api'
+import { useAppDispatch, useTypedSelector } from '../../../features/hooks'
+import { setTasks } from '../../../entities/tasks'
+import { setGoals } from '../../../entities/goals'
 
 export const Welcome: FC = () => {
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const from = queryParams.get('from')
     // const { user, task, goal } = useContext(Context)
+    const { user } = useTypedSelector(state => state.user)
+    const { tasks } = useTypedSelector(state => state.task)
+    const { goals } = useTypedSelector(state => state.goal)
+    const dispatch = useAppDispatch()
 
-    // if (!user) {
-    //     return <Navigate to={LOGIN_ROUTE} />;
-    // }
+    if (!user) {
+        return <Navigate to={LOGIN_ROUTE} />
+    }
 
-    // useEffect(() => {
-    //     const fetchTasks = async () => {
-    //         try {
-    //             if (user._user.id) {
-    //                 const tasks = await getTask(user._user.id);
-    //                 task.setTask(tasks);
-    //             }
-    //         } catch (e) {
-    //             alert('Ошибка при получении задач:', e.response.data.message);
-    //         }
-    //     };
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                if (user.id) {
+                    const tasks_data = await getTask(user.id)
+                    dispatch(setTasks(tasks_data))
+                    // task.setTask(tasks)
+                }
+            } catch (e) {
+                alert(`Ошибка при получении задач: ${e.response.data.message}`);
+            }
+        }
 
-    //     fetchTasks();
-    // }, [task, user])
+        fetchTasks()
+    }, [tasks, user])
 
-    // useEffect(() => {
-    //     const fetchGoals = async () => {
-    //         try {
-    //             if (user._user.id) {
-    //                 const goals = await getGoals(user._user.id);
-    //                 goal.setGoal(goals);
+    useEffect(() => {
+        const fetchGoals = async () => {
+            try {
+                if (user.id) {
+                    const goals_data = await getGoals(user.id)
+                    dispatch(setGoals(goals_data))
+                    // goal.setGoal(goals_data)
 
-    //                 goals.forEach(async (goalItem) => {
-    //                     const goalProgress = await getGoalProgress(goalItem.id);
-    //                     goal.setGoalProgress(goalItem.id, goalProgress.progress);
-    //                 });
-    //             }
-    //         } catch (e) {
-    //             alert('Ошибка при получении целей:', e.response.data.message);
-    //         }
-    //     };
+                    // goals.forEach(async (goalItem) => {
+                    //     const goalProgress = await getGoalProgress(goalItem.id)
+                    //     goal.setGoalProgress(goalItem.id, goalProgress.progress)
+                    // })
+                }
+            } catch (e) {
+                alert(`Ошибка при получении целей: ${e.response.data.message}`)
+            }
+        };
 
-    //     fetchGoals();
-    // }, [goal, user])
+        fetchGoals()
+    }, [goals, user])
 
     return (
         <>
             <Navbar />
-            {/* <div className={classes.container}>
+            <div className={classes.container}>
                 <div className={classes.welcome__wrapper}>
                     <h2 className={classes.plask}>Plask</h2>
                     {((from === 'login') || (from === 'registration')) &&
@@ -80,17 +89,17 @@ export const Welcome: FC = () => {
                                         “Задачи” или нажмите на кнопку ниже</p>
                                     <h5 className={classes.main_text}>Задачи</h5>
                                     <div className={classes.welcome__tasks}>
-                                        <TaskCheckBox label='Зарегистрироваться' checked={true} allowEdit={false} />
-                                        <TaskCheckBox label='Добавить задачу' checked={false} allowEdit={false} />
-                                        <TaskCheckBox label='Выполнить задачу' checked={false} allowEdit={false} />
+                                        <TaskCheckbox label='Зарегистрироваться' checked={true} allowEdit={false} taskId={0}/>
+                                        <TaskCheckbox label='Добавить задачу' checked={false} allowEdit={false} taskId={0}/>
+                                        <TaskCheckbox label='Выполнить задачу' checked={false} allowEdit={false} taskId={0}/>
                                     </div>
                                 </>
                                 :
                                 <div className={classes.welcome__task_listbox}>
-                                    {task._task && task._task.length > 0 ? (
+                                    {tasks !== null && tasks.length > 0 ? (
                                         <div className={classes.welcome__task_list}>
-                                            {task._task.map((taskItem) => (
-                                                <TaskCheckBox key={taskItem.id}
+                                            {tasks.map((taskItem) => (
+                                                <TaskCheckbox key={taskItem.id}
                                                     label={taskItem.info}
                                                     checked={taskItem.status}
                                                     taskId={taskItem.id}
@@ -113,17 +122,20 @@ export const Welcome: FC = () => {
                                         “Цели” или нажмите на кнопку ниже</p>
                                     <h5 className={classes.main_text}>Начать пользоваться Plask 33%</h5>
                                     <div className={classes.welcome__tasks}>
-                                        <TaskCheckBox label='Зарегистрироваться' checked={true} allowEdit={false} />
-                                        <TaskCheckBox label='Добавить цель' checked={false} allowEdit={false} />
-                                        <TaskCheckBox label='Достигнуть цель' checked={false} allowEdit={false} />
+                                        <TaskCheckbox label='Зарегистрироваться' checked={true} allowEdit={false} taskId={0}/>
+                                        <TaskCheckbox label='Добавить цель' checked={false} allowEdit={false} taskId={0}/>
+                                        <TaskCheckbox label='Достигнуть цель' checked={false} allowEdit={false} taskId={0}/>
                                     </div>
                                 </>
                                 :
                                 <div className={classes.welcome__goal_listbox}>
-                                    {goal._goal && goal._goal.length > 0 ? (
+                                    {goals !== null && goals.length > 0 ? (
                                         <div className={classes.welcome__goal_list}>
-                                            {goal._goal.map((goalItem) => (
-                                                <NavLink to={GOALS_ITEM_ROUTE + '/' + goalItem.id} className={classes.main_text} key={goalItem.id}>{goalItem.info} {goal.goalProgress[goalItem.id]}%</NavLink>
+                                            {goals.map((goalItem) => (
+                                                <NavLink to={GOALS_ITEM_ROUTE + '/' + goalItem.id} className={classes.main_text} key={goalItem.id}>
+                                                    {goalItem.info}
+                                                    {/* {goal.goalProgress[goalItem.id]}% */}
+                                                </NavLink>
                                             ))}
                                         </div>
                                     ) : (
@@ -139,7 +151,7 @@ export const Welcome: FC = () => {
                             к нашей службе поддержки в разделе <NavLink to={FEEDBACK_ROUTE} className={classes.welcome__bottom_link}>“Обратная связь”</NavLink>.</p>
                     }
                 </div>
-            </div> */}
+            </div>
         </>
     )
 }

@@ -4,8 +4,9 @@ import { useState, useContext, FC } from 'react'
 import classes from './GoalCheckbox.module.scss'
 import { deleteGoalItem, updateGoalItem, updateGoalItemStatus } from '../../../api'
 import {deleteIcon} from '../../../assets'
+import { IGoalCheckbox } from './types'
 
-export const GoalCheckbox: FC = ({ label, сhecked, goalItemId, updateProgress }) => {
+export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, updateProgress }) => {
     // // const { goalItem } = useContext(Context)
     // const [isChecked, setIsChecked] = useState(сhecked)
     // const [isEditing, setIsEditing] = useState(false)

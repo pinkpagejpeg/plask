@@ -12,7 +12,7 @@ export const router = () => {
         routes = [...routes, ...authRoutes]
     }
 
-    if (user.role === 'ADMIN') {
+    if (user !== null && user.role === 'ADMIN') {
         routes = [...routes, ...manageRoutes]
     }
 
