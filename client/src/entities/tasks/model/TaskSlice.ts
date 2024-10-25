@@ -1,3 +1,32 @@
+import { createSlice } from "@reduxjs/toolkit"
+import { ITaskState } from "./types"
+
+const initialState: ITaskState = {
+    tasks: null
+}
+
+const taskSlice = createSlice({
+    name: "task",
+    initialState,
+    reducers: {
+        setTasks(state, action) {
+            state.tasks = action.payload
+        },
+        // addTask() {
+
+        // }, 
+        // editTask () {
+
+        // },
+        // removeTask () {
+
+        // }
+    }
+})
+
+export const { setTasks, } = taskSlice.actions
+export default taskSlice.reducer
+
 // import { makeAutoObservable } from 'mobx'
 
 // export default class TaskStore {
@@ -33,5 +62,5 @@
 
 //     get task() {
 //         return this._task
-//     }    
+//     }
 // }

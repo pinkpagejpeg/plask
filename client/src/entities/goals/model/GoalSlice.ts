@@ -1,3 +1,26 @@
+import { createSlice } from "@reduxjs/toolkit"
+import { IGoalState } from "./types"
+
+const initialState: IGoalState = {
+    goals: null
+}
+
+const goalSlice = createSlice({
+    name: "goal",
+    initialState,
+    reducers: {
+        setGoals(state, action) {
+            state.goals = action.payload
+        },
+        // setGoalProgress(state, action) {
+
+        // }
+    }
+})
+
+export const { setGoals } = goalSlice.actions
+export default goalSlice.reducer
+
 // import { makeAutoObservable } from 'mobx'
 
 // export default class GoalStore {
@@ -11,7 +34,7 @@
 //         this._goal = goal
 //     }
 
-//     setGoalProgress(goalId, progress) { 
+//     setGoalProgress(goalId, progress) {
 //         this._goalProgress[goalId] = progress;
 //     }
 
