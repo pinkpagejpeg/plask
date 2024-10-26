@@ -16,7 +16,6 @@ export const Auth: FC = () => {
     const [password, setPassword] = useState('')
     const [hcaptchaToken, setHcaptchaToken] = useState('')
     const dispatch = useAppDispatch()
-    console.log(user)
 
     const buttonClick = async (e) => {
         e.preventDefault()
@@ -33,8 +32,8 @@ export const Auth: FC = () => {
 
                 // user.setIsAuth(true)
                 // user.setUser(data)
-                dispatch(setAuthTrue(data))
-                fetchUser()
+                // dispatch(setAuthTrue(data))
+                fetchUser(data.id)
 
                 if (user.role === 'ADMIN') {
                     navigate(`${ADMIN_ROUTE}?from=${isLogin ? 'login' : 'registration'}`)
@@ -51,10 +50,10 @@ export const Auth: FC = () => {
         }
     }
 
-    const fetchUser = async () => {
+    const fetchUser = async (id) => {
         try {
-            if (user.id) {
-                const data = await getUser(user.id)
+            if (id) {
+                const data = await getUser(id)
                 dispatch(setAuthTrue(data))
             }
         } catch (e) {

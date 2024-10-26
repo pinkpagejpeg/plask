@@ -3,7 +3,8 @@ import { IUserState } from "./types"
 
 const initialState: IUserState = {
     user: null,
-    isAuth: false
+    isAuth: false,
+    authLoading: false
 }
 
 const userSlice = createSlice({
@@ -17,11 +18,14 @@ const userSlice = createSlice({
         setAuthFalse(state) {
             state.user = null
             state.isAuth = false
+        },
+        setAuthLoading(state, action) {
+            state.authLoading = action.payload
         }
     }
 })
 
-export const { setAuthTrue, setAuthFalse } = userSlice.actions
+export const { setAuthTrue, setAuthFalse, setAuthLoading } = userSlice.actions
 export default userSlice.reducer
 
 // import { makeAutoObservable } from 'mobx'

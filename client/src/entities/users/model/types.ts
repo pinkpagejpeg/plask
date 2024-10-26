@@ -1,6 +1,7 @@
 export interface IUserState {
     user: IUser | null,
-    isAuth: boolean
+    isAuth: boolean,
+    authLoading: boolean,
 }
 export interface IUser {
     id: number | null,

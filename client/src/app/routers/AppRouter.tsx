@@ -1,34 +1,40 @@
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
 import { useAppDispatch, useTypedSelector } from '../../features/hooks'
-import { useEffect, useState } from 'react'
-import { setAuthTrue } from '../../entities/users'
+import { useEffect, useMemo, useState } from 'react'
+import { setAuthLoading, setAuthTrue } from '../../entities/users'
 import { check, getUser } from '../../shared/api'
 
 export const AppRouter = () => {
-    const { user, isAuth } = useTypedSelector((state) => state.user)
-    const [loading, setLoading] = useState(true)
+    const { user, isAuth, authLoading } = useTypedSelector((state) => state.user)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
+        dispatch(setAuthLoading(true))
         check().then((data) => {
-            dispatch(setAuthTrue(data))
-            fetchUser()
-        }).finally(() => setLoading(false))
+            // dispatch(setAuthTrue(data))
+            fetchUser(data.id)
+        }).finally(() => dispatch(setAuthLoading(false)))
     }, [])
 
-    const fetchUser = async () => {
+    const fetchUser = async (id) => {
         try {
-            if (user.id) {
-                const data = await getUser(user.id)
+            if (id) {
+                const data = await getUser(id)
                 dispatch(setAuthTrue(data))
             }
         } catch (e) {
             alert(`Ошибка при получении информации о пользователе: ${e.response.data.message}`)
         }
     }
-    console.log(user, isAuth)
+
+    const currentRouter = useMemo(() => router(user, isAuth, authLoading), [user, isAuth, authLoading])
+
+    if(authLoading) {
+        return <h1>Загрузка...</h1>
+    }
+
     return (
-        <RouterProvider router={router()}></RouterProvider >
+        <RouterProvider router={currentRouter}></RouterProvider >
     )
 }

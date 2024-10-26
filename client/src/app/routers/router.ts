@@ -1,25 +1,20 @@
 import { createBrowserRouter, RouteObject } from "react-router-dom"
-import { publicRoutes, manageRoutes, authRoutes } from "./routes"
-import { useTypedSelector } from "../../features/hooks"
-import { NotFound } from "../../pages/notFound"
+import { publicRoutes, manageRoutes, authRoutes, errorRoutes } from "./routes"
+import { IUser } from "../../entities/users"
 
-export const router = () => {
-    const { user, isAuth } = useTypedSelector(state => state.user);
+export const router = (user: IUser, isAuth: boolean, authLoading: boolean) => {
+    let routes: RouteObject[] = [
+        ...publicRoutes,
+        errorRoutes
+    ]
 
-    let routes: RouteObject[] = [...publicRoutes]
-
-    if (isAuth) {
+    if (!authLoading && isAuth) {
         routes = [...routes, ...authRoutes]
     }
 
-    if (user !== null && user.role === 'ADMIN') {
+    if (!authLoading && user !== null && user.role === 'ADMIN') {
         routes = [...routes, ...manageRoutes]
     }
-
-    // routes.push({ 
-    //     path: "*", 
-    //     element: <NotFound /> 
-    // })
 
     return createBrowserRouter(routes)
 }

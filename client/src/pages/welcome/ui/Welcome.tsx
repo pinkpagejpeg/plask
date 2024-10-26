@@ -1,6 +1,4 @@
-import { FC, useContext, useEffect } from 'react'
-// import { observer } from 'mobx-react-lite'
-// import { Context } from '../main'
+import { FC, useEffect } from 'react'
 import classes from './Welcome.module.scss'
 import { NavLink, Navigate } from 'react-router-dom'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
@@ -15,7 +13,6 @@ export const Welcome: FC = () => {
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const from = queryParams.get('from')
-    // const { user, task, goal } = useContext(Context)
     const { user } = useTypedSelector(state => state.user)
     const { tasks } = useTypedSelector(state => state.task)
     const { goals } = useTypedSelector(state => state.goal)
@@ -31,7 +28,6 @@ export const Welcome: FC = () => {
                 if (user.id) {
                     const tasks_data = await getTask(user.id)
                     dispatch(setTasks(tasks_data))
-                    // task.setTask(tasks)
                 }
             } catch (e) {
                 alert(`Ошибка при получении задач: ${e.response.data.message}`);
@@ -39,7 +35,7 @@ export const Welcome: FC = () => {
         }
 
         fetchTasks()
-    }, [tasks, user])
+    }, [user])
 
     useEffect(() => {
         const fetchGoals = async () => {
@@ -47,7 +43,6 @@ export const Welcome: FC = () => {
                 if (user.id) {
                     const goals_data = await getGoals(user.id)
                     dispatch(setGoals(goals_data))
-                    // goal.setGoal(goals_data)
 
                     // goals.forEach(async (goalItem) => {
                     //     const goalProgress = await getGoalProgress(goalItem.id)
@@ -57,10 +52,10 @@ export const Welcome: FC = () => {
             } catch (e) {
                 alert(`Ошибка при получении целей: ${e.response.data.message}`)
             }
-        };
+        }
 
         fetchGoals()
-    }, [goals, user])
+    }, [user])
 
     return (
         <>
@@ -89,9 +84,9 @@ export const Welcome: FC = () => {
                                         “Задачи” или нажмите на кнопку ниже</p>
                                     <h5 className={classes.main_text}>Задачи</h5>
                                     <div className={classes.welcome__tasks}>
-                                        <TaskCheckbox label='Зарегистрироваться' checked={true} allowEdit={false} taskId={0}/>
-                                        <TaskCheckbox label='Добавить задачу' checked={false} allowEdit={false} taskId={0}/>
-                                        <TaskCheckbox label='Выполнить задачу' checked={false} allowEdit={false} taskId={0}/>
+                                        <TaskCheckbox label='Зарегистрироваться' checked={true} allowEdit={false} taskId={0} />
+                                        <TaskCheckbox label='Добавить задачу' checked={false} allowEdit={false} taskId={0} />
+                                        <TaskCheckbox label='Выполнить задачу' checked={false} allowEdit={false} taskId={0} />
                                     </div>
                                 </>
                                 :
@@ -122,9 +117,9 @@ export const Welcome: FC = () => {
                                         “Цели” или нажмите на кнопку ниже</p>
                                     <h5 className={classes.main_text}>Начать пользоваться Plask 33%</h5>
                                     <div className={classes.welcome__tasks}>
-                                        <TaskCheckbox label='Зарегистрироваться' checked={true} allowEdit={false} taskId={0}/>
-                                        <TaskCheckbox label='Добавить цель' checked={false} allowEdit={false} taskId={0}/>
-                                        <TaskCheckbox label='Достигнуть цель' checked={false} allowEdit={false} taskId={0}/>
+                                        <TaskCheckbox label='Зарегистрироваться' checked={true} allowEdit={false} taskId={0} />
+                                        <TaskCheckbox label='Добавить цель' checked={false} allowEdit={false} taskId={0} />
+                                        <TaskCheckbox label='Достигнуть цель' checked={false} allowEdit={false} taskId={0} />
                                     </div>
                                 </>
                                 :

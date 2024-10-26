@@ -33,7 +33,7 @@ $dark_gray: #252525;
             }
 
             &:checked + .checkbox__label:before {
-                background-image: url('../../../../assets/images/checked.svg');
+                background-image: url('../../../assets//images/checked.svg');
                 background-position: center center;
                 background-repeat: no-repeat;
                 background-size: 10px;

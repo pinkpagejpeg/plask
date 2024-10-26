@@ -5,74 +5,79 @@ import classes from './TaskCheckbox.module.scss'
 import { deleteTask, updateTask, updateTaskStatus } from '../../../api'
 import { deleteIcon } from '../../../assets'
 import { ITaskCheckbox } from './types'
+import { useTypedSelector } from '../../../../features/hooks'
 
 export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowEdit }) => {
     // const { task } = useContext(Context)
-    // const [isChecked, setIsChecked] = useState(checked)
-    // const [isEditing, setIsEditing] = useState(false)
-    // const [info, setInfo] = useState(label)
+    const { tasks } = useTypedSelector(state => state.task)
+    const [isChecked, setIsChecked] = useState(checked)
+    const [isEditing, setIsEditing] = useState(false)
+    const [info, setInfo] = useState(label)
 
-    // const handleCheckboxChange = () => {
-    //     setIsChecked(!isChecked)
-    //     changeStatus()
-    // };
+    const handleCheckboxChange = () => {
+        setIsChecked(!isChecked)
+        changeStatus()
+    }
 
-    // const handleSpanClick = () => {
-    //     setIsEditing(true)
-    // };
+    const handleSpanClick = () => {
+        setIsEditing(true)
+    }
 
-    // const handleInputBlur = () => {
-    //     changeTask()
-    //     setIsEditing(false)
-    // };
+    const handleInputBlur = () => {
+        changeTask()
+        setIsEditing(false)
+    }
 
-    // const changeTask = async () => {
-    //     try {
-    //         if (allowEdit) {
-    //             let data
+    const changeTask = async () => {
+        try {
+            if (allowEdit) {
+                let data
 
-    //             if (info === '') {
-    //                 destroyTask()
-    //             }
+                if (info === '') {
+                    destroyTask()
+                }
 
-    //             data = await updateTask(taskId, info)
-    //             task.editTask(data.task.id, data.task)
-    //         }
-    //     } catch (e) {
-    //         alert(e.response.data.message)
-    //     }
-    // }
+                data = await updateTask(taskId, info)
+                // task.editTask(data.task.id, data.task)
+                // dispatch
+            }
+        } catch (e) {
+            alert(`При изменении задачи возникла ошибка: ${e.response.data.message}`)
+        }
+    }
 
-    // const changeStatus = async () => {
-    //     try {
-    //         if (allowEdit) {
-    //             let data
+    const changeStatus = async () => {
+        try {
+            if (allowEdit) {
+                let data
 
-    //             data = await updateTaskStatus(taskId, !isChecked)
-    //             task.editTask(data.task.id, data.task)
-    //         }
-    //     } catch (e) {
-    //         alert(e.response.data.message)
-    //     }
-    // }
+                data = await updateTaskStatus(taskId, !isChecked)
+                // task.editTask(data.task.id, data.task)
+                // dispatch
+            }
+        } catch (e) {
+            alert(`При изменении статуса задачи возникла ошибка: ${e.response.data.message}`)
+        }
+    }
 
-    // const destroyTask = async () => {
-    //     try {
-    //         if (allowEdit) {
-    //             let data
+    const destroyTask = async () => {
+        try {
+            if (allowEdit) {
+                let data
 
-    //             data = await deleteTask(taskId)
-    //             task.removeTask(data.deletedTaskId)
-    //         }
-    //     }
-    //     catch (e) {
-    //         alert(e.response.data.message)
-    //     }
-    // }
+                data = await deleteTask(taskId)
+                // task.removeTask(data.deletedTaskId)
+                // dispatch
+            }
+        }
+        catch (e) {
+            alert(`При удалении задачи возникла ошибка: ${e.response.data.message}`)
+        }
+    }
 
     return (
         <div className={classes.checkbox__wrapper}>
-            {/* <label>
+            <label>
                 <input
                     type="checkbox"
                     className={classes.checkbox__input}
@@ -100,7 +105,7 @@ export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowE
             )}
             <button className={classes.checkbox__button_delete} onClick={destroyTask}>
                 <img src={deleteIcon} alt='Иконка для удаления задачи' />
-            </button> */}
+            </button>
         </div>
     )
 }
