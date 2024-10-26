@@ -3,6 +3,7 @@ import { useState, useContext, FC } from 'react'
 // import { Context } from '../../../../main'
 import classes from './GoalCheckbox.module.scss'
 import { deleteGoalItem, updateGoalItem, updateGoalItemStatus } from '../../../api'
+<<<<<<< HEAD
 import { deleteIcon } from '../../../assets'
 import { IGoalCheckbox } from './types'
 import { useTypedSelector } from '../../../../features/hooks'
@@ -13,6 +14,16 @@ export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, up
     const [isChecked, setIsChecked] = useState(checked)
     const [isEditing, setIsEditing] = useState(false)
     const [info, setInfo] = useState(label)
+=======
+import {deleteIcon} from '../../../assets'
+import { IGoalCheckbox } from './types'
+
+export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, updateProgress }) => {
+    // // const { goalItem } = useContext(Context)
+    // const [isChecked, setIsChecked] = useState(сhecked)
+    // const [isEditing, setIsEditing] = useState(false)
+    // const [info, setInfo] = useState(label)
+>>>>>>> 9f76c12c39df5042070ca9d1fe95868534b138a6
 
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked)
