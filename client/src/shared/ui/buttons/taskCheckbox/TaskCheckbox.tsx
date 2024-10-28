@@ -5,10 +5,7 @@ import classes from './TaskCheckbox.module.scss'
 import { deleteTask, updateTask, updateTaskStatus } from '../../../api'
 import { deleteIcon } from '../../../assets'
 import { ITaskCheckbox } from './types'
-<<<<<<< HEAD
 import { useTypedSelector } from '../../../../features/hooks'
-=======
->>>>>>> 9f76c12c39df5042070ca9d1fe95868534b138a6
 
 export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowEdit }) => {
     // const { task } = useContext(Context)
