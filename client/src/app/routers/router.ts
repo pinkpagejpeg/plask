@@ -8,11 +8,11 @@ export const router = (user: IUser, isAuth: boolean, authLoading: boolean) => {
         errorRoutes
     ]
 
-    if (!authLoading && isAuth) {
+    if (!authLoading && user && isAuth) {
         routes = [...routes, ...authRoutes]
     }
 
-    if (!authLoading && user !== null && user.role === 'ADMIN') {
+    if (!authLoading && user && user.role === 'ADMIN') {
         routes = [...routes, ...manageRoutes]
     }
 

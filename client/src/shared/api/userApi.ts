@@ -2,7 +2,7 @@ import { $authHost, $host } from "./http"
 import { jwtDecode, JwtPayload } from 'jwt-decode'
 
 interface CustomJwtPayload extends JwtPayload {
-    id: string,
+    id: number,
     email: string,
     role: string,
 }

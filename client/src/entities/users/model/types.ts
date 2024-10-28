@@ -2,6 +2,7 @@ export interface IUserState {
     user: IUser | null,
     isAuth: boolean,
     authLoading: boolean,
+    authError: string | null
 }
 export interface IUser {
     id: number | null,

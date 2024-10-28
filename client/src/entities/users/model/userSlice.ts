@@ -1,10 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { IUserState } from "./types"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { IUser, IUserState } from "./types"
+import { fetchUserById } from "../api"
 
 const initialState: IUserState = {
     user: null,
     isAuth: false,
-    authLoading: false
+    authLoading: false,
+    authError: null,
 }
 
 const userSlice = createSlice({
@@ -12,8 +14,8 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setAuthTrue(state, action) {
-            state.user = action.payload
-            state.isAuth = true
+            // state.user = action.payload
+            // state.isAuth = true
         },
         setAuthFalse(state) {
             state.user = null
@@ -21,7 +23,22 @@ const userSlice = createSlice({
         },
         setAuthLoading(state, action) {
             state.authLoading = action.payload
-        }
+        },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchUserById.pending, (state) => {
+                state.authLoading = true
+            })
+            .addCase(fetchUserById.fulfilled, (state, action:PayloadAction<IUser>) => {
+                state.user = action.payload
+                state.isAuth = true
+                state.authLoading = false
+            })
+            .addCase(fetchUserById.rejected, (state, action: PayloadAction<string>) => {
+                state.authLoading = false
+                state.authError = action.payload!
+            })
     }
 })
 
