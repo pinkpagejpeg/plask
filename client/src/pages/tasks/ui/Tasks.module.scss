@@ -1,12 +1,8 @@
-@import '../../../shared/ui/index.scss';
-@include container;
-@include title;
-@include input;
-@include button_light;
-
-$light_gray: #E6E6E6;
-$middle_gray: #6D6D6D;
-$dark_gray: #252525;
+@use '../../../shared/ui/index.scss';
+@include index.container();
+@include index.title();
+@include index.input();
+@include index.button_light();
 
 .task {
     &__wrapper {
@@ -31,7 +27,7 @@ $dark_gray: #252525;
     &__listbox > h4 {
         font-size: 24px;
         margin-bottom: 12px;
-        color: $middle_gray;
+        color: index.$middle_gray;
     }
 
     &__list {

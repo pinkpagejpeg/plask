@@ -1,7 +1,7 @@
-@import '../../../../shared/ui/index.scss';
-@include container;
-@include main_text;
-@include plask;
+@use '../../../../shared/ui/index.scss';
+@include index.container();
+@include index.main_text();
+@include index.plask();
 
 .header {
     &__wrapper {

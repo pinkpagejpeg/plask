@@ -4,9 +4,9 @@ import { NavLink, Navigate } from 'react-router-dom'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
 import { FEEDBACK_ROUTE, GOALS_ITEM_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, TASKS_ROUTE } from '../../../shared/config'
 import { useLocation } from 'react-router-dom'
-import { getTask, getGoals, getGoalProgress } from '../../../shared/api'
+import { getGoals, getGoalProgress } from '../../../shared/api'
 import { useAppDispatch, useTypedSelector } from '../../../features/hooks'
-import { setTasks } from '../../../entities/tasks'
+import { fetchTasksByUserId } from '../../../entities/tasks'
 import { setGoals } from '../../../entities/goals'
 
 export const Welcome: FC = () => {
@@ -18,24 +18,13 @@ export const Welcome: FC = () => {
     const { goals } = useTypedSelector(state => state.goal)
     const dispatch = useAppDispatch()
 
-    if (!user) {
-        return <Navigate to={LOGIN_ROUTE} />
-    }
+    // if (!user) {
+    //     return <Navigate to={LOGIN_ROUTE} />
+    // }
 
     useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                if (user.id) {
-                    const tasks_data = await getTask(user.id)
-                    dispatch(setTasks(tasks_data))
-                }
-            } catch (e) {
-                alert(`Ошибка при получении задач: ${e.response.data.message}`);
-            }
-        }
-
-        fetchTasks()
-    }, [user])
+        dispatch(fetchTasksByUserId(user.id))
+    }, [user, tasks])
 
     useEffect(() => {
         const fetchGoals = async () => {

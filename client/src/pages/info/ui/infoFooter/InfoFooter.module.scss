@@ -1,15 +1,12 @@
-@import '../../../../shared/ui/index.scss';
-@include title;
-@include main_text;
+@use '../../../../shared/ui/index.scss';
+@include index.title();
+@include index.main_text();
 
-$light_gray: #E6E6E6;
-$middle_gray: #6D6D6D;
 $gray: #BFBFBF;
-$dark_gray: #252525;
 
 .footer {
     &__wrapper {
-        border-top: 3px solid $dark_gray;
+        border-top: 3px solid index.$dark_gray;
     }
 
     &__container {

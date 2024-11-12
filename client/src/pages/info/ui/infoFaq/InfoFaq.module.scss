@@ -1,11 +1,7 @@
-@import '../../../../shared/ui/index.scss';
-@include main_text;
-@include section_title;
-@include title;
-
-$light_gray: #E6E6E6;
-$middle_gray: #6D6D6D;
-$dark_gray: #252525;
+@use '../../../../shared/ui/index.scss';
+@include index.main_text();
+@include index.section_title();
+@include index.title();
 
 .faq {
     &__wrapper {
@@ -17,7 +13,7 @@ $dark_gray: #252525;
         display: flex;
         flex-direction: column;
         align-items: center;
-        border-top: 3px solid $dark_gray;
+        border-top: 3px solid index.$dark_gray;
     }
 
     &__item {
@@ -25,7 +21,7 @@ $dark_gray: #252525;
         display: flex;
         flex-direction: column;
         align-items: center;
-        border-bottom: 3px solid $dark_gray;
+        border-bottom: 3px solid index.$dark_gray;
         padding: 32px 0;
     }
 

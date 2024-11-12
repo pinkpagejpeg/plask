@@ -1,11 +1,10 @@
-import { useState, useContext, FC } from 'react'
-// import { observer } from 'mobx-react-lite'
-// import { Context } from '../../../../main'
+import { useState, FC } from 'react'
 import classes from './TaskCheckbox.module.scss'
 import { deleteTask, updateTask, updateTaskStatus } from '../../../api'
 import { deleteIcon } from '../../../assets'
 import { ITaskCheckbox } from './types'
-import { useTypedSelector } from '../../../../features/hooks'
+import { useAppDispatch, useTypedSelector } from '../../../../features/hooks'
+import { destroyTask } from '../../../../entities/tasks'
 
 export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowEdit }) => {
     // const { task } = useContext(Context)
@@ -13,6 +12,7 @@ export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowE
     const [isChecked, setIsChecked] = useState(checked)
     const [isEditing, setIsEditing] = useState(false)
     const [info, setInfo] = useState(label)
+    const dispatch = useAppDispatch()
 
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked)
@@ -34,7 +34,7 @@ export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowE
                 let data
 
                 if (info === '') {
-                    destroyTask()
+                    deleteTask()
                 }
 
                 data = await updateTask(taskId, info)
@@ -60,18 +60,9 @@ export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowE
         }
     }
 
-    const destroyTask = async () => {
-        try {
-            if (allowEdit) {
-                let data
-
-                data = await deleteTask(taskId)
-                // task.removeTask(data.deletedTaskId)
-                // dispatch
-            }
-        }
-        catch (e) {
-            alert(`При удалении задачи возникла ошибка: ${e.response.data.message}`)
+    const deleteTask = async () => {
+        if (allowEdit) {
+            dispatch(destroyTask(taskId))
         }
     }
 
@@ -103,7 +94,7 @@ export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowE
                     {info}
                 </span>
             )}
-            <button className={classes.checkbox__button_delete} onClick={destroyTask}>
+            <button className={classes.checkbox__button_delete} onClick={deleteTask}>
                 <img src={deleteIcon} alt='Иконка для удаления задачи' />
             </button>
         </div>

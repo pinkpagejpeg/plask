@@ -30,7 +30,7 @@ const userSlice = createSlice({
             .addCase(fetchUserById.pending, (state) => {
                 state.authLoading = true
             })
-            .addCase(fetchUserById.fulfilled, (state, action:PayloadAction<IUser>) => {
+            .addCase(fetchUserById.fulfilled, (state, action: PayloadAction<IUser>) => {
                 state.user = action.payload
                 state.isAuth = true
                 state.authLoading = false

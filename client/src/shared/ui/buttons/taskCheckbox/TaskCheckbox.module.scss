@@ -1,9 +1,5 @@
-@import '../../styles/index.scss';
-@include input;
-
-$light_gray: #E6E6E6;
-$middle_gray: #6D6D6D;
-$dark_gray: #252525;
+@use '../../styles/index.scss';
+@include index.input();
 
 .checkbox {
     &__wrapper {
@@ -19,7 +15,7 @@ $dark_gray: #252525;
                 &:before {
                     content: '';
                     border-radius: 2px;
-                    border: 2px solid $light_gray;
+                    border: 2px solid index.$light_gray;
                     display: inline-block;
                     width: 16px;
                     height: 16px;
@@ -41,12 +37,12 @@ $dark_gray: #252525;
 
             &:hover + .checkbox__label:before {
                 outline: none;
-                border: 2px solid $middle_gray;
+                border: 2px solid index.$middle_gray;
             }
 
             &:focus + .checkbox__label:before {
                 outline: none;
-                border: 2px solid $light_gray;
+                border: 2px solid index.$light_gray;
             }
 
             + .checkbox__label {
@@ -73,7 +69,7 @@ $dark_gray: #252525;
     }
 
     &__task {
-        color: $light_gray;
+        color: index.$light_gray;
         font-family: 'Ubuntu', sans-serif;
         word-break: break-all;
         text-align: start;
@@ -86,7 +82,7 @@ $dark_gray: #252525;
 
     &__task.checked {
         text-decoration: line-through;
-        color: $middle_gray;
+        color: index.$middle_gray;
     }
 
     &__button_delete {

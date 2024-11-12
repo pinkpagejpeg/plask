@@ -1,10 +1,6 @@
-@import '../../../../shared/ui/index.scss';
-@include section_title;
-@include main_text;
-
-$light_gray: #E6E6E6;
-$middle_gray: #6D6D6D;
-$dark_gray: #252525;
+@use '../../../../shared/ui/index.scss';
+@include index.section_title();
+@include index.main_text();
 
 .contacts {
     &__wrapper {
