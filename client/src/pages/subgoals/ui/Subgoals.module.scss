@@ -1,12 +1,9 @@
-@import '../../../shared/ui/index.scss';
-@include container;
-@include title;
-@include input;
-@include button_light;
+@use '../../../shared/ui/index.scss';
+@include index.container();
+@include index.title();
+@include index.input();
+@include index.button_light();
 
-$light_gray: #E6E6E6;
-$middle_gray: #6D6D6D;
-$dark_gray: #252525;
 $red: #D83A3A;
 
 .goal {
@@ -49,7 +46,7 @@ $red: #D83A3A;
     &__listbox > h4 {
         font-size: 24px;
         margin-bottom: 14px;
-        color: $middle_gray;
+        color: index.$middle_gray;
     }
 
     &__list {
@@ -65,7 +62,7 @@ $red: #D83A3A;
     &__addbutton {
         background-color: transparent;
         border: none;
-        color: $middle_gray;
+        color: index.$middle_gray;
         font-family: 'Ubuntu', sans-serif;
         font-size: 16px;
         font-weight: 300;

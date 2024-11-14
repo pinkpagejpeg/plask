@@ -1,13 +1,10 @@
-@import '../../../shared/ui/index.scss';
-@include container;
-@include plask;
-@include title;
-@include main_text;
-@include input;
+@use '../../../shared/ui/index.scss';
+@include index.container();
+@include index.plask();
+@include index.title();
+@include index.main_text();
+@include index.input();
 
-$light_gray: #E6E6E6;
-$middle_gray: #6D6D6D;
-$dark_gray: #252525;
 $red: #D83A3A;
 
 .profile {

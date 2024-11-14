@@ -1,11 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { ITask, ITaskState } from "./types"
-import { addTask, destroyTask, fetchTasksByUserId } from "../api"
+import { addTask, changeTask, changeTaskStatus, destroyTask, fetchTasksByUserId } from "../api"
 
 const initialState: ITaskState = {
     tasks: null,
     tasksLoading: false,
     tasksError: null,
+}
+
+const handlePending = (state: ITaskState) => {
+    state.tasksLoading = true
+    state.tasksError = null
+}
+
+const handleRejected = (state: ITaskState, action: PayloadAction<string>) => {
+    state.tasksLoading = false
+    state.tasksError = action.payload
 }
 
 const taskSlice = createSlice({
@@ -22,85 +32,46 @@ const taskSlice = createSlice({
     extraReducers: (builder) => {
         builder
             // fetchTasksByUserId
-            .addCase(fetchTasksByUserId.pending, (state) => {
-                state.tasksLoading = true
-            })
-            .addCase(fetchTasksByUserId.fulfilled, (state, action: PayloadAction<ITask[]>) => {
+            .addCase(fetchTasksByUserId.pending, handlePending)
+            .addCase(fetchTasksByUserId.fulfilled, (state: ITaskState, action: PayloadAction<ITask[]>) => {
                 state.tasksLoading = false
                 state.tasks = action.payload
             })
-            .addCase(fetchTasksByUserId.rejected, (state, action: PayloadAction<string>) => {
-                state.tasksLoading = false
-                state.tasksError = action.payload
-            })
+            .addCase(fetchTasksByUserId.rejected, handleRejected)
+
             // Add task
-            .addCase(addTask.pending, (state) => {
-                state.tasksLoading = true
-            })
-            .addCase(addTask.fulfilled, (state, action: PayloadAction<ITask>) => {
+            .addCase(addTask.pending, handlePending)
+            .addCase(addTask.fulfilled, (state: ITaskState, action: PayloadAction<ITask>) => {
                 state.tasksLoading = false
                 state.tasks.push(action.payload)
             })
-            .addCase(addTask.rejected, (state, action: PayloadAction<string>) => {
-                state.tasksLoading = false
-                state.tasksError = action.payload
-            })
+            .addCase(addTask.rejected, handleRejected)
+
             // Change task
+            .addCase(changeTask.pending, handlePending)
+            .addCase(changeTask.fulfilled, (state: ITaskState, action: PayloadAction<ITask>) => {
+                state.tasksLoading = false
+                state.tasks[action.payload.id] = action.payload
+            })
+            .addCase(changeTask.rejected, handleRejected)
 
             // Change task status
+            .addCase(changeTaskStatus.pending, handlePending)
+            .addCase(changeTaskStatus.fulfilled, (state: ITaskState, action: PayloadAction<ITask>) => {
+                state.tasksLoading = false
+                state.tasks[action.payload.id] = action.payload
+            })
+            .addCase(changeTaskStatus.rejected, handleRejected)
 
             // Destroy task
-            .addCase(destroyTask.pending, (state)=> {
-                state.tasksLoading = true
-            })
-            .addCase(destroyTask.fulfilled, (state, action: PayloadAction<number>)=> {
+            .addCase(destroyTask.pending, handlePending)
+            .addCase(destroyTask.fulfilled, (state: ITaskState, action: PayloadAction<number>) => {
                 state.tasksLoading = false
                 state.tasks.splice(action.payload, 1)
             })
-            .addCase(destroyTask.rejected, (state, action: PayloadAction<string>)=> {
-                state.tasksLoading = false
-                state.tasksError = action.payload
-            })
+            .addCase(destroyTask.rejected, handleRejected)
     },
 })
 
 // export const { setFilters } = taskSlice.actions
 export default taskSlice.reducer
-
-// import { makeAutoObservable } from 'mobx'
-
-// export default class TaskStore {
-//     constructor() {
-//         this._task = []
-//         makeAutoObservable(this)
-//     }
-
-//     setTask(task) {
-//         this._task = task
-//     }
-
-//     addTaskList(task) {
-//         this._task.unshift(task)
-//     }
-
-//     editTask(taskId, updatedTask) {
-//         this._task = this._task.map(task => {
-//             if (task.id === taskId) {
-//                 return updatedTask;
-//             }
-//             return task;
-//         });
-//     }
-
-//     removeTask(taskId) {
-//         this._task = this._task.filter(task => task.id !== taskId);
-//     }
-
-//     getTaskByUserId(userId) {
-//         return this._task.filter(task => task.userId === userId);
-//     }
-
-//     get task() {
-//         return this._task
-//     }
-// }

@@ -1,12 +1,9 @@
-@import '../../../../shared/ui/index.scss';
-@include container;
-@include title;
-@include input;
-@include button_light;
+@use '../../../../shared/ui/index.scss';
+@include index.container();
+@include index.title();
+@include index.input();
+@include index.button_light();
 
-$light_gray: #E6E6E6;
-$middle_gray: #6D6D6D;
-$dark_gray: #252525;
 $background: #191919;
 
 .goal {
@@ -62,11 +59,11 @@ progress {
 
 progress::-webkit-progress-bar {
     background-color: $background;
-    border: 3px $middle_gray solid;
+    border: 3px index.$middle_gray solid;
     border-radius: 20px;
 }
 
 progress::-webkit-progress-value {
-    background-color: $light_gray;
+    background-color: index.$light_gray;
     border-radius: 20px;
 }

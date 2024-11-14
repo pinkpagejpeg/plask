@@ -1,14 +1,11 @@
 import { useState, FC } from 'react'
 import classes from './TaskCheckbox.module.scss'
-import { deleteTask, updateTask, updateTaskStatus } from '../../../api'
 import { deleteIcon } from '../../../assets'
 import { ITaskCheckbox } from './types'
-import { useAppDispatch, useTypedSelector } from '../../../../features/hooks'
-import { destroyTask } from '../../../../entities/tasks'
+import { useAppDispatch } from '../../../../features/hooks'
+import { destroyTask, changeTask, changeTaskStatus } from '../../../../entities/tasks'
 
 export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowEdit }) => {
-    // const { task } = useContext(Context)
-    const { tasks } = useTypedSelector(state => state.task)
     const [isChecked, setIsChecked] = useState(checked)
     const [isEditing, setIsEditing] = useState(false)
     const [info, setInfo] = useState(label)
@@ -16,7 +13,7 @@ export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowE
 
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked)
-        changeStatus()
+        updateTaskStatus()
     }
 
     const handleSpanClick = () => {
@@ -24,39 +21,26 @@ export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowE
     }
 
     const handleInputBlur = () => {
-        changeTask()
+        updateTask()
         setIsEditing(false)
     }
 
-    const changeTask = async () => {
-        try {
-            if (allowEdit) {
-                let data
-
-                if (info === '') {
-                    deleteTask()
-                }
-
-                data = await updateTask(taskId, info)
-                // task.editTask(data.task.id, data.task)
-                // dispatch
+    const updateTask = async () => {
+        if (allowEdit) {
+            if (info === '') {
+                deleteTask()
             }
-        } catch (e) {
-            alert(`При изменении задачи возникла ошибка: ${e.response.data.message}`)
+            if (taskId && info) {
+                dispatch(changeTask({ taskId: taskId, info: info }))
+            }
         }
     }
 
-    const changeStatus = async () => {
-        try {
-            if (allowEdit) {
-                let data
-
-                data = await updateTaskStatus(taskId, !isChecked)
-                // task.editTask(data.task.id, data.task)
-                // dispatch
+    const updateTaskStatus = async () => {
+        if (allowEdit) {
+            if (taskId) {
+                dispatch(changeTaskStatus({ taskId: taskId, status: !isChecked }))
             }
-        } catch (e) {
-            alert(`При изменении статуса задачи возникла ошибка: ${e.response.data.message}`)
         }
     }
 

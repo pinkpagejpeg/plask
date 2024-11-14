@@ -1,3 +1,5 @@
 export { fetchTasksByUserId } from "./fetchTasksByUserId"
 export { addTask } from "./addTask"
+export { changeTask } from "./changeTask"
+export { changeTaskStatus } from "./changeTaskStatus"
 export { destroyTask } from "./destroyTask"

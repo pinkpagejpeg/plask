@@ -1,13 +1,9 @@
-@import '../../../shared/ui/index.scss';
-@include container;
-@include plask;
-@include title;
-@include input;
-@include button_light;
-
-$light_gray: #E6E6E6;
-$middle_gray: #6D6D6D;
-$dark_gray: #252525;
+@use '../../../shared/ui/index.scss';
+@include index.container();
+@include index.plask();
+@include index.title();
+@include index.input();
+@include index.button_light();
 
 .feedback {
     &__wrapper {
@@ -23,7 +19,7 @@ $dark_gray: #252525;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        background-color: $dark_gray;
+        background-color: index.$dark_gray;
         border-radius: 20px;
         margin: 40px 0 24px;
         padding: 32px 48px 48px 48px;
@@ -40,11 +36,11 @@ $dark_gray: #252525;
     }
     &__form > textarea {
         resize: none;
-        background-color: $dark_gray;
+        background-color: index.$dark_gray;
     }
 
     // &__form > input[type="email"],
     // &__form > input[type="password"] {
-    //     background-color: $dark_gray;
+    //     background-color: index.$dark_gray;
     // }
 }

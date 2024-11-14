@@ -1,13 +1,9 @@
-@import '../../../shared/ui/index.scss';
-@include container;
-@include plask;
-@include title;
-@include main_text;
-@include button_light;
-
-$light_gray: #E6E6E6;
-$middle_gray: #6D6D6D;
-$dark_gray: #252525;
+@use '../../../shared/ui/index.scss';
+@include index.container();
+@include index.plask();
+@include index.title();
+@include index.main_text();
+@include index.button_light();
 
 .admin {
     &__wrapper {
@@ -55,7 +51,7 @@ $dark_gray: #252525;
 
     &__link {
         text-decoration: none;
-        color: $light_gray;
+        color: index.$light_gray;
         font-family: 'Ubuntu', sans-serif;
         font-size: 24px;
         margin-bottom: 24px;
@@ -64,7 +60,7 @@ $dark_gray: #252525;
     }
 
     &__bottom {
-        color: $middle_gray;
+        color: index.$middle_gray;
         font-family: 'Ubuntu', sans-serif;
         font-size: 16px;
         font-weight: 300;
