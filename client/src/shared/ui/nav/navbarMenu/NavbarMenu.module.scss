@@ -1,6 +1,6 @@
+@use "../../styles/index.scss";
+
 $background_menu: #252525;
-$light_gray: #E6E6E6;
-$middle_gray: #6D6D6D;
 
 .menu__content {
     position: absolute;
@@ -44,7 +44,7 @@ $middle_gray: #6D6D6D;
 
     &__username {
         word-break: break-all;
-        color: $light_gray;
+        color: index.$light_gray;
         font-family: 'Ubuntu', sans-serif;
         font-size: 16px;
         font-weight: 500;
@@ -70,22 +70,22 @@ $middle_gray: #6D6D6D;
     }
 
     &__item > a:hover {
-        color: $light_gray;
+        color: index.$light_gray;
         transition: color 0.3s ease;
     }
 
     &__item > button:hover {
-        color: $light_gray;
+        color: index.$light_gray;
         transition: color 0.3s ease;
     }
 
     &__item > a:active {
-        color: $middle_gray;
+        color: index.$middle_gray;
         transition: color 0.3s ease;
     }
 
     &__item > button:active {
-        color: $middle_gray;
+        color: index.$middle_gray;
         transition: color 0.3s ease;
     }
 
@@ -99,7 +99,7 @@ $middle_gray: #6D6D6D;
 
     &__item > a,
     &__item > button {
-        color: $middle_gray;
+        color: index.$middle_gray;
         font-family: 'Ubuntu', sans-serif;
         text-decoration: none;
         font-size: 16px;
