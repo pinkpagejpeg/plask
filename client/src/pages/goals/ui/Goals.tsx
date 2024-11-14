@@ -1,54 +1,39 @@
-import { FC, useContext, useEffect, useState } from 'react'
-// import { observer } from 'mobx-react-lite'
-// import { Context } from '../main'
+import { FC, useEffect, useState } from 'react'
 import classes from './Goals.module.scss'
 import { Navbar } from '../../../shared/ui'
-import { createGoal, getGoals, getGoalProgress } from '../../../shared/api'
 import { GoalListItem } from './goalListItem'
+import { useAppDispatch, useTypedSelector } from '../../../features/hooks'
+import { addGoal, fetchGoalsByUserId } from '../../../entities/goals'
 
 export const Goals: FC = () => {
-    // const { goal, user } = useContext(Context)
+    const { user } = useTypedSelector(state => state.user)
+    const { goals } = useTypedSelector(state => state.goal)
     const [info, setInfo] = useState('')
+    const dispatch = useAppDispatch()
 
     // if (!user) {
     //     return <Navigate to={LOGIN_ROUTE} />;
     // }
 
-    // useEffect(() => {
-    //     const fetchGoals = async () => {
-    //         try {
-    //             if (user._user.id) {
-    //                 const goals = await getGoals(user._user.id);
-    //                 goal.setGoal(goals);
+    useEffect(() => {
+        if (user.id) {
+            dispatch(fetchGoalsByUserId(user.id))
 
-    //                 goals.forEach(async (goalItem) => {
-    //                     const goalProgress = await getGoalProgress(goalItem.id);
-    //                     goal.setGoalProgress(goalItem.id, goalProgress.progress);
-    //                 });
-    //             }
-    //         } catch (e) {
-    //             alert('Ошибка при получении целей:', e.response.data.message);
-    //         }
-    //     };
+            // goals.forEach(async (goalItem) => {
+            //     const goalProgress = await getGoalProgress(goalItem.id);
+            //     goal.setGoalProgress(goalItem.id, goalProgress.progress);
+            // });
+        }
 
-    //     fetchGoals();
-    // }, [goal, user])
+    }, [goals, user])
 
-    // const addGoal = async (e) => {
-    //     e.preventDefault()
-    //     try {
-    //         let data
-
-    //         data = await createGoal(user._user.id, info)
-
-    //         goal.addGoalList(data)
-    //         goal.setGoalProgress(data.id, 0);
-    //         setInfo('')
-    //     }
-    //     catch (e) {
-    //         alert(e.response.data.message)
-    //     }
-    // }
+    const createGoal = async (e) => {
+        e.preventDefault()
+        if (user.id && info) {
+            dispatch(addGoal({ userId: user.id, info: info }))
+            setInfo('')
+        }
+    }
 
     return (
         <>
@@ -57,15 +42,21 @@ export const Goals: FC = () => {
                 <div className={classes.goal__wrapper}>
                     <h3 className={classes.title}>Цели</h3>
                     <div className={classes.goal__listbox}>
-                        {/* {goal._goal && goal._goal.length > 0 ? (
+                        {goals && goals.length > 0 ? (
                             <div className={classes.goal__list}>
-                                {goal._goal.map((goalItem) => (
-                                    <GoalListItem key={goalItem.id} title={goalItem.info} goalId={goalItem.id} progress={goal.goalProgress[goalItem.id]} />
+                                {goals.map((goalItem) => (
+                                    <GoalListItem
+                                        key={goalItem.id}
+                                        title={goalItem.info}
+                                        goalId={goalItem.id}
+                                        // progress={goals.goalProgress[goalItem.id]}
+                                        progress={0}
+                                    />
                                 ))}
                             </div>
                         ) : (
                             <h4 className={classes.title}>Задачи не обнаружены</h4>
-                        )} */}
+                        )}
                     </div>
                     <form className={classes.goal__form}>
                         <input className={classes.input}
@@ -73,9 +64,9 @@ export const Goals: FC = () => {
                             value={info}
                             onChange={e => setInfo(e.target.value)}
                             required />
-                        {/* <input className={classes.button_light}
+                        <input className={classes.button_light}
                             type="submit" value="Добавить цель"
-                            onClick={addGoal} /> */}
+                            onClick={createGoal} />
                     </form>
 
                 </div>

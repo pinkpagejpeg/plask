@@ -1,24 +1,57 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { IGoalState } from "./types"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { IGoal, IGoalState } from "./types"
+import { addGoal, fetchGoalsByUserId } from "../api"
 
 const initialState: IGoalState = {
-    goals: null
+    goals: null,
+    goalsLoading: false,
+    goalsError: null,
+}
+
+const handlePending = (state: IGoalState) => {
+    state.goalsLoading = true
+    state.goalsError = null
+}
+
+const handleRejected = (state: IGoalState, action: PayloadAction<string>) => {
+    state.goalsLoading = false
+    state.goalsError = action.payload
 }
 
 const goalSlice = createSlice({
     name: "goal",
     initialState,
     reducers: {
-        setGoals(state, action) {
-            state.goals = action.payload
-        },
-        // setGoalProgress(state, action) {
+        // setFilters(state, action) {
+        //     state.tasks = action.payload
+        // },
+        // setSearchQuery(state, action) {
+        //     state.tasks = action.payload
+        // },
+    },
+    extraReducers: (builder) => {
+        builder
+            // fetchGoalsByUserId
+            .addCase(fetchGoalsByUserId.pending, handlePending)
+            .addCase(fetchGoalsByUserId.fulfilled, (state: IGoalState, action: PayloadAction<IGoal[]>) => {
+                state.goalsLoading = false
+                state.goals = action.payload
+            })
+            .addCase(fetchGoalsByUserId.rejected, handleRejected)
 
-        // }
+            // addGoal
+            .addCase(addGoal.pending, handlePending)
+            .addCase(addGoal.fulfilled, (state: IGoalState, action: PayloadAction<IGoal>) => {
+                state.goalsLoading = false
+                state.goals.push(action.payload)
+                // goals.setGoalProgress(data.id, 0);
+            })
+            .addCase(addGoal.rejected, handleRejected)
+            
     }
 })
 
-export const { setGoals } = goalSlice.actions
+// export const { setFilters } = goalSlice.actions
 export default goalSlice.reducer
 
 // import { makeAutoObservable } from 'mobx'

@@ -1,5 +1,7 @@
 export interface IGoalState {
     goals: IGoal[] | null,
+    goalsLoading: boolean,
+    goalsError: string | null,
 }
 
 export interface IGoal {

@@ -17,7 +17,9 @@ export const Tasks: FC = () => {
     // }
 
     useEffect(() => {
-        dispatch(fetchTasksByUserId(user.id))
+        if (user.id) {
+            dispatch(fetchTasksByUserId(user.id))
+        }
     }, [tasks, user])
 
     const createTask = async (e) => {
