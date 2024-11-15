@@ -18,14 +18,9 @@ export const Goals: FC = () => {
     useEffect(() => {
         if (user.id) {
             dispatch(fetchGoalsByUserId(user.id))
-
-            // goals.forEach(async (goalItem) => {
-            //     const goalProgress = await getGoalProgress(goalItem.id);
-            //     goal.setGoalProgress(goalItem.id, goalProgress.progress);
-            // });
         }
 
-    }, [goals, user])
+    }, [user])
 
     const createGoal = async (e) => {
         e.preventDefault()
@@ -44,13 +39,12 @@ export const Goals: FC = () => {
                     <div className={classes.goal__listbox}>
                         {goals && goals.length > 0 ? (
                             <div className={classes.goal__list}>
-                                {goals.map((goalItem) => (
+                                {goals.map((goal) => (
                                     <GoalListItem
-                                        key={goalItem.id}
-                                        title={goalItem.info}
-                                        goalId={goalItem.id}
-                                        // progress={goals.goalProgress[goalItem.id]}
-                                        progress={0}
+                                        key={goal.id}
+                                        title={goal.info}
+                                        goalId={goal.id}
+                                        progress={goal.progress | 0}
                                     />
                                 ))}
                             </div>
@@ -68,7 +62,6 @@ export const Goals: FC = () => {
                             type="submit" value="Добавить цель"
                             onClick={createGoal} />
                     </form>
-
                 </div>
             </div>
         </>

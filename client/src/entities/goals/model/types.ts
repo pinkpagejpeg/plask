@@ -9,6 +9,7 @@ export interface IGoal {
     info: string,
     subgoals: IGoalItem[] | null,
     userId: number,
+    progress: number
 }
 
 export interface IGoalItem {

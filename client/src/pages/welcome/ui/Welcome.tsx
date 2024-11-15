@@ -4,7 +4,6 @@ import { NavLink, Navigate } from 'react-router-dom'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
 import { FEEDBACK_ROUTE, GOALS_ITEM_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, TASKS_ROUTE } from '../../../shared/config'
 import { useLocation } from 'react-router-dom'
-// import { getGoals, getGoalProgress } from '../../../shared/api'
 import { useAppDispatch, useTypedSelector } from '../../../features/hooks'
 import { fetchTasksByUserId } from '../../../entities/tasks'
 import { fetchGoalsByUserId } from '../../../entities/goals'
@@ -26,12 +25,8 @@ export const Welcome: FC = () => {
         if (user.id) {
             dispatch(fetchTasksByUserId(user.id))
             dispatch(fetchGoalsByUserId(user.id))
-            // goals.forEach(async (goalItem) => {
-                    //     const goalProgress = await getGoalProgress(goalItem.id)
-                    //     goal.setGoalProgress(goalItem.id, goalProgress.progress)
-                    // })
         }
-    }, [user, tasks, goals])
+    }, [user])
 
     return (
         <>
@@ -89,12 +84,12 @@ export const Welcome: FC = () => {
                                 <div className={classes.welcome__task_listbox}>
                                     {tasks !== null && tasks.length > 0 ? (
                                         <div className={classes.welcome__task_list}>
-                                            {tasks.map((taskItem) => (
+                                            {tasks.map((task) => (
                                                 <TaskCheckbox
-                                                    key={taskItem.id}
-                                                    label={taskItem.info}
-                                                    checked={taskItem.status}
-                                                    taskId={taskItem.id}
+                                                    key={task.id}
+                                                    label={task.info}
+                                                    checked={task.status}
+                                                    taskId={task.id}
                                                     allowEdit={true}
                                                 />
                                             ))}
@@ -140,13 +135,12 @@ export const Welcome: FC = () => {
                                 <div className={classes.welcome__goal_listbox}>
                                     {goals !== null && goals.length > 0 ? (
                                         <div className={classes.welcome__goal_list}>
-                                            {goals.map((goalItem) => (
+                                            {goals.map((goal) => (
                                                 <NavLink
-                                                    to={GOALS_ITEM_ROUTE + '/' + goalItem.id}
+                                                    to={GOALS_ITEM_ROUTE + '/' + goal.id}
                                                     className={classes.main_text}
-                                                    key={goalItem.id}>
-                                                    {goalItem.info}
-                                                    {/* {goal.goalProgress[goalItem.id]}% */}
+                                                    key={goal.id}>
+                                                    {goal.info} {goal.progress | 0}%
                                                 </NavLink>
                                             ))}
                                         </div>

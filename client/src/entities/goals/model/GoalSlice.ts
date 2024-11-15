@@ -43,11 +43,11 @@ const goalSlice = createSlice({
             .addCase(addGoal.pending, handlePending)
             .addCase(addGoal.fulfilled, (state: IGoalState, action: PayloadAction<IGoal>) => {
                 state.goalsLoading = false
-                state.goals.push(action.payload)
-                // goals.setGoalProgress(data.id, 0);
+                state.goals = [ action.payload, ...state.goals]
             })
             .addCase(addGoal.rejected, handleRejected)
-            
+
+
     }
 })
 
