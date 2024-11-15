@@ -1,24 +1,18 @@
-import { useState, FC } from 'react'
+import { FC } from 'react'
 import classes from './GoalListItem.module.scss'
-import { deleteGoal } from '../../../../shared/api'
 import { deleteIcon } from '../../../../shared/assets'
 import { NavLink } from 'react-router-dom'
 import { GOALS_ITEM_ROUTE } from '../../../../shared/config'
 import { IGoalListItem } from './types'
-import { useTypedSelector } from '../../../../features/hooks'
+import { useAppDispatch, useTypedSelector } from '../../../../features/hooks'
+import { destroyGoal } from "../../../../entities/goals"
 
 export const GoalListItem: FC<IGoalListItem> = ({ title, goalId, progress }) => {
-    const { goals } = useTypedSelector(state => state.goal)
+    const dispatch = useAppDispatch()
 
-    const destroyGoal = async () => {
-        try {
-            let data
-
-            data = await deleteGoal(goalId)
-            // goals.removeGoal(data.deletedGoalId)
-        }
-        catch (e) {
-            alert(e.response.data.message);
+    const deleteGoal = async () => {
+        if (goalId) {
+            dispatch(destroyGoal(goalId))
         }
     }
 
@@ -28,7 +22,7 @@ export const GoalListItem: FC<IGoalListItem> = ({ title, goalId, progress }) => 
                 <NavLink to={GOALS_ITEM_ROUTE + '/' + goalId}>
                     <h4 className={classes.title}>{title}</h4>
                 </NavLink>
-                <button className={classes.goal__button_delete} onClick={destroyGoal}>
+                <button className={classes.goal__button_delete} onClick={deleteGoal}>
                     <img src={deleteIcon} alt='Иконка для удаления задачи' />
                 </button>
             </div>

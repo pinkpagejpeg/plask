@@ -6,7 +6,7 @@ export const destroyTask = createAsyncThunk<number, number, { rejectValue: strin
     async (taskId, {rejectWithValue}) => {
         try {
             const data = await deleteTask(taskId)
-            return data
+            return data.deletedTaskId
         }
         catch (error) {
             return rejectWithValue(error.response.data)

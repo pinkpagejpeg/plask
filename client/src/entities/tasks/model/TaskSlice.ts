@@ -43,7 +43,7 @@ const taskSlice = createSlice({
             .addCase(addTask.pending, handlePending)
             .addCase(addTask.fulfilled, (state: ITaskState, action: PayloadAction<ITask>) => {
                 state.tasksLoading = false
-                state.tasks.push(action.payload)
+                state.tasks = [action.payload, ...state.tasks]
             })
             .addCase(addTask.rejected, handleRejected)
 
@@ -67,7 +67,7 @@ const taskSlice = createSlice({
             .addCase(destroyTask.pending, handlePending)
             .addCase(destroyTask.fulfilled, (state: ITaskState, action: PayloadAction<number>) => {
                 state.tasksLoading = false
-                state.tasks.splice(action.payload, 1)
+                state.tasks = state.tasks.filter(task => task.id !== action.payload)
             })
             .addCase(destroyTask.rejected, handleRejected)
     },

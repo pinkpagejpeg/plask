@@ -46,7 +46,9 @@ export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowE
 
     const deleteTask = async () => {
         if (allowEdit) {
-            dispatch(destroyTask(taskId))
+            if (taskId) {
+                dispatch(destroyTask(taskId))
+            }
         }
     }
 
