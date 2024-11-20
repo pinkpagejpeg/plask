@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IGoal, IGoalState } from "./types"
-import { addGoal, destroyGoal, fetchGoalsByUserId } from "../api"
+import { addGoal, changeGoal, destroyGoal, fetchGoalsByUserId } from "../api"
 
 const initialState: IGoalState = {
     goals: null,
@@ -55,7 +55,16 @@ const goalSlice = createSlice({
             })
             .addCase(destroyGoal.rejected, handleRejected)
 
-        // changeGoal
+            // changeGoal
+            .addCase(changeGoal.pending, handlePending)
+            .addCase(changeGoal.fulfilled, (state: IGoalState, action: PayloadAction<IGoal>) => {
+                state.goalsLoading = false
+                const index = state.goals.findIndex(goal => goal.id === action.payload.id)
+                if (index !== -1) {
+                    state.goals[index] = action.payload
+                }
+            })
+            .addCase(changeGoal.rejected, handleRejected)
 
     }
 })

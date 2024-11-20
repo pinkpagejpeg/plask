@@ -22,6 +22,8 @@ export const Tasks: FC = () => {
         }
     }, [user])
 
+    console.log(tasks)
+
     const createTask = async (e) => {
         e.preventDefault()
         if (user.id && info) {

@@ -1,15 +1,10 @@
-import { useState, useContext, FC } from 'react'
-// import { observer } from 'mobx-react-lite'
-// import { Context } from '../../../../main'
+import { useState, FC } from 'react'
 import classes from './GoalCheckbox.module.scss'
 import { deleteGoalItem, updateGoalItem, updateGoalItemStatus } from '../../../api'
 import { deleteIcon } from '../../../assets'
 import { IGoalCheckbox } from './types'
-import { useTypedSelector } from '../../../../features/hooks'
 
 export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, updateProgress }) => {
-    // const { goalItem } = useContext(Context)
-    const { goals } = useTypedSelector(state => state.goal)
     const [isChecked, setIsChecked] = useState(checked)
     const [isEditing, setIsEditing] = useState(false)
     const [info, setInfo] = useState(label)
@@ -17,28 +12,28 @@ export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, up
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked)
         changeStatus()
-    };
+    }
 
     const handleSpanClick = () => {
         setIsEditing(true)
-    };
+    }
 
     const handleInputBlur = () => {
         changeGoalItem()
         setIsEditing(false)
-    };
+    }
 
     const changeGoalItem = async () => {
         try {
-            let data
-
             if (info === '') {
                 destroyGoalItem()
+                updateProgress()
             }
 
-            data = await updateGoalItem(goalItemId, info)
-            // goalItem.editGoalItem(data.goal_item.id, data.goal_item)
-            // dispatch
+            if (info && goalItemId) {
+                await updateGoalItem(goalItemId, info)
+                updateProgress()
+            }
         } catch (e) {
             alert(`При изменении подцели возникла ошибка: ${e.response.data.message}`)
         }
@@ -46,12 +41,10 @@ export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, up
 
     const changeStatus = async () => {
         try {
-            let data
-
-            data = await updateGoalItemStatus(goalItemId, !isChecked)
-            // goalItem.editGoalItem(data.goal_item.id, data.goal_item)
-            // dispatch
-            updateProgress()
+            if (goalItemId) {
+                await updateGoalItemStatus(goalItemId, !isChecked)
+                updateProgress()
+            }
         } catch (e) {
             alert(`При изменении статуса подцели возникла ошибка: ${e.response.data.message}`)
         }
@@ -59,12 +52,10 @@ export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, up
 
     const destroyGoalItem = async () => {
         try {
-            let data
-
-            data = await deleteGoalItem(goalItemId)
-            // goalItem.removeGoalItem(data.deletedGoalItemId)
-            // dispatch
-            updateProgress()
+            if (goalItemId) {
+                await deleteGoalItem(goalItemId)
+                updateProgress()
+            }
         }
         catch (e) {
             alert(`При удалении подцели возникла ошибка: ${e.response.data.message}`)

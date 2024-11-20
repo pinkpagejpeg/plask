@@ -51,7 +51,10 @@ const taskSlice = createSlice({
             .addCase(changeTask.pending, handlePending)
             .addCase(changeTask.fulfilled, (state: ITaskState, action: PayloadAction<ITask>) => {
                 state.tasksLoading = false
-                state.tasks[action.payload.id] = action.payload
+                const index = state.tasks.findIndex(task => task.id === action.payload.id)
+                if (index !== -1) {
+                    state.tasks[index] = action.payload
+                }
             })
             .addCase(changeTask.rejected, handleRejected)
 
@@ -59,7 +62,10 @@ const taskSlice = createSlice({
             .addCase(changeTaskStatus.pending, handlePending)
             .addCase(changeTaskStatus.fulfilled, (state: ITaskState, action: PayloadAction<ITask>) => {
                 state.tasksLoading = false
-                state.tasks[action.payload.id] = action.payload
+                const index = state.tasks.findIndex(task => task.id === action.payload.id)
+                if (index !== -1) {
+                    state.tasks[index] = action.payload
+                }
             })
             .addCase(changeTaskStatus.rejected, handleRejected)
 
