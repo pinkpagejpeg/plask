@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import classes from './ProfileInfo.module.scss'
-import { updateUserInfo, getUser } from '../../../../shared/api'
-import { useTypedSelector } from '../../../../features/hooks'
+import { useAppDispatch, useTypedSelector } from '../../../../features/hooks'
+import { changeUserInfo } from '../../../../entities/users'
 
 export const ProfileInfo: FC = () => {
     const { user } = useTypedSelector(state => state.user)
@@ -9,63 +9,42 @@ export const ProfileInfo: FC = () => {
     const [prevEmail, setPrevEmail] = useState('')
     const [isEmailEditing, setIsEmailEditing] = useState(false)
     const [password, setPassword] = useState('')
-    const [prevPassword, setPrevPassword] = useState('')
     const [isPasswordEditing, setIsPasswordEditing] = useState(false)
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         setEmail(user.email)
         setPrevEmail(user.email)
-        setPrevPassword(user.password)
     }, [user])
 
     const handleEmailEdit = () => {
-        // setIsEmailEditing(true)
+        setIsEmailEditing(true)
     }
 
     const handleEmailBlur = () => {
-        // if (prevEmail !== email && email.trim() !== '') {
-        //     changeUserInfo()
-        //     setPrevEmail(email)
-        // } else {
-        //     setEmail(prevEmail)
-        // }
-        // setIsEmailEditing(false)
+        if (user.id) {
+            if (prevEmail !== email && email.trim() !== '') {
+                dispatch(changeUserInfo({ userId: user.id, email: email, password: password }))
+                setPrevEmail(email)
+            } else {
+                setEmail(prevEmail)
+            }
+            setIsEmailEditing(false)
+        }
     }
 
     const handlePasswordEdit = () => {
-        // setIsPasswordEditing(true)
+        setIsPasswordEditing(true)
     }
 
     const handlePasswordBlur = () => {
-        // if (prevPassword !== password && password.trim() !== '') {
-        //     changeUserInfo()
-        //     setPrevPassword(password)
-        // } else {
-        //     setPassword(prevPassword)
-        // }
-        // setIsPasswordEditing(false)
-        // setPassword('')
-    }
-
-    const changeUserInfo = async () => {
-        // try {
-        //     let data
-        //     data = await updateUserInfo(user.id, email, password)
-        //     fetchUser()
-        // } catch (e) {
-        //     alert(e.response.data.message)
-        // }
-    }
-
-    const fetchUser = async () => {
-        // try {
-        //     if (user.id) {
-        //         const data = await getUser(user.id)
-        //         user.setUser(data)
-        //     }
-        // } catch (e) {
-        //     alert(`Ошибка при получении информации о пользователе: ${e.response.data.message}`)
-        // }
+        if (user.id) {
+            if (password.trim() !== '') {
+                dispatch(changeUserInfo({ userId: user.id, email: email, password: password }))
+            }
+            setIsPasswordEditing(false)
+            setPassword('')
+        }
     }
 
     return (

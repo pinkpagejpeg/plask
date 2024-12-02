@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IUser, IUserState } from "./types"
-import { destroyUser, destroyUserImage, fetchUserById } from "../api"
-import { changeUserImage } from "../api/changeUserImage"
+import { IChangeUserReturnedValue, IUser, IUserState } from "./types"
+import { changeUserImage, changeUserInfo, destroyUser, destroyUserImage, fetchUserById } from "../api"
 
 const initialState: IUserState = {
     user: null,
@@ -51,6 +50,19 @@ const userSlice = createSlice({
                 state.authLoading = false
             })
             .addCase(changeUserImage.rejected, (state, action: PayloadAction<string>) => {
+                state.authLoading = false
+                state.authError = action.payload
+            })
+
+            // changeUserInfo
+            .addCase(changeUserInfo.pending, (state) => {
+                state.authLoading = true
+            })
+            .addCase(changeUserInfo.fulfilled, (state, action: PayloadAction<IChangeUserReturnedValue>) => {
+                state.user.email = action.payload.email
+                state.authLoading = false
+            })
+            .addCase(changeUserInfo.rejected, (state, action: PayloadAction<string>) => {
                 state.authLoading = false
                 state.authError = action.payload
             })
