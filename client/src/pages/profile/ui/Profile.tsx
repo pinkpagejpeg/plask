@@ -1,94 +1,69 @@
-import { FC, useContext, useEffect, useState } from 'react'
-// import { observer } from 'mobx-react-lite'
-// import { Context } from '../main'
+import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import classes from './Profile.module.scss'
 import { Navbar } from '../../../shared/ui'
-import { getUser, updateUserImage, deleteUserImage, deleteUser } from '../../../shared/api'
 import { deleteIcon } from '../../../shared/assets'
 import { uploadIcon } from '../../../shared/assets'
 import { REGISTRATION_ROUTE } from '../../../shared/config'
 import { ProfileInfo } from './profileInfo'
+import { useAppDispatch, useTypedSelector } from '../../../features/hooks'
+import { changeUserImage, destroyUser, destroyUserImage, fetchUserById } from '../../../entities/users'
 
 export const Profile: FC = () => {
-    // const { user } = useContext(Context)
+    const { user } = useTypedSelector(state => state.user)
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const [image, setImage] = useState(user.img)
 
     // if (!user) {
-    //     return <Navigate to={LOGIN_ROUTE} />;
+    //     return <Navigate to={LOGIN_ROUTE} />
     // }
 
-    // const selectFile = (e) => {
-    //     const file = e.target.files[0]
+    const selectFile = (e) => {
+        const file = e.target.files[0]
 
-    //     if (!file) {
-    //         alert('Файл не загружен')
-    //     }
+        if (!file) {
+            alert('Файл не загружен')
+        }
 
-    //     changeUserImage(file)
-    // };
+        updateUserImage(file)
+    }
 
-    // const changeUserImage = async (file) => {
-    //     try {
-    //         const formData = new FormData()
-    //         formData.append('file', file)
+    const updateUserImage = async (file) => {
+        if (user.id) {
+            const formData = new FormData()
+            formData.append('file', file)
 
-    //         let data
-    //         data = await updateUserImage(user._user.id, formData)   
-    //         fetchUser()    
-    //     } catch (e) {
-    //         alert(e.response.data.message)
-    //     }
-    // };
+            dispatch(changeUserImage({ userId: user.id, formData: formData }))
+        }
+    }
 
-    // const destroyUserImage = async () => {
-    //         try {
-    //             let data
-    //             data = await deleteUserImage(user._user.id);
-    //             fetchUser()        
-    //         } catch (e) {
-    //             alert(e.response.data.message);
-    //         }
-    // };
+    const deleteUserImage = async () => {
+        if (user.id) {
+            dispatch(destroyUserImage(user.id))
+        }
+    }
 
-    // const destroyUser = async () => {
-    //     try {
-    //         const confirmed = window.confirm("Вы уверены, что хотите удалить аккаунт?");
-    //         if (confirmed) {
-    //             let data
-
-    //             data = await deleteUser(user._user.id)
-    //             localStorage.removeItem('token')
-    //             user.setUser({})
-    //             user.setIsAuth(false)
-    //             navigate(REGISTRATION_ROUTE)
-    //         }
-    //     }
-    //     catch (e) {
-    //         alert(e.response.data.message)
-    //     }
-    // }
-
-    // const fetchUser = async () => {
-    //     try {
-    //         if (user._user.id) {
-    //             const data = await getUser(user._user.id)
-    //             user.setUser(data)
-    //         }
-    //     } catch (e) {
-    //         alert('Ошибка при получении информации о пользователе:', e.response.data.message)
-    //     }
-    // };
+    const deleteUser = async () => {
+        if (user.id) {
+            const confirmed = window.confirm("Вы уверены, что хотите удалить аккаунт?")
+            if (confirmed) {
+                dispatch(destroyUser(user.id))
+                localStorage.removeItem('token')
+                navigate(REGISTRATION_ROUTE)
+            }
+        }
+    }
 
     return (
         <>
             <Navbar />
-            {/* <div className={classes.profile__wrapper}>
+            <div className={classes.profile__wrapper}>
                 <h2 className={classes.plask}>Plask</h2>
                 <h3 className={classes.title}>Профиль</h3>
                 <div className={classes.profile__mainbox}>
                     <div className={classes.profile__imagebox}>
-                        <img src={import.meta.env.VITE_API_URL + 'static/' + user._user.img} />
+                        <img src={import.meta.env.VITE_API_URL + 'static/' + user.img} />
                         <div className={classes.profile__image_buttons}>
                             <label htmlFor="file-upload" className={classes.profile__image_button}>
                                 <img src={uploadIcon} alt="Загрузить фото профиля" />
@@ -100,19 +75,19 @@ export const Profile: FC = () => {
                                 style={{ display: 'none' }}
                                 onChange={(e) => selectFile(e)}
                             />
-                            <button className={classes.profile__image_button} onClick={destroyUserImage}>
+                            <button className={classes.profile__image_button} onClick={deleteUserImage}>
                                 <img src={deleteIcon} alt='Удалить фото профиля' />
                             </button>
                         </div>
                     </div>
                     <div className={classes.profile__infobox}>
                         <ProfileInfo />
-                        <button className={classes.profile__button_delete} onClick={destroyUser}>
+                        <button className={classes.profile__button_delete} onClick={deleteUser}>
                             Удалить аккаунт
                         </button>
                     </div>
                 </div>
-            </div> */}
+            </div>
         </>
     )
 }

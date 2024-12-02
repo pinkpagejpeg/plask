@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import { getUser } from "../../../shared/api"
 import { IUser } from "../model"
 
-export const fetchUserById = createAsyncThunk<IUser, { userId: number }, { rejectValue: string }>(
+export const fetchUserById = createAsyncThunk<IUser, number, { rejectValue: string }>(
     "user/fetchUserById",
     async (userId, { rejectWithValue }) => {
         try {

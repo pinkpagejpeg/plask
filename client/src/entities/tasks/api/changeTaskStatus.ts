@@ -6,8 +6,8 @@ export const changeTaskStatus = createAsyncThunk<ITask, { taskId: number, status
     "task/changeTaskStatus",
     async ({ taskId, status }, { rejectWithValue }) => {
         try {
-            const data = await updateTaskStatus(taskId, status)
-            return data
+            const { task } = await updateTaskStatus(taskId, status)
+            return task
         } catch (error) {
             return rejectWithValue(error.response.data)
         }

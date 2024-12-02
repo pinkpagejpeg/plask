@@ -30,6 +30,8 @@ export const Goals: FC = () => {
         }
     }
 
+    console.log(goals)
+
     return (
         <>
             <Navbar />

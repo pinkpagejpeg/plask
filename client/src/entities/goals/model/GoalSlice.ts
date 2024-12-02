@@ -61,7 +61,7 @@ const goalSlice = createSlice({
                 state.goalsLoading = false
                 const index = state.goals.findIndex(goal => goal.id === action.payload.id)
                 if (index !== -1) {
-                    state.goals[index] = action.payload
+                    state.goals[index] = {...action.payload}
                 }
             })
             .addCase(changeGoal.rejected, handleRejected)

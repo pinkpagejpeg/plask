@@ -6,8 +6,8 @@ export const changeGoal = createAsyncThunk<IGoal, { goalId: number, info: string
     "goal/changeGoal",
     async ({ goalId, info }, { rejectWithValue }) => {
         try {
-            const data = await updateGoal(goalId, info)
-            return data.goal
+            const { goal } = await updateGoal(goalId, info)
+            return goal
         } catch (error) {
             return rejectWithValue(error.response.data)
         }

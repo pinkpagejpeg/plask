@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IUser, IUserState } from "./types"
-import { fetchUserById } from "../api"
+import { destroyUser, destroyUserImage, fetchUserById } from "../api"
+import { changeUserImage } from "../api/changeUserImage"
 
 const initialState: IUserState = {
     user: null,
@@ -18,15 +19,16 @@ const userSlice = createSlice({
             // state.isAuth = true
         },
         setAuthFalse(state) {
-            state.user = null
-            state.isAuth = false
+            // state.user = null
+            // state.isAuth = false
         },
         setAuthLoading(state, action) {
-            state.authLoading = action.payload
+            // state.authLoading = action.payload
         },
     },
     extraReducers: (builder) => {
         builder
+            // fetchUserById
             .addCase(fetchUserById.pending, (state) => {
                 state.authLoading = true
             })
@@ -37,7 +39,47 @@ const userSlice = createSlice({
             })
             .addCase(fetchUserById.rejected, (state, action: PayloadAction<string>) => {
                 state.authLoading = false
-                state.authError = action.payload!
+                state.authError = action.payload
+            })
+
+            // changeUserImage
+            .addCase(changeUserImage.pending, (state) => {
+                state.authLoading = true
+            })
+            .addCase(changeUserImage.fulfilled, (state, action: PayloadAction<IUser>) => {
+                state.user = {...action.payload}
+                state.authLoading = false
+            })
+            .addCase(changeUserImage.rejected, (state, action: PayloadAction<string>) => {
+                state.authLoading = false
+                state.authError = action.payload
+            })
+
+            // destroyUserImage
+            .addCase(destroyUserImage.pending, (state) => {
+                state.authLoading = true
+            })
+            .addCase(destroyUserImage.fulfilled, (state, action: PayloadAction<IUser>) => {
+                state.user = {...action.payload}
+                state.authLoading = false
+            })
+            .addCase(destroyUserImage.rejected, (state, action: PayloadAction<string>) => {
+                state.authLoading = false
+                state.authError = action.payload
+            })
+
+            // destroyUser
+            .addCase(destroyUser.pending, (state) => {
+                state.authLoading = true
+            })
+            .addCase(destroyUser.fulfilled, (state, action: PayloadAction<number>) => {
+                state.user = null
+                state.isAuth = false
+                state.authLoading = false
+            })
+            .addCase(destroyUser.rejected, (state, action: PayloadAction<string>) => {
+                state.authLoading = false
+                state.authError = action.payload
             })
     }
 })

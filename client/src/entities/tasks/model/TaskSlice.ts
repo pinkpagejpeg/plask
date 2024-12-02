@@ -53,7 +53,7 @@ const taskSlice = createSlice({
                 state.tasksLoading = false
                 const index = state.tasks.findIndex(task => task.id === action.payload.id)
                 if (index !== -1) {
-                    state.tasks[index] = action.payload
+                    state.tasks[index] = {...action.payload}
                 }
             })
             .addCase(changeTask.rejected, handleRejected)
@@ -64,7 +64,7 @@ const taskSlice = createSlice({
                 state.tasksLoading = false
                 const index = state.tasks.findIndex(task => task.id === action.payload.id)
                 if (index !== -1) {
-                    state.tasks[index] = action.payload
+                    state.tasks[index] = {...action.payload}
                 }
             })
             .addCase(changeTaskStatus.rejected, handleRejected)
