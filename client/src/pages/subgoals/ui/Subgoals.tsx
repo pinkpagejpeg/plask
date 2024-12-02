@@ -1,5 +1,5 @@
 import { useState, useEffect, FC } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import classes from './Subgoals.module.scss'
 import { Navbar, GoalCheckbox } from '../../../shared/ui'
 import { getGoal, getGoalProgress, getGoalItems, createGoalItem } from '../../../shared/api'
@@ -12,10 +12,7 @@ import { changeGoal, destroyGoal, fetchGoalsByUserId } from '../../../entities/g
 export const Subgoals: FC = () => {
     const { id } = useParams()
     const goalId = Number(id)
-    const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    // const { goals } = useTypedSelector(state => state.goal)
-    // const { subgoals } = useTypedSelector(state => state.goal)
     const { user } = useTypedSelector(state => state.user)
     const [goal, setGoal] = useState({})
     const [progress, setProgress] = useState(0)

@@ -1,13 +1,12 @@
-import { FC, useContext, useState } from 'react'
+import { FC, useState } from 'react'
 import classes from './Feedback.module.scss'
 import { Navbar } from '../../../shared/ui'
-// import { observer } from 'mobx-react-lite'
-// import { Context } from '../main'
 import { LOGIN_ROUTE } from '../../../shared/config'
 import { createFeedback } from '../../../shared/api'
+import { useTypedSelector } from '../../../features/hooks'
 
 export const Feedback: FC = () => {
-    // const { user } = useContext(Context)
+    const { user } = useTypedSelector(state => state.user)
     const [info, setInfo] = useState('')
 
     // if (!user) {
@@ -17,12 +16,12 @@ export const Feedback: FC = () => {
     const buttonClick = async (e) => {
         e.preventDefault()
         try {
-            let data
+            if (user.id && info) {
+                await createFeedback(user.id, info)
 
-            // data = await createFeedback(user._user.id, info)
-
-            setInfo('')
-            alert('Обратная связь отправлена')
+                setInfo('')
+                alert('Обратная связь отправлена')
+            }
         }
         catch (e) {
             alert(e.response.data.message)
