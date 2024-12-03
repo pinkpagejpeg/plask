@@ -1,12 +1,10 @@
-import { useEffect, useState, useContext, FC } from 'react'
+import { useEffect, useState, FC } from 'react'
 import classes from './Users.module.scss'
-// import { Context } from '../main'
 import { Navbar } from '../../../shared/ui'
 import { getUsers, createUser } from '../../../shared/api'
 import { UserItem } from './userItem'
 
 export const Users: FC = () => {
-    // const { user } = useContext(Context)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [role, setRole] = useState('USER')
@@ -16,38 +14,36 @@ export const Users: FC = () => {
     //     return <Navigate to={LOGIN_ROUTE} />;
     // }
 
-    // useEffect(() => {
-    //     fetchUsers();
-    // }, [])
+    useEffect(() => {
+        fetchUsers();
+    }, [])
 
-    // const fetchUsers = async () => {
-    //     try {
-    //         const users = await getUsers()
-    //         setUsers(users)
-    //     } catch (e) {
-    //         alert(`Ошибка при получении пользователей: ${e.response.data.message}`)
-    //     }
-    // };
+    const fetchUsers = async () => {
+        try {
+            const users = await getUsers()
+            setUsers(users)
+        } catch (error) {
+            alert(`Ошибка при получении пользователей: ${error.response.data}`)
+        }
+    }
 
-    // const addUser = async (e) => {
-    //     e.preventDefault()
-    //     try {
-    //         let data
-
-    //         data = await createUser(email, password, role)
-    //         setEmail('')
-    //         setPassword('')
-    //         fetchUsers();
-    //     }
-    //     catch (e) {
-    //         alert(e.response.data.message.message)
-    //     }
-    // }
+    const addUser = async (e) => {
+        e.preventDefault()
+        try {
+            await createUser(email, password, role)
+            setEmail('')
+            setPassword('')
+            fetchUsers()
+        }
+        catch (error) {
+            alert(`Ошибка при добавлении пользователя: ${error.response.data}`)
+        }
+    }
 
     return (
         <>
             <Navbar />
-            {/* <div className={classes.container}>
+            <div className={classes.container}>
                 <div className={classes.user__wrapper}>
                     <h3 className={classes.title}>Пользователи</h3>
                     <form className={classes.user__form} autoComplete='off'>
@@ -94,7 +90,7 @@ export const Users: FC = () => {
                         </tbody>
                     </table>
                 </div>
-            </div> */}
+            </div>
         </>
     )
 }

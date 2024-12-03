@@ -2,88 +2,84 @@ import { FC, useState } from 'react'
 import classes from './UserItem.module.scss'
 import { deleteUser, updateUser } from '../../../../shared/api'
 import { deleteIcon } from '../../../../shared/assets'
+import { IUserItem } from './types'
 
-export const UserItem: FC = ({ user, onUserChange }) => {
-    // const [email, setEmail] = useState(user.email)
-    // const [prevEmail, setPrevEmail] = useState(user.email)
-    // const [password, setPassword] = useState('')
-    // const [prevPassword, setPrevPassword] = useState(user.password)
-    // const [role, setRole] = useState(user.role)
-    // const [prevRole, setPrevRole] = useState(user.role)
-    // const [isEmailEditing, setIsEmailEditing] = useState(false)
-    // const [isPasswordEditing, setIsPasswordEditing] = useState(false)
-    // const [isRoleOpen, setIsRoleOpen] = useState(false)
+export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
+    const [email, setEmail] = useState(user.email)
+    const [prevEmail, setPrevEmail] = useState(user.email)
+    const [password, setPassword] = useState('')
+    const [prevPassword, setPrevPassword] = useState(user.password)
+    const [role, setRole] = useState(user.role)
+    const [prevRole, setPrevRole] = useState(user.role)
+    const [isEmailEditing, setIsEmailEditing] = useState(false)
+    const [isPasswordEditing, setIsPasswordEditing] = useState(false)
+    const [isRoleOpen, setIsRoleOpen] = useState(false)
 
-    // const handleEmailEdit = () => {
-    //     setIsEmailEditing(true);
-    // };
+    const handleEmailEdit = () => {
+        setIsEmailEditing(true)
+    }
 
-    // const handleEmailBlur = () => {
-    //     if (prevEmail !== email && email.trim() !== '') {
-    //         changeUser()
-    //         setPrevEmail(email)
-    //     } else {
-    //         setEmail(prevEmail)
-    //     }
-    //     setIsEmailEditing(false)
-    // };
+    const handleEmailBlur = () => {
+        if (prevEmail !== email && email.trim() !== '') {
+            changeUser()
+            setPrevEmail(email)
+        } else {
+            setEmail(prevEmail)
+        }
+        setIsEmailEditing(false)
+    }
 
-    // const handlePasswordEdit = () => {
-    //     setIsPasswordEditing(true);
-    // };
+    const handlePasswordEdit = () => {
+        setIsPasswordEditing(true)
+    }
 
-    // const handlePasswordBlur = () => {
-    //     if (prevPassword !== password && password.trim() !== '') {
-    //         changeUser()
-    //         setPrevPassword(password)
-    //     } else {
-    //         setPassword(prevPassword)
-    //     }
-    //     setIsPasswordEditing(false)
-    //     setPassword('')
-    // };
+    const handlePasswordBlur = () => {
+        if (prevPassword !== password && password.trim() !== '') {
+            changeUser()
+            setPrevPassword(password)
+        } else {
+            setPassword(prevPassword)
+        }
+        setIsPasswordEditing(false)
+        setPassword('')
+    }
 
-    // const handleRoleClick = () => {
-    //     setIsRoleOpen(true);
-    // };
+    const handleRoleClick = () => {
+        setIsRoleOpen(true);
+    }
 
-    // const handleRoleBlur = () => {
-    //     if (prevRole !== role && role.trim() !== '') {
-    //         changeUser()
-    //         setPrevRole(role)
-    //     } else {
-    //         setRole(prevRole)
-    //     }
-    //     setIsRoleOpen(false)
-    // };
+    const handleRoleBlur = () => {
+        if (prevRole !== role && role.trim() !== '') {
+            changeUser()
+            setPrevRole(role)
+        } else {
+            setRole(prevRole)
+        }
+        setIsRoleOpen(false)
+    }
 
-    // const changeUser = async () => {
-    //     try {
-    //         let data
+    const changeUser = async () => {
+        try {
+            await updateUser(user.id, email, password, role)
+            onUserChange()
+        } catch (error) {
+            alert(`Ошибка при изменении пользователя: ${error.response.data}`)
+        }
+    }
 
-    //         data = await updateUser(user.id, email, password, role)
-    //         console.log(role, prevRole)
-    //         onUserChange()
-    //     } catch (e) {
-    //         alert(e.response.data.message)
-    //     }
-    // };
-
-    // const destroyUser = async () => {
-    //     try {
-    //         let data
-
-    //         data = await deleteUser(user.id)
-    //         onUserChange()
-    //     }
-    //     catch (e) {
-    //         alert(e.response.data.message)
-    //     }
-    // }
+    const destroyUser = async () => {
+        try {
+            await deleteUser(user.id)
+            onUserChange()
+        }
+        catch (error) {
+            alert(`Ошибка при удалении пользователя: ${error.response.data}`)
+        }
+    }
 
     return (
         <tr className={classes.user__table_main}>
-            {/* <td className={classes.main_text}>{user.id}</td>
+            <td className={classes.main_text}>{user.id}</td>
             <td className={classes.main_text}>{isEmailEditing ? (
                 <input
                     type="email"
@@ -129,7 +125,7 @@ export const UserItem: FC = ({ user, onUserChange }) => {
                 <button className={classes.user__button} onClick={destroyUser}>
                     <img src={deleteIcon} />
                 </button>
-            </td> */}
+            </td>
         </tr>
     )
 }

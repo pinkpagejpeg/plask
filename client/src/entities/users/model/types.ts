@@ -4,6 +4,7 @@ export interface IUserState {
     authLoading: boolean,
     authError: string | null
 }
+
 export interface IUser {
     id: number | null,
     email: string | null,

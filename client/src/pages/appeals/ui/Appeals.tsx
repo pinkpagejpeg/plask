@@ -1,14 +1,11 @@
-import { useEffect, useState, useContext, FC } from 'react'
+import { useEffect, useState, FC } from 'react'
 import classes from './Appeals.module.scss'
-// import { Context } from '../main'
 import { Navbar } from '../../../shared/ui'
 import { getFeedback } from '../../../shared/api'
 import { AppealItem } from './appealItem'
 
 export const Appeals: FC = () => {
-    // const { user } = useContext(Context)
     const [feedbacks, setFeedbacks] = useState([])
-
 
     // if (!user) {
     //     return <Navigate to={LOGIN_ROUTE} />;
@@ -19,12 +16,12 @@ export const Appeals: FC = () => {
             try {
                 const feedbacks = await getFeedback()
                 setFeedbacks(feedbacks)
-            } catch (e) {
-                // alert('Ошибка при получении обратной связи:', e.response.data.message.message)
+            } catch (error) {
+                alert(`Ошибка при получении обратной связи: ${error.response.data}`)
             }
-        };
+        }
 
-        fetchFeedbacks();
+        fetchFeedbacks()
     }, [])
 
     return (

@@ -1,6 +1,4 @@
-import { FC, useContext } from 'react'
-// import { observer } from 'mobx-react-lite'
-// import { Context } from '../main'
+import { FC } from 'react'
 import classes from './Admin.module.scss'
 import { NavLink, Navigate } from 'react-router-dom'
 import { ADMIN_FEEDBACK_ROUTE, ADMIN_USER_ROUTE, LOGIN_ROUTE } from '../../../shared/config'
@@ -11,11 +9,11 @@ export const Admin: FC = () => {
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search)
     const from = queryParams.get('from')
-    // const { user } = useContext(Context)
 
     // if (!user) {
     //     return <Navigate to={LOGIN_ROUTE} />
     // }
+
     return (
         <>
             <Navbar />
