@@ -1,5 +1,5 @@
 import { useState, FC } from 'react'
-import classes from './NavBar.module.scss'
+import classes from './Navbar.module.scss'
 import { burgerMenu } from '../../assets'
 import { NavbarMenu } from './navbarMenu'
 
