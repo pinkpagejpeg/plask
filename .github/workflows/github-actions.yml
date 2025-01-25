@@ -24,6 +24,10 @@ jobs:
           ls -l /home/runner/work/plask
 
       - name: Install dependencies for frontend
+<<<<<<< HEAD
+=======
+        working-directory: frontend
+>>>>>>> 6ed4ca5eacc59c313e5a54584e54853ef2e10f43
         run: |
           cd frontend
           npm install
@@ -49,7 +53,11 @@ jobs:
           npm run build
 
       - name: Install dependencies for backend
+<<<<<<< HEAD
         working-directory: /home/runner/work/plask/plask/backend
+=======
+        working-directory: backend
+>>>>>>> 6ed4ca5eacc59c313e5a54584e54853ef2e10f43
         run: |
           npm install
 
