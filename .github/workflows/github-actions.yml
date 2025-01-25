@@ -19,51 +19,47 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: List contents of the root directory
-        run: ls -l /home/runner/work/plask/plask
-          ls -l /home/runner/work/plask
-
       - name: Install dependencies for frontend
+        working-directory: client
         run: |
-          cd frontend
           npm install
 
       - name: Run lint for frontend
-        working-directory: frontend
+        working-directory: client
         run: |
           npm run lint
 
       - name: Run Steiger for frontend
-        working-directory: frontend
+        working-directory: client
         run: |
           npm run lint:steiger
 
       - name: Typecheck for frontend
-        working-directory: frontend
+        working-directory: client
         run: |
           npm run typecheck
 
       - name: Build frontend
-        working-directory: frontend
+        working-directory: client
         run: |
           npm run build
 
       - name: Install dependencies for backend
-        working-directory: /home/runner/work/plask/plask/backend
+        working-directory: server
         run: |
           npm install
 
       - name: Run lint for backend
-        working-directory: backend
+        working-directory: server
         run: |
           npm run lint
 
       - name: Run migrations for backend
-        working-directory: backend
+        working-directory: server
         run: |
           npm run migrate
 
       - name: Start backend in dev mode
-        working-directory: backend
+        working-directory: server
         run: |
           npm run dev
