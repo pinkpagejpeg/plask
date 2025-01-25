@@ -12,16 +12,20 @@ jobs:
       matrix:
         node-version: [20.x]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
 
       - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: List contents of the root directory
+        run: ls -l /home/runner/work/plask/plask
+          ls -l /home/runner/work/plask
+
       - name: Install dependencies for frontend
-        working-directory: frontend
         run: |
+          cd frontend
           npm install
 
       - name: Run lint for frontend
@@ -45,7 +49,7 @@ jobs:
           npm run build
 
       - name: Install dependencies for backend
-        working-directory: backend
+        working-directory: /home/runner/work/plask/plask/backend
         run: |
           npm install
 
