@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react'
 import classes from './InfoContactsMap.module.scss'
-import { getMap } from '../../../../../shared/lib'
+import { getMap } from '../../../../../shared/lib/map'
 
 export const InfoContactsMap: FC = () => {
     useEffect(() => {

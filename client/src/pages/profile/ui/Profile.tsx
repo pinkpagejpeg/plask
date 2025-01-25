@@ -1,26 +1,28 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import classes from './Profile.module.scss'
 import { Navbar } from '../../../shared/ui'
-import { deleteIcon } from '../../../shared/assets'
-import { uploadIcon } from '../../../shared/assets'
+import { deleteIcon, uploadIcon } from '../../../shared/assets'
 import { REGISTRATION_ROUTE } from '../../../shared/config'
 import { ProfileInfo } from './profileInfo'
-import { useAppDispatch, useTypedSelector } from '../../../features/hooks'
-import { changeUserImage, destroyUser, destroyUserImage, fetchUserById } from '../../../entities/users'
+import { useAppDispatch, useTypedSelector } from '@redux'
+import { changeUserImage, destroyUser, destroyUserImage } from '../../../entities/users'
 
 export const Profile: FC = () => {
     const { user } = useTypedSelector(state => state.user)
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const [image, setImage] = useState(user.img)
 
     // if (!user) {
     //     return <Navigate to={LOGIN_ROUTE} />
     // }
 
-    const selectFile = (e) => {
-        const file = e.target.files[0]
+    const fileChangeHandler = (event)=> {
+        selectFile(event)
+    }
+
+    const selectFile = (event) => {
+        const file = event.target.files[0]
 
         if (!file) {
             alert('Файл не загружен')
@@ -34,7 +36,7 @@ export const Profile: FC = () => {
             const formData = new FormData()
             formData.append('file', file)
 
-            dispatch(changeUserImage({ userId: user.id, formData: formData }))
+            dispatch(changeUserImage({ userId: user.id, formData }))
         }
     }
 
@@ -73,7 +75,7 @@ export const Profile: FC = () => {
                                 type="file"
                                 accept="image/*"
                                 style={{ display: 'none' }}
-                                onChange={(e) => selectFile(e)}
+                                onChange={fileChangeHandler}
                             />
                             <button className={classes.profile__image_button} onClick={deleteUserImage}>
                                 <img src={deleteIcon} alt='Удалить фото профиля' />

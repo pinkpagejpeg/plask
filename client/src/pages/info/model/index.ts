@@ -1,0 +1,1 @@
+export { IInfoProsCard } from "./types"

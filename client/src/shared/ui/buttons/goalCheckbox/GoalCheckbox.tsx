@@ -1,17 +1,16 @@
 import { useState, FC } from 'react'
 import classes from './GoalCheckbox.module.scss'
-import { deleteGoalItem, updateGoalItem, updateGoalItemStatus } from '../../../api'
 import { deleteIcon } from '../../../assets'
 import { IGoalCheckbox } from './types'
 
-export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, updateProgress }) => {
+export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, changeSubgoal, changeSubgoalStatus, destroySubgoal }) => {
     const [isChecked, setIsChecked] = useState(checked)
     const [isEditing, setIsEditing] = useState(false)
     const [info, setInfo] = useState(label)
 
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked)
-        changeStatus()
+        changeSubgoalStatusHandler()
     }
 
     const handleSpanClick = () => {
@@ -19,46 +18,40 @@ export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, up
     }
 
     const handleInputBlur = () => {
-        changeGoalItem()
+        changeSubgoalHandler()
         setIsEditing(false)
     }
 
-    const changeGoalItem = async () => {
+    const subgoalInfoChangeHandler = (event) => {
+        setInfo(event.target.value)
+    }
+
+    const changeSubgoalHandler = async () => {
         try {
             if (info === '') {
-                destroyGoalItem()
-                updateProgress()
+                destroySubgoalHandler()
             }
 
-            if (info && goalItemId) {
-                await updateGoalItem(goalItemId, info)
-                updateProgress()
-            }
-        } catch (e) {
-            alert(`При изменении подцели возникла ошибка: ${e.response.data.message}`)
+            changeSubgoal(goalItemId, info)
+        } catch (error) {
+            alert(`При изменении подцели возникла ошибка: ${error.response.data}`)
         }
     }
 
-    const changeStatus = async () => {
+    const changeSubgoalStatusHandler = async () => {
         try {
-            if (goalItemId) {
-                await updateGoalItemStatus(goalItemId, !isChecked)
-                updateProgress()
-            }
-        } catch (e) {
-            alert(`При изменении статуса подцели возникла ошибка: ${e.response.data.message}`)
+            changeSubgoalStatus(goalItemId, !isChecked)
+        } catch (error) {
+            alert(`При изменении статуса подцели возникла ошибка: ${error.response.data}`)
         }
     }
 
-    const destroyGoalItem = async () => {
+    const destroySubgoalHandler = async () => {
         try {
-            if (goalItemId) {
-                await deleteGoalItem(goalItemId)
-                updateProgress()
-            }
+            destroySubgoal(goalItemId)
         }
-        catch (e) {
-            alert(`При удалении подцели возникла ошибка: ${e.response.data.message}`)
+        catch (error) {
+            alert(`При удалении подцели возникла ошибка: ${error.response.data}`)
         }
     }
 
@@ -78,7 +71,7 @@ export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, up
                     type="text"
                     className={classes.input}
                     value={info}
-                    onChange={e => setInfo(e.target.value)}
+                    onChange={subgoalInfoChangeHandler}
                     onBlur={handleInputBlur}
                     autoFocus
                     required
@@ -90,7 +83,7 @@ export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, up
                     {info}
                 </span>
             )}
-            <button className={classes.checkbox__button_delete} onClick={destroyGoalItem}>
+            <button className={classes.checkbox__button_delete} onClick={destroySubgoalHandler}>
                 <img src={deleteIcon} alt='Иконка для удаления задачи' />
             </button>
         </div>

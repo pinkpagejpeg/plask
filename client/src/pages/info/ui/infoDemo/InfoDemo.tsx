@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import classes from './InfoDemo.module.scss'
-import { tasksDemo } from '../../../../shared/assets'
-import { goalsDemo } from '../../../../shared/assets'
+import { tasksDemo, goalsDemo } from '../../../../shared/assets'
 
 export const InfoDemo: FC = () => {
     return (

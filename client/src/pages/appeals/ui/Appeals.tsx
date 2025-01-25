@@ -1,27 +1,27 @@
 import { useEffect, useState, FC } from 'react'
 import classes from './Appeals.module.scss'
 import { Navbar } from '../../../shared/ui'
-import { getFeedback } from '../../../shared/api'
 import { AppealItem } from './appealItem'
+import { fetchAppeals } from '../api'
 
 export const Appeals: FC = () => {
-    const [feedbacks, setFeedbacks] = useState([])
+    const [appeals, setAppeals] = useState([])
 
     // if (!user) {
     //     return <Navigate to={LOGIN_ROUTE} />;
     // }
 
     useEffect(() => {
-        const fetchFeedbacks = async () => {
+        const getAppeals = async () => {
             try {
-                const feedbacks = await getFeedback()
-                setFeedbacks(feedbacks)
+                const data = await fetchAppeals()
+                setAppeals(data)
             } catch (error) {
                 alert(`Ошибка при получении обратной связи: ${error.response.data}`)
             }
         }
 
-        fetchFeedbacks()
+        getAppeals()
     }, [])
 
     return (
@@ -42,7 +42,7 @@ export const Appeals: FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {feedbacks.map((item) => (
+                            {appeals.map((item) => (
                                 <AppealItem key={item.id} feedback={item} />
                             ))}
                         </tbody>

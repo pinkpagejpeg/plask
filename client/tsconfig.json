@@ -6,13 +6,18 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "baseUrl": "./src",
+    "paths": {
+      "@redux": ["shared/lib/redux"]
+    }
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.d.ts",
     "./styles.d.ts",
-    "./images.d.ts"
-, "src/features/hooks/useTypedSelector", "src/features/hooks/useAppDispatch"  ]
+    "./images.d.ts", 
+    "src/features/hooks/useTypedSelector", "src/features/hooks/useAppDispatch"
+, "src/shared/lib/redux/handlers/hadleRejected"  ]
 }

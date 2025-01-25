@@ -4,7 +4,7 @@ import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { ADMIN_ROUTE, INFO_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, WELCOME_ROUTE } from '../../../shared/config'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { registration, login } from '../../../shared/api'
-import { useAppDispatch } from '../../../features/hooks'
+import { useAppDispatch } from '@redux'
 import { fetchUserById } from '../../../entities/users'
 
 export const Auth: FC = () => {
@@ -16,7 +16,7 @@ export const Auth: FC = () => {
     const [hcaptchaToken, setHcaptchaToken] = useState('')
     const dispatch = useAppDispatch()
 
-    const buttonClick = async (e) => {
+    const authButtonHandler = async (e) => {
         e.preventDefault()
         try {
             if (hcaptchaToken) {
@@ -41,9 +41,21 @@ export const Auth: FC = () => {
                 alert('Необходимо пройти капчу')
             }
         }
-        catch (e) {
-            alert(`Ошибка при получении информации о пользователе: ${e.response.data.message.message}`)
+        catch (error) {
+            alert(`Ошибка при получении информации о пользователе: ${error.response.data}`)
         }
+    }
+
+    const emailChangeHandler = (event) => {
+        setEmail(event.target.value)
+    }
+
+    const passwordChangeHandler = (event) => {
+        setPassword(event.target.value)
+    }
+
+    const verifyCaptchaHandler = (token) => {
+        setHcaptchaToken(token)
     }
 
     return (
@@ -58,20 +70,20 @@ export const Auth: FC = () => {
                         className={classes.input}
                         type='email' placeholder='Email'
                         value={email}
-                        onChange={e => setEmail(e.target.value)}
+                        onChange={emailChangeHandler}
                         required />
                     <input
                         className={classes.input}
                         type='password' placeholder='Пароль'
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={passwordChangeHandler}
                         required />
                     <HCaptcha
                         sitekey='6fd23c34-4ef8-4d2e-90d2-f444b6acaed4'
                         theme="dark"
-                        onVerify={(token) => setHcaptchaToken(token)}
+                        onVerify={verifyCaptchaHandler}
                     />
-                    <button className={classes.button_light} type="submit" onClick={buttonClick}>
+                    <button className={classes.button_light} type="submit" onClick={authButtonHandler}>
                         {isLogin ? 'Войти' : 'Зарегистрироваться'}
                     </button>
                     {isLogin ?

@@ -1,16 +1,19 @@
 import { FC } from 'react'
 import classes from './AppealItem.module.scss'
 import { NavLink } from "react-router-dom"
-import { updateFeedbackStatus } from '../../../../shared/api'
 import { replyIcon } from '../../../../shared/assets'
-import { IAppealItem } from './types'
+import { IAppealItem } from '../../model'
+import { changeAppealStatus } from '../../api'
 
 export const AppealItem: FC<IAppealItem> = ({ feedback }) => {
-    const changeStatus = async (feedbackId) => {
+    const replyHandler = () => {
         try {
-            await updateFeedbackStatus(feedbackId)
-        } catch (error) {
-            alert(error.response.data)
+            if (feedback.id) {
+                changeAppealStatus(feedback.id)
+            }
+        }
+        catch (error) {
+            alert(`При изменении статуса обратной связи возникла ошибка: ${error.response.data}`)
         }
     }
 
@@ -26,7 +29,7 @@ export const AppealItem: FC<IAppealItem> = ({ feedback }) => {
                     <NavLink
                         className={classes.feedback__button}
                         to="https://mail.google.com"
-                        onClick={() => changeStatus(feedback.id)}
+                        onClick={replyHandler}
                     >
                         <img src={replyIcon} />
                     </NavLink>

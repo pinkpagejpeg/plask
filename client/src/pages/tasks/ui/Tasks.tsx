@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from 'react'
 import classes from './Tasks.module.scss'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
-import { useAppDispatch, useTypedSelector } from '../../../features/hooks'
+import { useAppDispatch, useTypedSelector } from '@redux'
 import { Navigate } from 'react-router-dom'
 import { LOGIN_ROUTE } from '../../../shared/config'
-import { fetchTasksByUserId, addTask } from '../../../entities/tasks'
+import { fetchTasksByUserId, addTask, changeTask, changeTaskStatus, destroyTask } from '../../../entities/tasks'
 
 export const Tasks: FC = () => {
     const dispatch = useAppDispatch()
@@ -22,12 +22,34 @@ export const Tasks: FC = () => {
         }
     }, [user])
 
-    const createTask = async (e) => {
-        e.preventDefault()
+    const createTask = async (event) => {
+        event.preventDefault()
         if (user.id && info) {
-            dispatch(addTask({ userId: user.id, info: info }))
+            dispatch(addTask({ userId: user.id, info }))
             setInfo('')
         }
+    }
+
+    const updateTask = (taskId: number, info: string) => {
+        if (taskId && info) {
+            dispatch(changeTask({ taskId, info }))
+        }
+    }
+
+    const updateTaskStatus = (taskId: number, status: boolean) => {
+        if (taskId) {
+            dispatch(changeTaskStatus({ taskId, status }))
+        }
+    }
+
+    const deleteTask = (taskId: number) => {
+        if (taskId) {
+            dispatch(destroyTask(taskId))
+        }
+    }
+
+    const taskInfoChangeHandler = (event) => {
+        setInfo(event.target.value)
     }
 
     return (
@@ -46,6 +68,9 @@ export const Tasks: FC = () => {
                                         checked={taskItem.status}
                                         taskId={taskItem.id}
                                         allowEdit={true}
+                                        updateTask={updateTask}
+                                        updateTaskStatus={updateTaskStatus}
+                                        deleteTask={deleteTask}
                                     />
                                 ))}
                             </div>
@@ -57,7 +82,7 @@ export const Tasks: FC = () => {
                         <input className={classes.input}
                             type="text" placeholder="Название"
                             value={info}
-                            onChange={e => setInfo(e.target.value)}
+                            onChange={taskInfoChangeHandler}
                             required />
                         <input className={classes.button_light}
                             type="submit" value="Добавить задачу"

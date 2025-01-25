@@ -2,8 +2,8 @@ import { FC, useState } from 'react'
 import classes from './Feedback.module.scss'
 import { Navbar } from '../../../shared/ui'
 import { LOGIN_ROUTE } from '../../../shared/config'
-import { createFeedback } from '../../../shared/api'
-import { useTypedSelector } from '../../../features/hooks'
+import { useTypedSelector } from '@redux'
+import { addFeedback } from '../api'
 
 export const Feedback: FC = () => {
     const { user } = useTypedSelector(state => state.user)
@@ -13,19 +13,22 @@ export const Feedback: FC = () => {
     //     return <Navigate to={LOGIN_ROUTE} />;
     // }
 
-    const buttonClick = async (e) => {
-        e.preventDefault()
+    const buttonHandler = (event) => {
+        event.preventDefault()
         try {
             if (user.id && info) {
-                await createFeedback(user.id, info)
-
+                addFeedback({ userId: user.id, info })
                 setInfo('')
                 alert('Обратная связь отправлена')
             }
         }
-        catch (e) {
-            alert(e.response.data.message)
+        catch (error) {
+            alert(`При отправке обратной связи возникла ошибка: ${error.response.data}`)
         }
+    }
+
+    const infoChangeHandler = (event) => {
+        setInfo(event.target.value)
     }
 
     return (
@@ -39,9 +42,9 @@ export const Feedback: FC = () => {
                         <textarea className={classes.input}
                             placeholder='Сообщение'
                             value={info}
-                            onChange={e => setInfo(e.target.value)}
+                            onChange={infoChangeHandler}
                             required />
-                        <button className={classes.button_light} type="submit" onClick={buttonClick}>Отправить</button>
+                        <button className={classes.button_light} type="submit" onClick={buttonHandler}>Отправить</button>
                     </form>
                 </div>
             </div>

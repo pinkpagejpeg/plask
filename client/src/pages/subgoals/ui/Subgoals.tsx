@@ -1,18 +1,18 @@
 import { useState, useEffect, FC } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import classes from './Subgoals.module.scss'
 import { Navbar, GoalCheckbox } from '../../../shared/ui'
-import { getGoal, getGoalProgress, getGoalItems, createGoalItem } from '../../../shared/api'
-import { addIcon } from '../../../shared/assets'
-import { deleteIcon } from '../../../shared/assets'
-import { GOALS_ROUTE } from '../../../shared/config'
-import { useAppDispatch, useTypedSelector } from '../../../features/hooks'
+import { getGoal, getGoalProgress, getGoalItems, createGoalItem, updateGoalItem, updateGoalItemStatus, deleteGoalItem } from '../../../shared/api'
+import { addIcon, deleteIcon } from '../../../shared/assets'
+import { useAppDispatch, useTypedSelector } from '@redux'
 import { changeGoal, destroyGoal, fetchGoalsByUserId } from '../../../entities/goals'
+import { GOALS_ROUTE } from '../../../shared/config'
 
 export const Subgoals: FC = () => {
     const { id } = useParams()
     const goalId = Number(id)
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const { user } = useTypedSelector(state => state.user)
     const [goal, setGoal] = useState({})
     const [progress, setProgress] = useState(0)
@@ -69,6 +69,7 @@ export const Subgoals: FC = () => {
     const deleteGoal = async () => {
         if (goalId) {
             dispatch(destroyGoal(goalId))
+            navigate(GOALS_ROUTE)
         }
     }
 
@@ -81,6 +82,27 @@ export const Subgoals: FC = () => {
         }
         catch (e) {
             alert(e.response.data.message)
+        }
+    }
+
+    const changeSubgoal = async (goalItemId, info) => {
+        if (info && goalItemId) {
+            await updateGoalItem(goalItemId, info)
+            fetchSubgoals()
+        }
+    }
+
+    const changeSubgoalStatus = async (goalItemId, status) => {
+        if (goalItemId) {
+            await updateGoalItemStatus(goalItemId, status)
+            fetchSubgoals()
+        }
+    }
+
+    const destroySubgoal = async (goalItemId) => {
+        if (goalItemId) {
+            await deleteGoalItem(goalItemId)
+            fetchSubgoals()
         }
     }
 
@@ -97,6 +119,14 @@ export const Subgoals: FC = () => {
         setIsEditing(false)
     }
 
+    const goalInfoChangeHandler = (event) => {
+        setGoalInfo(event.target.value)
+    }
+
+    const subgoalInfoChangeHandler = (event) => {
+        setSubgoalInfo(event.target.value)
+    }
+
     return (
         <>
             <Navbar />
@@ -107,7 +137,7 @@ export const Subgoals: FC = () => {
                             type="text"
                             className={classes.input}
                             value={goalInfo}
-                            onChange={e => setGoalInfo(e.target.value)}
+                            onChange={goalInfoChangeHandler}
                             onBlur={handleInputBlur}
                             autoFocus
                             required
@@ -124,7 +154,16 @@ export const Subgoals: FC = () => {
                         {subgoals && subgoals.length > 0 ? (
                             <div className={classes.goal__list}>
                                 {subgoals.map((goalItem) => (
-                                    <GoalCheckbox key={goalItem.id} goalItemId={goalItem.id} label={goalItem.info} checked={goalItem.status} updateProgress={fetchSubgoals} />
+                                    <GoalCheckbox
+                                        key={goalItem.id}
+                                        goalItemId={goalItem.id}
+                                        label={goalItem.info}
+                                        checked={goalItem.status}
+                                        changeSubgoal={changeSubgoal}
+                                        changeSubgoalStatus={changeSubgoalStatus}
+                                        destroySubgoal={destroySubgoal}
+
+                                    />
                                 ))}
                             </div>
                         ) : (
@@ -135,7 +174,7 @@ export const Subgoals: FC = () => {
                         <input className={classes.input}
                             type="text" placeholder="Название"
                             value={subgoalInfo}
-                            onChange={e => setSubgoalInfo(e.target.value)}
+                            onChange={subgoalInfoChangeHandler}
                             required />
                         <img src={addIcon} />
                         <input className={classes.goal__addbutton}
@@ -143,7 +182,7 @@ export const Subgoals: FC = () => {
                             onClick={addSubgoal} />
                     </form>
                     <button className={classes.goal__button_delete} onClick={deleteGoal}>
-                        <img src={deleteIcon} alt='Иконка для удаления задачи' />
+                        <img src={deleteIcon} alt='Иконка для удаления цели' />
                         Удалить цель
                     </button>
                 </div>

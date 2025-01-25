@@ -1,12 +1,12 @@
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
-import { useAppDispatch, useTypedSelector } from '../../features/hooks'
+import { useAppDispatch, useTypedSelector } from '@redux'
 import { useEffect, useMemo } from 'react'
 import { fetchUserById } from '../../entities/users'
 import { check } from '../../shared/api'
 
 export const AppRouter = () => {
-    const { user, isAuth, authLoading, authError } = useTypedSelector((state) => state.user)
+    const { user, isAuth, loading, error } = useTypedSelector((state) => state.user)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -15,14 +15,14 @@ export const AppRouter = () => {
         })
     }, [])
 
-    const currentRouter = useMemo(() => router(user, isAuth, authLoading), [user, isAuth, authLoading])
+    const currentRouter = useMemo(() => router(user, isAuth, loading), [user, isAuth, loading])
 
-    if (authLoading) {
+    if (loading) {
         return <h3>Загрузка...</h3>
     }
 
-    if (authError) {
-        return <h3>{authError}</h3>
+    if (error) {
+        return <h3>{error}</h3>
     }
 
     return (

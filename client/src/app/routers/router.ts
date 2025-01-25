@@ -2,17 +2,17 @@ import { createBrowserRouter, RouteObject } from "react-router-dom"
 import { publicRoutes, manageRoutes, authRoutes, errorRoutes } from "./routes"
 import { IUser } from "../../entities/users"
 
-export const router = (user: IUser, isAuth: boolean, authLoading: boolean) => {
+export const router = (user: IUser, isAuth: boolean, loading: boolean) => {
     let routes: RouteObject[] = [
         ...publicRoutes,
         errorRoutes
     ]
 
-    if (!authLoading && user && isAuth) {
+    if (!loading && user && isAuth) {
         routes = [...routes, ...authRoutes]
     }
 
-    if (!authLoading && user && user.role === 'ADMIN') {
+    if (!loading && user && user.role === 'ADMIN') {
         routes = [...routes, ...manageRoutes]
     }
 

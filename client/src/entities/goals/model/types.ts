@@ -1,7 +1,7 @@
-export interface IGoalState {
+import { ICommonState } from "@redux"
+
+export interface IGoalState extends ICommonState{
     goals: IGoal[] | null,
-    goalsLoading: boolean,
-    goalsError: string | null,
 }
 
 export interface IGoal {

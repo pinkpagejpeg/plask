@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react'
 import classes from './Goals.module.scss'
 import { Navbar } from '../../../shared/ui'
 import { GoalListItem } from './goalListItem'
-import { useAppDispatch, useTypedSelector } from '../../../features/hooks'
+import { useAppDispatch, useTypedSelector } from '@redux'
 import { addGoal, fetchGoalsByUserId } from '../../../entities/goals'
 
 export const Goals: FC = () => {
@@ -22,15 +22,17 @@ export const Goals: FC = () => {
 
     }, [user])
 
-    const createGoal = async (e) => {
-        e.preventDefault()
+    const createButtonHandler = async (event) => {
+        event.preventDefault()
         if (user.id && info) {
-            dispatch(addGoal({ userId: user.id, info: info }))
+            dispatch(addGoal({ userId: user.id, info }))
             setInfo('')
         }
     }
 
-    console.log(goals)
+    const infoChangeHandler = (event) => {
+        setInfo(event.target.value)
+    }
 
     return (
         <>
@@ -58,11 +60,11 @@ export const Goals: FC = () => {
                         <input className={classes.input}
                             type="text" placeholder="Название"
                             value={info}
-                            onChange={e => setInfo(e.target.value)}
+                            onChange={infoChangeHandler}
                             required />
                         <input className={classes.button_light}
                             type="submit" value="Добавить цель"
-                            onClick={createGoal} />
+                            onClick={createButtonHandler} />
                     </form>
                 </div>
             </div>

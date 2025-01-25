@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import classes from './InfoProsCard.module.scss'
+import { IInfoProsCard } from '../../../model'
 
-export const InfoProsCard: FC<any> = ({ pros }) => {
+export const InfoProsCard: FC<IInfoProsCard> = ({ pros }) => {
     return (
         <div className={classes.pros__wrapper}>
             <img className={classes.pros__image} src={pros.image} />

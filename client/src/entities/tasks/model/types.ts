@@ -1,7 +1,7 @@
-export interface ITaskState {
+import { ICommonState } from "@redux"
+
+export interface ITaskState extends ICommonState {
     tasks: ITask[] | null,
-    tasksLoading: boolean,
-    tasksError: string | null,
 }
 
 export interface ITask {

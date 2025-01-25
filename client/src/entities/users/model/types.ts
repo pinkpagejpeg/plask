@@ -1,8 +1,8 @@
-export interface IUserState {
+import { ICommonState } from "@redux"
+
+export interface IUserState extends ICommonState {
     user: IUser | null,
     isAuth: boolean,
-    authLoading: boolean,
-    authError: string | null
 }
 
 export interface IUser {

@@ -1,5 +1,6 @@
 import { $authHost, $host } from "./http"
 
+// Goal
 export const createGoal = async (userId, info) => {
     const { data } = await $authHost.post(`api/goal/`, { userId, info })
     return data
@@ -31,7 +32,6 @@ export const getGoalProgress = async (goalId) => {
 }
 
 // Goal Item
-
 export const createGoalItem = async (goalId, info) => {
     const { data } = await $authHost.post(`api/goal/item`, { goalId, info })
     return data

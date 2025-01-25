@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import classes from './ProfileInfo.module.scss'
-import { useAppDispatch, useTypedSelector } from '../../../../features/hooks'
+import { useAppDispatch, useTypedSelector } from '@redux'
 import { changeUserInfo } from '../../../../entities/users'
 
 export const ProfileInfo: FC = () => {
@@ -17,6 +17,14 @@ export const ProfileInfo: FC = () => {
         setPrevEmail(user.email)
     }, [user])
 
+    const emailChangeHandler = (event) => {
+        setEmail(event.target.value)
+    }
+
+    const passwordChangeHandler = (event) => {
+        setPassword(event.target.value)
+    }
+
     const handleEmailEdit = () => {
         setIsEmailEditing(true)
     }
@@ -24,7 +32,7 @@ export const ProfileInfo: FC = () => {
     const handleEmailBlur = () => {
         if (user.id) {
             if (prevEmail !== email && email.trim() !== '') {
-                dispatch(changeUserInfo({ userId: user.id, email: email, password: password }))
+                dispatch(changeUserInfo({ userId: user.id, email, password }))
                 setPrevEmail(email)
             } else {
                 setEmail(prevEmail)
@@ -40,7 +48,7 @@ export const ProfileInfo: FC = () => {
     const handlePasswordBlur = () => {
         if (user.id) {
             if (password.trim() !== '') {
-                dispatch(changeUserInfo({ userId: user.id, email: email, password: password }))
+                dispatch(changeUserInfo({ userId: user.id, email, password }))
             }
             setIsPasswordEditing(false)
             setPassword('')
@@ -57,7 +65,7 @@ export const ProfileInfo: FC = () => {
                             type="email"
                             className={classes.input}
                             value={email}
-                            onChange={e => setEmail(e.target.value)}
+                            onChange={emailChangeHandler}
                             onBlur={handleEmailBlur}
                             autoFocus
                             required
@@ -75,7 +83,7 @@ export const ProfileInfo: FC = () => {
                             type="password"
                             className={classes.input}
                             value={password}
-                            onChange={e => setPassword(e.target.value)}
+                            onChange={passwordChangeHandler}
                             onBlur={handlePasswordBlur}
                             autoFocus
                             required

@@ -1,9 +1,7 @@
 import { FC } from 'react'
 import classes from './InfoPros.module.scss'
 import { InfoProsCard } from './infoProsCard'
-import { goals } from '../../../../shared/assets'
-import { support } from '../../../../shared/assets'
-import { progress } from '../../../../shared/assets'
+import { goals, support, progress } from '../../../../shared/assets'
 
 export const InfoPros: FC = () => {
     return (

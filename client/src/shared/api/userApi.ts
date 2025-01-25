@@ -46,7 +46,7 @@ export const deleteUserImage = async (userId) => {
     return data
 }
 
-// Панель администратора
+// Admin
 
 export const getUsers = async () => {
     const { data } = await $authHost.get('api/user/')

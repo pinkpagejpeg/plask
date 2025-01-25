@@ -1,8 +1,8 @@
 import { FC, useState } from 'react'
 import classes from './UserItem.module.scss'
-import { deleteUser, updateUser } from '../../../../shared/api'
 import { deleteIcon } from '../../../../shared/assets'
-import { IUserItem } from './types'
+import { IUserItem } from '../../model'
+import { changeUser, destroyUser } from '../../api'
 
 export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
     const [email, setEmail] = useState(user.email)
@@ -21,7 +21,7 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
 
     const handleEmailBlur = () => {
         if (prevEmail !== email && email.trim() !== '') {
-            changeUser()
+            changeUserHandler()
             setPrevEmail(email)
         } else {
             setEmail(prevEmail)
@@ -35,7 +35,7 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
 
     const handlePasswordBlur = () => {
         if (prevPassword !== password && password.trim() !== '') {
-            changeUser()
+            changeUserHandler()
             setPrevPassword(password)
         } else {
             setPassword(prevPassword)
@@ -50,7 +50,7 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
 
     const handleRoleBlur = () => {
         if (prevRole !== role && role.trim() !== '') {
-            changeUser()
+            changeUserHandler()
             setPrevRole(role)
         } else {
             setRole(prevRole)
@@ -58,23 +58,35 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
         setIsRoleOpen(false)
     }
 
-    const changeUser = async () => {
+    const changeUserHandler = async () => {
         try {
-            await updateUser(user.id, email, password, role)
+            changeUser({ userId: user.id, email, password, role })
             onUserChange()
         } catch (error) {
             alert(`Ошибка при изменении пользователя: ${error.response.data}`)
         }
     }
 
-    const destroyUser = async () => {
+    const destroyButtonHandler = async () => {
         try {
-            await deleteUser(user.id)
+            destroyUser(user.id)
             onUserChange()
         }
         catch (error) {
             alert(`Ошибка при удалении пользователя: ${error.response.data}`)
         }
+    }
+
+    const emailChangeHandler = (event) => {
+        setEmail(event.target.value)
+    }
+
+    const passwordChangeHandler = (event) => {
+        setPassword(event.target.value)
+    }
+
+    const roleChangeHandler = (event) => {
+        setRole(event.target.value)
     }
 
     return (
@@ -85,7 +97,7 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
                     type="email"
                     className={classes.input}
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={emailChangeHandler}
                     onBlur={handleEmailBlur}
                     autoFocus
                     required
@@ -98,7 +110,7 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
                     type="password"
                     className={classes.input}
                     value={password}
-                    onChange={e => setPassword(e.target.value)}
+                    onChange={passwordChangeHandler}
                     onBlur={handlePasswordBlur}
                     autoFocus
                     required
@@ -110,7 +122,7 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
                 <select
                     className={classes.input}
                     value={role}
-                    onChange={e => setRole(e.target.value)}
+                    onChange={roleChangeHandler}
                     onBlur={handleRoleBlur}
                     autoFocus
                     required
@@ -122,7 +134,7 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
                 <span onClick={handleRoleClick}>{user.role}</span>
             )}</td>
             <td className={classes.main_text}>
-                <button className={classes.user__button} onClick={destroyUser}>
+                <button className={classes.user__button} onClick={destroyButtonHandler}>
                     <img src={deleteIcon} />
                 </button>
             </td>

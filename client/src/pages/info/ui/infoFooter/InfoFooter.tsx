@@ -1,8 +1,6 @@
 import { FC } from 'react'
 import classes from './InfoFooter.module.scss'
-import { twitterLogo } from '../../../../shared/assets'
-import { telegramLogo } from '../../../../shared/assets'
-import { tiktokLogo } from '../../../../shared/assets'
+import { twitterLogo, telegramLogo, tiktokLogo } from '../../../../shared/assets'
 
 export const InfoFooter: FC = () => {
     return (

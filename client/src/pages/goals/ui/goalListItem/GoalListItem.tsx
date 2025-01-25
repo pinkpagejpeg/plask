@@ -3,8 +3,8 @@ import classes from './GoalListItem.module.scss'
 import { deleteIcon } from '../../../../shared/assets'
 import { NavLink } from 'react-router-dom'
 import { GOALS_ITEM_ROUTE } from '../../../../shared/config'
-import { IGoalListItem } from './types'
-import { useAppDispatch, useTypedSelector } from '../../../../features/hooks'
+import { IGoalListItem } from '../../model'
+import { useAppDispatch } from '@redux'
 import { destroyGoal } from "../../../../entities/goals"
 
 export const GoalListItem: FC<IGoalListItem> = ({ title, goalId, progress }) => {

@@ -1,8 +1,8 @@
 import { useEffect, useState, FC } from 'react'
 import classes from './Users.module.scss'
 import { Navbar } from '../../../shared/ui'
-import { getUsers, createUser } from '../../../shared/api'
 import { UserItem } from './userItem'
+import { fetchUsers, addUser } from '../api'
 
 export const Users: FC = () => {
     const [email, setEmail] = useState('')
@@ -15,29 +15,41 @@ export const Users: FC = () => {
     // }
 
     useEffect(() => {
-        fetchUsers();
+        getUsers()
     }, [])
 
-    const fetchUsers = async () => {
+    const getUsers = async () => {
         try {
-            const users = await getUsers()
-            setUsers(users)
+            const data = await fetchUsers()
+            setUsers(data)
         } catch (error) {
             alert(`Ошибка при получении пользователей: ${error.response.data}`)
         }
     }
 
-    const addUser = async (e) => {
-        e.preventDefault()
+    const addButtonHandler = (event) => {
+        event.preventDefault()
         try {
-            await createUser(email, password, role)
+            addUser({email, password, role})
             setEmail('')
             setPassword('')
-            fetchUsers()
+            getUsers()
         }
         catch (error) {
             alert(`Ошибка при добавлении пользователя: ${error.response.data}`)
         }
+    }
+
+    const emailChangeHandler = (event) => {
+        setEmail(event.target.value)
+    }
+
+    const passwordChangeHandler = (event) => {
+        setPassword(event.target.value)
+    }
+
+    const roleChangeHandler = (event) => {
+        setRole(event.target.value)
     }
 
     return (
@@ -51,26 +63,26 @@ export const Users: FC = () => {
                             className={classes.input}
                             type='email' placeholder='Email'
                             value={email}
-                            onChange={e => setEmail(e.target.value)}
+                            onChange={emailChangeHandler}
                             autoComplete='off'
                             required />
                         <input
                             className={classes.input}
                             type='password' placeholder='Пароль'
                             value={password}
-                            onChange={e => setPassword(e.target.value)}
+                            onChange={passwordChangeHandler}
                             autoComplete='off'
                             required />
                         <select
                             className={classes.input}
                             value={role}
-                            onChange={e => setRole(e.target.value)}
+                            onChange={roleChangeHandler}
                             required
                         >
                             <option value='USER'>Пользователь</option>
                             <option value='ADMIN'>Администратор</option>
                         </select>
-                        <button className={classes.button_light} type="submit" onClick={addUser}>Добавить пользователя</button>
+                        <button className={classes.button_light} type="submit" onClick={addButtonHandler}>Добавить пользователя</button>
                     </form>
 
                     <table className={classes.user__table}>
@@ -85,7 +97,7 @@ export const Users: FC = () => {
                         </thead>
                         <tbody>
                             {users.map((item) => (
-                                <UserItem key={item.id} user={item} onUserChange={fetchUsers} />
+                                <UserItem key={item.id} user={item} onUserChange={getUsers} />
                             ))}
                         </tbody>
                     </table>

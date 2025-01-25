@@ -4,7 +4,7 @@ import { NavLink, Navigate } from 'react-router-dom'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
 import { FEEDBACK_ROUTE, GOALS_ITEM_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, TASKS_ROUTE } from '../../../shared/config'
 import { useLocation } from 'react-router-dom'
-import { useAppDispatch, useTypedSelector } from '../../../features/hooks'
+import { useAppDispatch, useTypedSelector } from '@redux'
 import { fetchTasksByUserId } from '../../../entities/tasks'
 import { fetchGoalsByUserId } from '../../../entities/goals'
 

@@ -15,7 +15,7 @@ export const InfoFaq: FC = () => {
             question: 'Как обеспечивается конфиденциальность моих данных?',
             answer: 'Мы придаем высокое значение конфиденциальности данных наших пользователей и применяем все необходимые меры для защиты вашей личной информации. Все данные передаются по защищенным протоколам, а доступ к ним имеют только авторизованные пользователи.'
         }
-    ];
+    ]
 
     const [expandedIndex, setExpandedIndex] = useState(null)
 
@@ -25,7 +25,7 @@ export const InfoFaq: FC = () => {
         } else {
             setExpandedIndex(index)
         }
-    };
+    }
 
     return (
         <div className={classes.faq__wrapper} id="faq">
