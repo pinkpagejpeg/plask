@@ -1,4 +1,4 @@
-import { $authHost, $host } from "./http"
+import { $authHost } from "./http"
 
 export const createFeedback = async (userId, info) => {
     const { data } = await $authHost.post(`api/feedback/`, { userId, info })

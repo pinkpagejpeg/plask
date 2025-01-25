@@ -1,4 +1,4 @@
-import { $authHost, $host } from "./http"
+import { $authHost } from "./http"
 
 // Goal
 export const createGoal = async (userId, info) => {

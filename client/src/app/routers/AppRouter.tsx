@@ -13,7 +13,7 @@ export const AppRouter = () => {
         check().then((data) => {
             dispatch(fetchUserById(data.id))
         })
-    }, [])
+    }, [dispatch])
 
     const currentRouter = useMemo(() => router(user, isAuth, loading), [user, isAuth, loading])
 

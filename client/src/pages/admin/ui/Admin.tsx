@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import classes from './Admin.module.scss'
-import { NavLink, Navigate } from 'react-router-dom'
-import { ADMIN_FEEDBACK_ROUTE, ADMIN_USER_ROUTE, LOGIN_ROUTE } from '../../../shared/config'
+import { NavLink } from 'react-router-dom'
+import { ADMIN_FEEDBACK_ROUTE, ADMIN_USER_ROUTE } from '../../../shared/config'
 import { useLocation } from 'react-router-dom'
 import { Navbar } from '../../../shared/ui'
 

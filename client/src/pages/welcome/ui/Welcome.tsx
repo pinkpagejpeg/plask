@@ -1,8 +1,8 @@
 import { FC, useEffect } from 'react'
 import classes from './Welcome.module.scss'
-import { NavLink, Navigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
-import { FEEDBACK_ROUTE, GOALS_ITEM_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, TASKS_ROUTE } from '../../../shared/config'
+import { FEEDBACK_ROUTE, GOALS_ITEM_ROUTE, GOALS_ROUTE, TASKS_ROUTE } from '../../../shared/config'
 import { useLocation } from 'react-router-dom'
 import { useAppDispatch, useTypedSelector } from '@redux'
 import { fetchTasksByUserId } from '../../../entities/tasks'
@@ -26,7 +26,7 @@ export const Welcome: FC = () => {
             dispatch(fetchTasksByUserId(user.id))
             dispatch(fetchGoalsByUserId(user.id))
         }
-    }, [user])
+    }, [dispatch, user])
 
     return (
         <>

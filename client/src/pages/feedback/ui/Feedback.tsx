@@ -1,7 +1,6 @@
 import { FC, useState } from 'react'
 import classes from './Feedback.module.scss'
 import { Navbar } from '../../../shared/ui'
-import { LOGIN_ROUTE } from '../../../shared/config'
 import { useTypedSelector } from '@redux'
 import { addFeedback } from '../api'
 

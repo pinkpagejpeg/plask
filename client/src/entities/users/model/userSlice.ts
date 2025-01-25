@@ -14,15 +14,15 @@ const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        setAuthTrue(state, action) {
+        setAuthTrue() {
             // state.user = action.payload
             // state.isAuth = true
         },
-        setAuthFalse(state) {
+        setAuthFalse() {
             // state.user = null
             // state.isAuth = false
         },
-        setAuthLoading(state, action) {
+        setAuthLoading() {
             // state.authLoading = action.payload
         },
     },
@@ -63,7 +63,7 @@ const userSlice = createSlice({
 
             // destroyUser
             .addCase(destroyUser.pending, createPendingHandler<IUserState>())
-            .addCase(destroyUser.fulfilled, (state, action: PayloadAction<number>) => {
+            .addCase(destroyUser.fulfilled, (state) => {
                 state.user = null
                 state.isAuth = false
                 state.loading = false

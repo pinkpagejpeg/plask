@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import { updateUserImage } from "../../../shared/api"
 import { IUser } from "../model"
 
-export const changeUserImage = createAsyncThunk<IUser, { userId: number, formData: any }, { rejectValue: string }>(
+export const changeUserImage = createAsyncThunk<IUser, { userId: number, formData: FormData }, { rejectValue: string }>(
     "user/changeUserImage",
     async ({ userId, formData }, { rejectWithValue }) => {
         try {

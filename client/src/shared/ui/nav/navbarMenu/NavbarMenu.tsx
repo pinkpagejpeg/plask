@@ -1,9 +1,9 @@
 import { FC } from 'react'
 import classes from './NavbarMenu.module.scss'
 import { menuClose, profileIcon, usersIcon, feedbackIcon, logoutIcon, mainIcon, goalsIcon, tasksIcon } from '../../../assets'
-import { ADMIN_FEEDBACK_ROUTE, ADMIN_ROUTE, ADMIN_USER_ROUTE, FEEDBACK_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, TASKS_ROUTE, WELCOME_ROUTE } from '../../../config'
-import { NavLink, useNavigate } from 'react-router-dom'
-import { useAppDispatch, useTypedSelector } from '@redux'
+import { ADMIN_FEEDBACK_ROUTE, ADMIN_ROUTE, ADMIN_USER_ROUTE, FEEDBACK_ROUTE, GOALS_ROUTE, PROFILE_ROUTE, TASKS_ROUTE, WELCOME_ROUTE } from '../../../config'
+import { NavLink } from 'react-router-dom'
+import { useTypedSelector } from '@redux'
 // import { setAuthFalse } from '../../../../entities/users'
 import { INavbarMenu } from './types'
 

@@ -20,7 +20,7 @@ export const Goals: FC = () => {
             dispatch(fetchGoalsByUserId(user.id))
         }
 
-    }, [user])
+    }, [dispatch, user])
 
     const createButtonHandler = async (event) => {
         event.preventDefault()

@@ -2,8 +2,6 @@ import { FC, useEffect, useState } from 'react'
 import classes from './Tasks.module.scss'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
 import { useAppDispatch, useTypedSelector } from '@redux'
-import { Navigate } from 'react-router-dom'
-import { LOGIN_ROUTE } from '../../../shared/config'
 import { fetchTasksByUserId, addTask, changeTask, changeTaskStatus, destroyTask } from '../../../entities/tasks'
 
 export const Tasks: FC = () => {
@@ -20,7 +18,7 @@ export const Tasks: FC = () => {
         if (user.id) {
             dispatch(fetchTasksByUserId(user.id))
         }
-    }, [user])
+    }, [dispatch, user])
 
     const createTask = async (event) => {
         event.preventDefault()

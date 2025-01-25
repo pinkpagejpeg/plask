@@ -1,6 +1,6 @@
 export interface IInfoProsCard {
     pros: {
-        image: any
+        image: string,
         title: string,
         text: string
     }

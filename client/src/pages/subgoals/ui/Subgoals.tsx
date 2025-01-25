@@ -1,4 +1,4 @@
-import { useState, useEffect, FC } from 'react'
+import { useState, useEffect, FC, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import classes from './Subgoals.module.scss'
 import { Navbar, GoalCheckbox } from '../../../shared/ui'
@@ -14,7 +14,7 @@ export const Subgoals: FC = () => {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { user } = useTypedSelector(state => state.user)
-    const [goal, setGoal] = useState({})
+    // const [goal, setGoal] = useState({})
     const [progress, setProgress] = useState(0)
     const [subgoals, setSubgoals] = useState([])
     const [subgoalInfo, setSubgoalInfo] = useState('')
@@ -26,6 +26,17 @@ export const Subgoals: FC = () => {
     //     return <Navigate to={LOGIN_ROUTE} />;
     // }
 
+    const fetchProgress = useCallback(async () => {
+        const progress = await getGoalProgress(goalId)
+        setProgress(progress.progress)
+    }, [goalId])
+
+    const fetchSubgoals = useCallback(async () => {
+        const subgoals = await getGoalItems(goalId)
+        setSubgoals(subgoals)
+        fetchProgress()
+    }, [goalId, fetchProgress])
+
     useEffect(() => {
         if (user.id) {
             dispatch(fetchGoalsByUserId(user.id))
@@ -35,7 +46,7 @@ export const Subgoals: FC = () => {
             try {
                 if (id) {
                     const goal = await getGoal(goalId)
-                    setGoal(goal)
+                    // setGoal(goal)
                     setGoalInfo(goal.info)
                     setGoalPrevInfo(goal.info)
 
@@ -47,18 +58,7 @@ export const Subgoals: FC = () => {
         }
 
         fetchGoal()
-    }, [goalId, user])
-
-    const fetchSubgoals = async () => {
-        const subgoals = await getGoalItems(goalId)
-        setSubgoals(subgoals)
-        fetchProgress()
-    }
-
-    const fetchProgress = async () => {
-        const progress = await getGoalProgress(goalId)
-        setProgress(progress.progress)
-    }
+    }, [dispatch, goalId, id, user, fetchSubgoals])
 
     const updateGoal = async () => {
         if (goalId && goalInfo) {
