@@ -52,7 +52,10 @@ jobs:
       - name: Run lint for backend
         working-directory: server
         run: |
+          eslint --version
           npm run lint
+          npm install
+          npx eslint '**/*.js'
 
       - name: Run migrations for backend
         working-directory: server
