@@ -55,6 +55,17 @@ jobs:
           chmod +x ./node_modules/.bin/eslint
           chmod +x ./node_modules/.bin/sequelize
 
+      - name: Set environment variables
+        run: |
+          echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
+          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+          echo "SITE_KEY=${{ secrets.SITE_KEY }}" >> $GITHUB_ENV
+
       - name: Run lint for backend
         working-directory: server
         run: |
