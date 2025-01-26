@@ -55,6 +55,7 @@ jobs:
           chmod +x ./node_modules/.bin/eslint
           chmod +x ./node_modules/.bin/sequelize
           chmod +x ./node_modules/.bin/nodemon
+          chmod +x ./node_modules/.bin/pm2
           
       - name: Run lint for backend
         working-directory: server
@@ -87,7 +88,7 @@ jobs:
         run: |
           npm run seed --debug
 
-      - name: Start backend in dev mode
+      - name: Start backend server
         working-directory: server
         run: |
           npm run start
