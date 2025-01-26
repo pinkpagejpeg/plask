@@ -1,6 +1,6 @@
 const ApiError = require('../error/ApiError')
 const { User, Feedback, Task, Goal, Goal_item } = require('../models/models')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
 const { v4: uuidv4 } = require('uuid')
