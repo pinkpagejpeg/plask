@@ -49,17 +49,17 @@ jobs:
         run: |
           npm install
       
-      - name: Run lint for backend
-        working-directory: server
-        run: |
-          npm run lint
-      
       - name: Fix permissions
         working-directory: server
         run: |
           chmod +x ./node_modules/.bin/eslint
           chmod +x ./node_modules/.bin/sequelize
           chmod +x ./node_modules/.bin/nodemon
+          
+      - name: Run lint for backend
+        working-directory: server
+        run: |
+          npm run lint
 
       - name: Set environment variables
         run: |
