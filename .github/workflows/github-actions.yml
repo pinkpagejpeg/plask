@@ -53,6 +53,7 @@ jobs:
         working-directory: server
         run: |
           chmod +x ./node_modules/.bin/eslint
+          chmod +x ./node_modules/.bin/sequelize
 
       - name: Run lint for backend
         working-directory: server
