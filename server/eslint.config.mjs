@@ -5,8 +5,16 @@ import pluginJs from '@eslint/js'
 export default [
   {
     languageOptions: {
-      globals: globals.node,
+      globals: {
+        ...globals.node,
+      },
+      ecmaVersion: 'latest',
+      sourceType: 'script',
+    },
+    rules: {
+      'no-unused-vars': 'warn',
+      'no-console': 'off',
     },
   },
-  pluginJs.configs.recommended,
+  pluginJs.configs.recommended
 ]

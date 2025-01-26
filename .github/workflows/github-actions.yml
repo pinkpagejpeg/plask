@@ -48,12 +48,16 @@ jobs:
         working-directory: server
         run: |
           npm install
+      
+      - name: Fix permissions
+        working-directory: server
+        run: |
+          chmod +x ./node_modules/.bin/eslint
 
       - name: Run lint for backend
         working-directory: server
         run: |
-          npm install eslint --save-dev
-          npx eslint '**/*.js'
+          npm run lint
 
       - name: Run migrations for backend
         working-directory: server
