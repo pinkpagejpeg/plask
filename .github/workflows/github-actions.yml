@@ -91,3 +91,8 @@ jobs:
         working-directory: server
         run: |
           npm run dev
+
+      - name: Stop backend server
+        working-directory: server
+        run: |
+          pkill node 
