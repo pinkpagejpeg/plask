@@ -92,4 +92,5 @@ jobs:
         run: |
           npm run dev
           sleep 10
-          pkill node
+          ps aux | grep node  # проверить запущенные процессы node
+          pkill node || killall node || kill -9 $(ps aux | grep 'node' | awk '{print $2}')
