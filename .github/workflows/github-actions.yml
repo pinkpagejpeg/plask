@@ -59,6 +59,7 @@ jobs:
         run: |
           chmod +x ./node_modules/.bin/eslint
           chmod +x ./node_modules/.bin/sequelize
+          chmod +x ./node_modules/.bin/nodemon
 
       - name: Set environment variables
         run: |
@@ -79,7 +80,12 @@ jobs:
       - name: Run migrations for backend
         working-directory: server
         run: |
-          npm run migrate --debug
+          npm run migrate
+
+      - name: Run seeders for backend
+        working-directory: server
+        run: |
+          npm run seed --debug
 
       - name: Start backend in dev mode
         working-directory: server
