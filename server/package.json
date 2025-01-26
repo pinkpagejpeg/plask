@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "pm2 start index.js --name server",
+    "stop": "pm2 stop server",
+    "restart": "pm2 restart server",
+    "logs": "pm2 logs server",
     "dev": "nodemon index.js",
     "lint": "eslint \"**/*.js\"",
     "migrate": "sequelize db:migrate",
@@ -24,6 +27,7 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
+    "pm2": "^5.4.3",
     "sequelize": "^6.37.1",
     "uuid": "^9.0.1"
   },

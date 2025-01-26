@@ -90,7 +90,6 @@ jobs:
       - name: Start backend in dev mode
         working-directory: server
         run: |
-          npm run dev
+          npm run start
           sleep 10
-          ps aux | grep node  # проверить запущенные процессы node
-          pkill node || killall node || kill -9 $(ps aux | grep 'node' | awk '{print $2}')
+          npm run stop
