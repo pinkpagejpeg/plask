@@ -49,6 +49,11 @@ jobs:
         run: |
           npm install
       
+      - name: Run lint for backend
+        working-directory: server
+        run: |
+          npm run lint
+      
       - name: Fix permissions
         working-directory: server
         run: |
@@ -66,15 +71,15 @@ jobs:
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
           echo "SITE_KEY=${{ secrets.SITE_KEY }}" >> $GITHUB_ENV
 
-      - name: Run lint for backend
-        working-directory: server
+      - name: Start PostgreSQL container
         run: |
-          npm run lint
+          docker run --name postgres -e POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} -e POSTGRES_USER=${{ secrets.DB_USER }} -e POSTGRES_DB=${{ secrets.DB_NAME }} -p 5432:5432 -d postgres:latest
+          sleep 10
 
       - name: Run migrations for backend
         working-directory: server
         run: |
-          npm run migrate
+          npm run migrate --debug
 
       - name: Start backend in dev mode
         working-directory: server
