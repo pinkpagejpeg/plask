@@ -13,11 +13,11 @@ export interface IChangeUser {
 
 export interface IUserItem {
     user: {
-        id: number | null,
-        email: string | null,
-        password: string | null,
-        role: string | null,
-        img: string | null,
+        id: number,
+        email: string,
+        password: string,
+        role: string,
+        img: string,
     },
     onUserChange: () => Promise<void>
 }

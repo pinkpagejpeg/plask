@@ -8,8 +8,8 @@ export const changeUserInfo = createAsyncThunk<IChangeUserReturnedValue, { userI
         try {
             const data = await updateUserInfo(userId, email, password)
             return data
-        } catch (error) {
-            return rejectWithValue(error.response.data)
+        } catch (error: unknown) {
+            return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }
     }
 )

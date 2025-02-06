@@ -1,11 +1,11 @@
-import { useState, useEffect, FC, useCallback } from 'react'
+import { useState, useEffect, FC, useCallback, SetStateAction } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import classes from './Subgoals.module.scss'
 import { Navbar, GoalCheckbox } from '../../../shared/ui'
 import { getGoal, getGoalProgress, getGoalItems, createGoalItem, updateGoalItem, updateGoalItemStatus, deleteGoalItem } from '../../../shared/api'
 import { addIcon, deleteIcon } from '../../../shared/assets'
-import { useAppDispatch, useTypedSelector } from '@redux'
-import { changeGoal, destroyGoal, fetchGoalsByUserId } from '../../../entities/goals'
+import { useAppDispatch, useTypedSelector } from 'shared/store'
+import { changeGoal, destroyGoal, fetchGoalsByUserId, IGoalItem } from '../../../entities/goals'
 import { GOALS_ROUTE } from '../../../shared/config'
 
 export const Subgoals: FC = () => {
@@ -16,7 +16,7 @@ export const Subgoals: FC = () => {
     const { user } = useTypedSelector(state => state.user)
     // const [goal, setGoal] = useState({})
     const [progress, setProgress] = useState(0)
-    const [subgoals, setSubgoals] = useState([])
+    const [subgoals, setSubgoals] = useState<IGoalItem[]>([])
     const [subgoalInfo, setSubgoalInfo] = useState('')
     const [isEditing, setIsEditing] = useState(false)
     const [goalInfo, setGoalInfo] = useState('')
@@ -38,8 +38,8 @@ export const Subgoals: FC = () => {
     }, [goalId, fetchProgress])
 
     useEffect(() => {
-        if (user.id) {
-            dispatch(fetchGoalsByUserId(user.id))
+        if (user) {
+            dispatch(fetchGoalsByUserId(user?.id))
         }
 
         const fetchGoal = async () => {
@@ -52,8 +52,12 @@ export const Subgoals: FC = () => {
 
                     fetchSubgoals()
                 }
-            } catch (e) {
-                alert(`Ошибка при получении цели: ${e.response.data.message}`)
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    alert(`При получении цели возникла ошибка: ${error.message}`)
+                } else {
+                    alert("При получении цели возникла неизвестная ошибка")
+                }
             }
         }
 
@@ -73,33 +77,37 @@ export const Subgoals: FC = () => {
         }
     }
 
-    const addSubgoal = async (e) => {
-        e.preventDefault()
+    const addSubgoal = async (event: { preventDefault: () => void }) => {
+        event.preventDefault()
         try {
             await createGoalItem(goalId, subgoalInfo)
             fetchSubgoals()
             setSubgoalInfo('')
         }
-        catch (e) {
-            alert(e.response.data.message)
+        catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При добавлении цели возникла ошибка: ${error.message}`)
+            } else {
+                alert("При добавлении цели возникла неизвестная ошибка")
+            }
         }
     }
 
-    const changeSubgoal = async (goalItemId, info) => {
+    const changeSubgoal = async (goalItemId: number, info: string) => {
         if (info && goalItemId) {
             await updateGoalItem(goalItemId, info)
             fetchSubgoals()
         }
     }
 
-    const changeSubgoalStatus = async (goalItemId, status) => {
+    const changeSubgoalStatus = async (goalItemId: number, status: boolean) => {
         if (goalItemId) {
             await updateGoalItemStatus(goalItemId, status)
             fetchSubgoals()
         }
     }
 
-    const destroySubgoal = async (goalItemId) => {
+    const destroySubgoal = async (goalItemId: number) => {
         if (goalItemId) {
             await deleteGoalItem(goalItemId)
             fetchSubgoals()
@@ -119,11 +127,11 @@ export const Subgoals: FC = () => {
         setIsEditing(false)
     }
 
-    const goalInfoChangeHandler = (event) => {
+    const goalInfoChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
         setGoalInfo(event.target.value)
     }
 
-    const subgoalInfoChangeHandler = (event) => {
+    const subgoalInfoChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
         setSubgoalInfo(event.target.value)
     }
 

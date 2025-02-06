@@ -8,8 +8,8 @@ export const changeTaskStatus = createAsyncThunk<ITask, { taskId: number, status
         try {
             const { task } = await updateTaskStatus(taskId, status)
             return task
-        } catch (error) {
-            return rejectWithValue(error.response.data)
+        } catch (error: unknown) {
+            return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }
     }
 )

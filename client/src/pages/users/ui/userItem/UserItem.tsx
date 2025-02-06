@@ -62,8 +62,12 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
         try {
             changeUser({ userId: user.id, email, password, role })
             onUserChange()
-        } catch (error) {
-            alert(`Ошибка при изменении пользователя: ${error.response.data}`)
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При изменении пользователя возникла ошибка: ${error.message}`)
+            } else {
+                alert("При изменении пользователя возникла неизвестная ошибка")
+            }
         }
     }
 
@@ -72,8 +76,12 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
             destroyUser(user.id)
             onUserChange()
         }
-        catch (error) {
-            alert(`Ошибка при удалении пользователя: ${error.response.data}`)
+        catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При удалении пользователя возникла ошибка: ${error.message}`)
+            } else {
+                alert("При удалении пользователя возникла неизвестная ошибка")
+            }
         }
     }
 

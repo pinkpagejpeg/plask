@@ -7,7 +7,7 @@ module.exports = {
       {
         email: 'user@example.com',
         password: 'hashedPassword123',
-        role: 'user',
+        role: 'USER',
         img: 'user_default_image.jpg',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -15,7 +15,7 @@ module.exports = {
       {
         email: 'admin@example.com',
         password: 'hashedAdminPassword123',
-        role: 'admin',
+        role: 'ADMIN',
         img: 'user_default_image.jpg',
         createdAt: new Date(),
         updatedAt: new Date(),

@@ -8,8 +8,8 @@ export const changeUserImage = createAsyncThunk<IUser, { userId: number, formDat
         try {
             const { user } = await updateUserImage(userId, formData)
             return user
-        } catch (error) {
-            return rejectWithValue(error.response.data)
+        } catch (error: unknown) {
+            return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }
     }
 )

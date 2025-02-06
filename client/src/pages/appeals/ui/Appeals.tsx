@@ -3,9 +3,10 @@ import classes from './Appeals.module.scss'
 import { Navbar } from '../../../shared/ui'
 import { AppealItem } from './appealItem'
 import { fetchAppeals } from '../api'
+import { IAppealItem } from '../model'
 
 export const Appeals: FC = () => {
-    const [appeals, setAppeals] = useState([])
+    const [appeals, setAppeals] = useState<IAppealItem[]>([])
 
     // if (!user) {
     //     return <Navigate to={LOGIN_ROUTE} />;
@@ -16,8 +17,12 @@ export const Appeals: FC = () => {
             try {
                 const data = await fetchAppeals()
                 setAppeals(data)
-            } catch (error) {
-                alert(`Ошибка при получении обратной связи: ${error.response.data}`)
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    alert(`При получении обратной связи возникла ошибка: ${error.message}`)
+                } else {
+                    alert("При получении обратной связи возникла неизвестная ошибка")
+                }
             }
         }
 
@@ -43,7 +48,14 @@ export const Appeals: FC = () => {
                         </thead>
                         <tbody>
                             {appeals.map((item) => (
-                                <AppealItem key={item.id} feedback={item} />
+                                <AppealItem
+                                    key={item.id}
+                                    id={item.id}
+                                    info={item.info}
+                                    date={item.date}
+                                    status={item.status}
+                                    userEmail={item.user.email}
+                                />
                             ))}
                         </tbody>
                     </table>

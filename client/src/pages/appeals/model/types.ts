@@ -1,5 +1,4 @@
 export interface IAppealItem {
-    feedback: {
         id: number,
         info: string,
         date: string,
@@ -8,5 +7,12 @@ export interface IAppealItem {
             email: string,
         },
         userId: number,
-    }
+}
+
+export interface IAppealItemComponent {
+    id: number,
+    info: string,
+    date: string,
+    status: boolean
+    userEmail: string,
 }

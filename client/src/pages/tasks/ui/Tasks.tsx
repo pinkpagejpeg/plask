@@ -1,7 +1,7 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, SetStateAction, useEffect, useState } from 'react'
 import classes from './Tasks.module.scss'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
-import { useAppDispatch, useTypedSelector } from '@redux'
+import { useAppDispatch, useTypedSelector } from 'shared/store'
 import { fetchTasksByUserId, addTask, changeTask, changeTaskStatus, destroyTask } from '../../../entities/tasks'
 
 export const Tasks: FC = () => {
@@ -15,15 +15,15 @@ export const Tasks: FC = () => {
     // }
 
     useEffect(() => {
-        if (user.id) {
-            dispatch(fetchTasksByUserId(user.id))
+        if (user) {
+            dispatch(fetchTasksByUserId(user?.id))
         }
     }, [dispatch, user])
 
-    const createTask = async (event) => {
+    const createTask = async (event: { preventDefault: () => void }) => {
         event.preventDefault()
-        if (user.id && info) {
-            dispatch(addTask({ userId: user.id, info }))
+        if (user && info) {
+            dispatch(addTask({ userId: user?.id, info }))
             setInfo('')
         }
     }
@@ -46,7 +46,7 @@ export const Tasks: FC = () => {
         }
     }
 
-    const taskInfoChangeHandler = (event) => {
+    const taskInfoChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
         setInfo(event.target.value)
     }
 

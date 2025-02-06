@@ -33,16 +33,24 @@ export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, ch
             }
 
             changeSubgoal(goalItemId, info)
-        } catch (error) {
-            alert(`При изменении подцели возникла ошибка: ${error.response.data}`)
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При изменении подцели возникла ошибка: ${error.message}`)
+            } else {
+                alert("При изменении подцели возникла неизвестная ошибка")
+            }
         }
     }
 
     const changeSubgoalStatusHandler = async () => {
         try {
             changeSubgoalStatus(goalItemId, !isChecked)
-        } catch (error) {
-            alert(`При изменении статуса подцели возникла ошибка: ${error.response.data}`)
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При изменении статуса подцели возникла ошибка: ${error.message}`)
+            } else {
+                alert("При изменении статуса подцели возникла неизвестная ошибка")
+            }
         }
     }
 
@@ -50,8 +58,12 @@ export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, ch
         try {
             destroySubgoal(goalItemId)
         }
-        catch (error) {
-            alert(`При удалении подцели возникла ошибка: ${error.response.data}`)
+        catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При удалении подцели возникла ошибка: ${error.message}`)
+            } else {
+                alert("При удалении подцели возникла неизвестная ошибка")
+            }
         }
     }
 

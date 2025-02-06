@@ -6,18 +6,20 @@ export const fetchGoalsByUserId = createAsyncThunk<IGoal[], number, { rejectValu
     "goal/fetchGoalsByUserId",
     async (userId, { rejectWithValue }) => {
         try {
-            if (userId) {
-                const goals = await getGoals(userId)
-                const data = await Promise.all(
-                    goals.map(async (goal) => {
-                        const progress = await getGoalProgress(goal.id)
-                        return { ...goal, progress }
-                    })
-                )
-                return data
+            if (!userId) {
+                throw new Error("Отсутствует идентификатор пользователя")
             }
-        } catch (error) {
-            return rejectWithValue(error.response.data)
+
+            const goals = await getGoals(userId)
+            const data = await Promise.all(
+                goals.map(async (goal) => {
+                    const progress = await getGoalProgress(goal.id)
+                    return { ...goal, progress }
+                })
+            )
+            return data
+        } catch (error: unknown) {
+            return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }
     }
 )

@@ -1,4 +1,4 @@
-import { ICommonState } from "@redux"
+import { ICommonState } from "shared/store"
 
 export interface IGoalState extends ICommonState{
     goals: IGoal[] | null,

@@ -1,4 +1,4 @@
-import { ICommonState } from "@redux"
+import { ICommonState } from "shared/store"
 
 export interface IUserState extends ICommonState {
     user: IUser | null,
@@ -6,11 +6,11 @@ export interface IUserState extends ICommonState {
 }
 
 export interface IUser {
-    id: number | null,
-    email: string | null,
-    // password: string | null,
-    role: string | null,
-    img: string | null,
+    id: number,
+    email: string,
+    password: string,
+    role: string,
+    img: string,
 }
 
 export interface IChangeUserReturnedValue {

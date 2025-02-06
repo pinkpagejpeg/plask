@@ -7,9 +7,8 @@ export const destroyUser = createAsyncThunk<number, number, { rejectValue: strin
         try {
             const data = await deleteUser(userId)
             return data
-        }
-        catch (error) {
-            return rejectWithValue(error.response.data)
+        } catch (error: unknown) {
+            return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }
     }
 )

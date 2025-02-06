@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { ITask, ITaskState } from "./types"
 import { addTask, changeTask, changeTaskStatus, destroyTask, fetchTasksByUserId } from "../api"
-import { createPendingHandler, createRejectedHandler } from "@redux"
+import { createPendingHandler, createRejectedHandler } from "shared/store"
 
 const initialState: ITaskState = {
     tasks: null,
@@ -34,7 +34,9 @@ const taskSlice = createSlice({
             .addCase(addTask.pending, createPendingHandler<ITaskState>())
             .addCase(addTask.fulfilled, (state: ITaskState, action: PayloadAction<ITask>) => {
                 state.loading = false
-                state.tasks = [action.payload, ...state.tasks]
+                if (state.tasks) {
+                    state.tasks = [action.payload, ...state.tasks]
+                }
             })
             .addCase(addTask.rejected, createRejectedHandler<ITaskState>())
 
@@ -42,9 +44,11 @@ const taskSlice = createSlice({
             .addCase(changeTask.pending, createPendingHandler<ITaskState>())
             .addCase(changeTask.fulfilled, (state: ITaskState, action: PayloadAction<ITask>) => {
                 state.loading = false
-                const index = state.tasks.findIndex(task => task.id === action.payload.id)
-                if (index !== -1) {
-                    state.tasks[index] = {...action.payload}
+                if (state.tasks) {
+                    const index = state.tasks.findIndex(task => task.id === action.payload.id)
+                    if (index !== -1) {
+                        state.tasks[index] = { ...action.payload }
+                    }
                 }
             })
             .addCase(changeTask.rejected, createRejectedHandler<ITaskState>())
@@ -53,9 +57,11 @@ const taskSlice = createSlice({
             .addCase(changeTaskStatus.pending, createPendingHandler<ITaskState>())
             .addCase(changeTaskStatus.fulfilled, (state: ITaskState, action: PayloadAction<ITask>) => {
                 state.loading = false
-                const index = state.tasks.findIndex(task => task.id === action.payload.id)
-                if (index !== -1) {
-                    state.tasks[index] = {...action.payload}
+                if (state.tasks) {
+                    const index = state.tasks.findIndex(task => task.id === action.payload.id)
+                    if (index !== -1) {
+                        state.tasks[index] = { ...action.payload }
+                    }
                 }
             })
             .addCase(changeTaskStatus.rejected, createRejectedHandler<ITaskState>())
@@ -64,7 +70,9 @@ const taskSlice = createSlice({
             .addCase(destroyTask.pending, createPendingHandler<ITaskState>())
             .addCase(destroyTask.fulfilled, (state: ITaskState, action: PayloadAction<number>) => {
                 state.loading = false
-                state.tasks = state.tasks.filter(task => task.id !== action.payload)
+                if (state.tasks) {
+                    state.tasks = state.tasks.filter(task => task.id !== action.payload)
+                }
             })
             .addCase(destroyTask.rejected, createRejectedHandler<ITaskState>())
     },

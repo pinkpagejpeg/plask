@@ -5,7 +5,7 @@ import { Navbar } from '../../../shared/ui'
 import { deleteIcon, uploadIcon } from '../../../shared/assets'
 import { REGISTRATION_ROUTE } from '../../../shared/config'
 import { ProfileInfo } from './profileInfo'
-import { useAppDispatch, useTypedSelector } from '@redux'
+import { useAppDispatch, useTypedSelector } from 'shared/store'
 import { changeUserImage, destroyUser, destroyUserImage } from '../../../entities/users'
 
 export const Profile: FC = () => {
@@ -17,7 +17,7 @@ export const Profile: FC = () => {
     //     return <Navigate to={LOGIN_ROUTE} />
     // }
 
-    const fileChangeHandler = (event)=> {
+    const fileChangeHandler = (event) => {
         selectFile(event)
     }
 
@@ -31,28 +31,52 @@ export const Profile: FC = () => {
         updateUserImage(file)
     }
 
-    const updateUserImage = async (file) => {
-        if (user.id) {
-            const formData = new FormData()
-            formData.append('file', file)
+    const updateUserImage = async (file: string | Blob) => {
+        try {
+            if (user) {
+                const formData = new FormData()
+                formData.append('file', file)
 
-            dispatch(changeUserImage({ userId: user.id, formData }))
+                dispatch(changeUserImage({ userId: user?.id, formData }))
+            }
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При изменении фото профиля возникла ошибка: ${error.message}`)
+            } else {
+                alert("При изменении фото профиля возникла неизвестная ошибка")
+            }
         }
     }
 
     const deleteUserImage = async () => {
-        if (user.id) {
-            dispatch(destroyUserImage(user.id))
+        try {
+            if (user) {
+                dispatch(destroyUserImage(user?.id))
+            }
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При удалении фото профиля возникла ошибка: ${error.message}`)
+            } else {
+                alert("При удалении фото профиля возникла неизвестная ошибка")
+            }
         }
     }
 
     const deleteUser = async () => {
-        if (user.id) {
-            const confirmed = window.confirm("Вы уверены, что хотите удалить аккаунт?")
-            if (confirmed) {
-                dispatch(destroyUser(user.id))
-                localStorage.removeItem('token')
-                navigate(REGISTRATION_ROUTE)
+        try {
+            if (user) {
+                const confirmed = window.confirm("Вы уверены, что хотите удалить аккаунт?")
+                if (confirmed) {
+                    dispatch(destroyUser(user?.id))
+                    localStorage.removeItem('token')
+                    navigate(REGISTRATION_ROUTE)
+                }
+            }
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При удалении профиля возникла ошибка: ${error.message}`)
+            } else {
+                alert("При удалении профиля возникла неизвестная ошибка")
             }
         }
     }
@@ -65,7 +89,7 @@ export const Profile: FC = () => {
                 <h3 className={classes.title}>Профиль</h3>
                 <div className={classes.profile__mainbox}>
                     <div className={classes.profile__imagebox}>
-                        <img src={import.meta.env.VITE_API_URL + 'static/' + user.img} />
+                        <img src={import.meta.env.VITE_API_URL + 'static/' + user?.img} />
                         <div className={classes.profile__image_buttons}>
                             <label htmlFor="file-upload" className={classes.profile__image_button}>
                                 <img src={uploadIcon} alt="Загрузить фото профиля" />

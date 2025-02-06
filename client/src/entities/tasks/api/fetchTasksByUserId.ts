@@ -6,12 +6,14 @@ export const fetchTasksByUserId = createAsyncThunk<ITask[], number, { rejectValu
     "task/fetchTasksByUserId",
     async (userId, { rejectWithValue }) => {
         try {
-            if (userId) {
-                const data = await getTask(userId)
-                return data
+            if (!userId) {
+                throw new Error("Отсутствует идентификатор пользователя")
             }
-        } catch (error) {
-            return rejectWithValue(error.response.data)
+            
+            const data = await getTask(userId)
+            return data
+        } catch (error: unknown) {
+            return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }
     }
 )

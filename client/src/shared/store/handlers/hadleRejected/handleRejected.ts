@@ -7,9 +7,9 @@ import { ICommonState } from "../../state"
  * @param state - The slice state that conforms to ICommonState.
  * @param action - The rejected action with a string payload (error message).
  */
-export const handleRejected = <T extends ICommonState>(state: T, action: PayloadAction<string>) => {
+export const handleRejected = <T extends ICommonState>(state: T, action: PayloadAction<string | undefined>) => {
     state.loading = false;
-    state.error = action.payload;
+    state.error = action.payload || `Неизвестная ошибка`;
 };
 
 /**
@@ -17,5 +17,5 @@ export const handleRejected = <T extends ICommonState>(state: T, action: Payload
  * 
  * @returns A pre-configured handler function for rejected cases.
  */
-export const createRejectedHandler = <T extends ICommonState>() => 
-    (state: T, action: PayloadAction<string>) => handleRejected(state, action);
+export const createRejectedHandler = <T extends ICommonState>() =>
+    (state: T, action: PayloadAction<string | undefined>) => handleRejected(state, action);

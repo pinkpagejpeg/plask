@@ -28,34 +28,46 @@ export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowE
 
     const updateTaskHandler = () => {
         try {
-            if (allowEdit) {
+            if (allowEdit && updateTask) {
                 if (info === '') {
                     deleteTaskHandler()
                 }
                 updateTask(taskId, info)
             }
-        } catch (error) {
-            alert(`При изменении задачи возникла ошибка: ${error.response.data}`)
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При изменении задачи возникла ошибка: ${error.message}`)
+            } else {
+                alert("При изменении задачи возникла неизвестная ошибка")
+            }
         }
     }
 
     const updateTaskStatusHandler = () => {
         try {
-            if (allowEdit) {
+            if (allowEdit && updateTaskStatus) {
                 updateTaskStatus(taskId, !isChecked)
             }
-        } catch (error) {
-            alert(`При изменении статуса задачи возникла ошибка: ${error.response.data}`)
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При изменении статуса задачи возникла ошибка: ${error.message}`)
+            } else {
+                alert("При изменении статуса задачи возникла неизвестная ошибка")
+            }
         }
     }
 
     const deleteTaskHandler = () => {
         try {
-            if (allowEdit) {
+            if (allowEdit && deleteTask) {
                 deleteTask(taskId)
             }
-        } catch (error) {
-            alert(`При удвлении задачи возникла ошибка: ${error.response.data}`)
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При удалении задачи возникла ошибка: ${error.message}`)
+            } else {
+                alert("При удалении задачи возникла неизвестная ошибка")
+            }
         }
     }
 
@@ -63,6 +75,7 @@ export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowE
         <div className={classes.checkbox__wrapper}>
             <label>
                 <input
+                    data-testid="taskCheckbox"
                     type="checkbox"
                     className={classes.checkbox__input}
                     checked={isChecked}

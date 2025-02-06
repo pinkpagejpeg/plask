@@ -3,12 +3,13 @@ import classes from './Users.module.scss'
 import { Navbar } from '../../../shared/ui'
 import { UserItem } from './userItem'
 import { fetchUsers, addUser } from '../api'
+import { IUser } from '@/entities/users'
 
 export const Users: FC = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [role, setRole] = useState('USER')
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<IUser[]>([])
 
     // if (!user) {
     //     return <Navigate to={LOGIN_ROUTE} />;
@@ -22,8 +23,12 @@ export const Users: FC = () => {
         try {
             const data = await fetchUsers()
             setUsers(data)
-        } catch (error) {
-            alert(`Ошибка при получении пользователей: ${error.response.data}`)
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При получении пользователей возникла ошибка: ${error.message}`)
+            } else {
+                alert("При получении пользователей возникла неизвестная ошибка")
+            }
         }
     }
 
@@ -35,8 +40,12 @@ export const Users: FC = () => {
             setPassword('')
             getUsers()
         }
-        catch (error) {
-            alert(`Ошибка при добавлении пользователя: ${error.response.data}`)
+        catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При добавлении пользователя возникла ошибка: ${error.message}`)
+            } else {
+                alert("При добавлении пользователя возникла неизвестная ошибка")
+            }
         }
     }
 

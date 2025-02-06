@@ -7,9 +7,8 @@ export const destroyTask = createAsyncThunk<number, number, { rejectValue: strin
         try {
             const data = await deleteTask(taskId)
             return data.deletedTaskId
-        }
-        catch (error) {
-            return rejectWithValue(error.response.data)
+        } catch (error: unknown) {
+            return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }
     }
 )

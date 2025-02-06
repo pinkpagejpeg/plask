@@ -1,6 +1,6 @@
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
-import { useAppDispatch, useTypedSelector } from '@redux'
+import { useAppDispatch, useTypedSelector } from 'shared/store'
 import { useEffect, useMemo } from 'react'
 import { fetchUserById } from '../../entities/users'
 import { check } from '../../shared/api'
@@ -15,7 +15,9 @@ export const AppRouter = () => {
         })
     }, [dispatch])
 
-    const currentRouter = useMemo(() => router(user, isAuth, loading), [user, isAuth, loading])
+    const currentRouter = useMemo(() => {
+        return (user) ? router(user, isAuth, loading) : null
+    }, [user, isAuth, loading])
 
     if (loading) {
         return <h3>Загрузка...</h3>
@@ -23,6 +25,10 @@ export const AppRouter = () => {
 
     if (error) {
         return <h3>{error}</h3>
+    }
+
+    if (!currentRouter) {
+        return <h3>Ошибка маршрута</h3>
     }
 
     return (

@@ -4,7 +4,7 @@ import { deleteIcon } from '../../../../shared/assets'
 import { NavLink } from 'react-router-dom'
 import { GOALS_ITEM_ROUTE } from '../../../../shared/config'
 import { IGoalListItem } from '../../model'
-import { useAppDispatch } from '@redux'
+import { useAppDispatch } from 'shared/store'
 import { destroyGoal } from "../../../../entities/goals"
 
 export const GoalListItem: FC<IGoalListItem> = ({ title, goalId, progress }) => {

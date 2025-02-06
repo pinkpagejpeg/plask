@@ -1,10 +1,10 @@
-import { FC, useState } from 'react'
+import { FC, SetStateAction, useState } from 'react'
 import classes from './Auth.module.scss'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { ADMIN_ROUTE, INFO_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, WELCOME_ROUTE } from '../../../shared/config'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { registration, login } from '../../../shared/api'
-import { useAppDispatch } from '@redux'
+import { useAppDispatch } from 'shared/store'
 import { fetchUserById } from '../../../entities/users'
 
 export const Auth: FC = () => {
@@ -16,8 +16,8 @@ export const Auth: FC = () => {
     const [hcaptchaToken, setHcaptchaToken] = useState('')
     const dispatch = useAppDispatch()
 
-    const authButtonHandler = async (e) => {
-        e.preventDefault()
+    const authButtonHandler = async (event: { preventDefault: () => void }) => {
+        event.preventDefault()
         try {
             if (hcaptchaToken) {
                 let data
@@ -36,25 +36,27 @@ export const Auth: FC = () => {
                 } else {
                     navigate(`${WELCOME_ROUTE}?from=${isLogin ? 'login' : 'registration'}`)
                 }
-            }
-            else {
+            } else {
                 alert('Необходимо пройти капчу')
             }
-        }
-        catch (error) {
-            alert(`Ошибка при получении информации о пользователе: ${error.response.data}`)
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При получении информации о пользователе возникла ошибка: ${error.message}`)
+            } else {
+                alert("При получении информации о пользователе возникла неизвестная ошибка")
+            }
         }
     }
 
-    const emailChangeHandler = (event) => {
+    const emailChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
         setEmail(event.target.value)
     }
 
-    const passwordChangeHandler = (event) => {
+    const passwordChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
         setPassword(event.target.value)
     }
 
-    const verifyCaptchaHandler = (token) => {
+    const verifyCaptchaHandler = (token: string) => {
         setHcaptchaToken(token)
     }
 

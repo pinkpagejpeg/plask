@@ -1,6 +1,6 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, SetStateAction, useEffect, useState } from 'react'
 import classes from './ProfileInfo.module.scss'
-import { useAppDispatch, useTypedSelector } from '@redux'
+import { useAppDispatch, useTypedSelector } from 'shared/store'
 import { changeUserInfo } from '../../../../entities/users'
 
 export const ProfileInfo: FC = () => {
@@ -13,15 +13,17 @@ export const ProfileInfo: FC = () => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        setEmail(user.email)
-        setPrevEmail(user.email)
+        if (user) {
+            setEmail(user.email)
+            setPrevEmail(user.email)
+        }
     }, [user])
 
-    const emailChangeHandler = (event) => {
+    const emailChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
         setEmail(event.target.value)
     }
 
-    const passwordChangeHandler = (event) => {
+    const passwordChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
         setPassword(event.target.value)
     }
 
@@ -30,9 +32,9 @@ export const ProfileInfo: FC = () => {
     }
 
     const handleEmailBlur = () => {
-        if (user.id) {
+        if (user) {
             if (prevEmail !== email && email.trim() !== '') {
-                dispatch(changeUserInfo({ userId: user.id, email, password }))
+                dispatch(changeUserInfo({ userId: user?.id, email, password }))
                 setPrevEmail(email)
             } else {
                 setEmail(prevEmail)
@@ -46,9 +48,9 @@ export const ProfileInfo: FC = () => {
     }
 
     const handlePasswordBlur = () => {
-        if (user.id) {
+        if (user) {
             if (password.trim() !== '') {
-                dispatch(changeUserInfo({ userId: user.id, email, password }))
+                dispatch(changeUserInfo({ userId: user?.id, email, password }))
             }
             setIsPasswordEditing(false)
             setPassword('')
@@ -71,7 +73,7 @@ export const ProfileInfo: FC = () => {
                             required
                         />
                     ) : (
-                        <span className={classes.profile__info} onClick={handleEmailEdit}> {user.email}</span>
+                        <span className={classes.profile__info} onClick={handleEmailEdit}> {user?.email}</span>
                     )}
                 </p>
             </div>

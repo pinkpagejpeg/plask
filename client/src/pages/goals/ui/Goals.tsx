@@ -1,8 +1,8 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, SetStateAction, useEffect, useState } from 'react'
 import classes from './Goals.module.scss'
 import { Navbar } from '../../../shared/ui'
 import { GoalListItem } from './goalListItem'
-import { useAppDispatch, useTypedSelector } from '@redux'
+import { useAppDispatch, useTypedSelector } from 'shared/store'
 import { addGoal, fetchGoalsByUserId } from '../../../entities/goals'
 
 export const Goals: FC = () => {
@@ -16,21 +16,29 @@ export const Goals: FC = () => {
     // }
 
     useEffect(() => {
-        if (user.id) {
-            dispatch(fetchGoalsByUserId(user.id))
+        if (user) {
+            dispatch(fetchGoalsByUserId(user?.id))
         }
 
     }, [dispatch, user])
 
-    const createButtonHandler = async (event) => {
+    const createButtonHandler = async (event: { preventDefault: () => void }) => {
         event.preventDefault()
-        if (user.id && info) {
-            dispatch(addGoal({ userId: user.id, info }))
-            setInfo('')
+        try {
+            if (user && info) {
+                dispatch(addGoal({ userId: user?.id, info }))
+                setInfo('')
+            }
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При добавлении цели возникла ошибка: ${error.message}`)
+            } else {
+                alert("При добавлении цели возникла неизвестная ошибка")
+            }
         }
     }
 
-    const infoChangeHandler = (event) => {
+    const infoChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
         setInfo(event.target.value)
     }
 

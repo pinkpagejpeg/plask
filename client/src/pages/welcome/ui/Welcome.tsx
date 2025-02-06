@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
 import { FEEDBACK_ROUTE, GOALS_ITEM_ROUTE, GOALS_ROUTE, TASKS_ROUTE } from '../../../shared/config'
 import { useLocation } from 'react-router-dom'
-import { useAppDispatch, useTypedSelector } from '@redux'
+import { useAppDispatch, useTypedSelector } from 'shared/store'
 import { fetchTasksByUserId } from '../../../entities/tasks'
 import { fetchGoalsByUserId } from '../../../entities/goals'
 
@@ -22,7 +22,7 @@ export const Welcome: FC = () => {
     // }
 
     useEffect(() => {
-        if (user.id) {
+        if (user && user.id) {
             dispatch(fetchTasksByUserId(user.id))
             dispatch(fetchGoalsByUserId(user.id))
         }

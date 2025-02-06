@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IChangeUserReturnedValue, IUser, IUserState } from "./types"
 import { changeUserImage, changeUserInfo, destroyUser, destroyUserImage, fetchUserById } from "../api"
-import { createPendingHandler, createRejectedHandler } from "@redux"
+import { createPendingHandler, createRejectedHandler } from "shared/store"
 
 const initialState: IUserState = {
     user: null,
@@ -40,7 +40,7 @@ const userSlice = createSlice({
             // changeUserImage
             .addCase(changeUserImage.pending, createPendingHandler<IUserState>())
             .addCase(changeUserImage.fulfilled, (state, action: PayloadAction<IUser>) => {
-                state.user = {...action.payload}
+                state.user = { ...action.payload }
                 state.loading = false
             })
             .addCase(changeUserImage.rejected, createRejectedHandler<IUserState>())
@@ -48,15 +48,17 @@ const userSlice = createSlice({
             // changeUserInfo
             .addCase(changeUserInfo.pending, createPendingHandler<IUserState>())
             .addCase(changeUserInfo.fulfilled, (state, action: PayloadAction<IChangeUserReturnedValue>) => {
-                state.user.email = action.payload.email
                 state.loading = false
+                if (state.user) {
+                    state.user.email = action.payload.email
+                }
             })
             .addCase(changeUserInfo.rejected, createRejectedHandler<IUserState>())
 
             // destroyUserImage
             .addCase(destroyUserImage.pending, createPendingHandler<IUserState>())
             .addCase(destroyUserImage.fulfilled, (state, action: PayloadAction<IUser>) => {
-                state.user = {...action.payload}
+                state.user = { ...action.payload }
                 state.loading = false
             })
             .addCase(destroyUserImage.rejected, createRejectedHandler<IUserState>())

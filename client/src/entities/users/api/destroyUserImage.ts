@@ -8,8 +8,8 @@ export const destroyUserImage = createAsyncThunk<IUser, number, { rejectValue: s
         try {
             const { user } = await deleteUserImage(userId)
             return user
-        } catch (error) {
-            return rejectWithValue(error.response.data)
+        } catch (error: unknown) {
+            return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }
     }
 )

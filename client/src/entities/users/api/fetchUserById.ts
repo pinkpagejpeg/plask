@@ -8,8 +8,8 @@ export const fetchUserById = createAsyncThunk<IUser, number, { rejectValue: stri
         try {
             const data = await getUser(userId)
             return data
-        } catch (error) {
-            return rejectWithValue(error.response.data)
+        } catch (error: unknown) {
+            return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }
     }
 )

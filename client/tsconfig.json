@@ -6,18 +6,33 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "types": ["vite/client"],
+    "types": [
+      "vite/client",
+      "vitest/globals"
+    ],
     "baseUrl": "./src",
     "paths": {
-      "@redux": ["shared/lib/redux"]
-    }
+      "@redux": [
+        "shared/lib/redux"
+      ],
+      "@/*": [
+        "./*"
+      ]
+    },
+    "strict": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": false
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.d.ts",
     "./styles.d.ts",
-    "./images.d.ts", 
-    "src/features/hooks/useTypedSelector", "src/features/hooks/useAppDispatch"
-, "src/shared/lib/redux/handlers/hadleRejected"  ]
+    "./images.d.ts",
+    "src/features/hooks/useTypedSelector",
+    "src/features/hooks/useAppDispatch",
+    "src/shared/store/handlers/hadleRejected",
+    "./jest.setup.ts",
+    "src/shared/ui/buttons/taskCheckbox/__tests__/TaskCheckbox.test.tsx",
+  ]
 }

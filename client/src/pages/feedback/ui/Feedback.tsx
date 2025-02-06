@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 import classes from './Feedback.module.scss'
 import { Navbar } from '../../../shared/ui'
-import { useTypedSelector } from '@redux'
+import { useTypedSelector } from 'shared/store'
 import { addFeedback } from '../api'
 
 export const Feedback: FC = () => {
@@ -15,14 +15,17 @@ export const Feedback: FC = () => {
     const buttonHandler = (event) => {
         event.preventDefault()
         try {
-            if (user.id && info) {
-                addFeedback({ userId: user.id, info })
+            if (user && info) {
+                addFeedback({ userId: user?.id, info })
                 setInfo('')
                 alert('Обратная связь отправлена')
             }
-        }
-        catch (error) {
-            alert(`При отправке обратной связи возникла ошибка: ${error.response.data}`)
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`При отправке обратной связи возникла ошибка: ${error.message}`)
+            } else {
+                alert("При отправке обратной связи возникла неизвестная ошибка")
+            }
         }
     }
 

@@ -10,5 +10,7 @@ export const store = configureStore({
     }).concat(thunk)
 })
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+declare global {
+    type RootState = ReturnType<typeof rootReducer>
+    type AppDispatch = typeof store.dispatch
+}

@@ -8,8 +8,8 @@ export const changeGoal = createAsyncThunk<IGoal, { goalId: number, info: string
         try {
             const { goal } = await updateGoal(goalId, info)
             return goal
-        } catch (error) {
-            return rejectWithValue(error.response.data)
+        } catch (error: unknown) {
+            return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }
     }
 )

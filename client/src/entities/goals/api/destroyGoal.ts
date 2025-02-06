@@ -7,9 +7,8 @@ export const destroyGoal = createAsyncThunk<number, number, { rejectValue: strin
         try {
             const data = await deleteGoal(goalId)
             return data.deletedGoalId
-        }
-        catch (error) {
-            return rejectWithValue(error.response.data)
+        } catch (error: unknown) {
+            return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }
     }
 )
