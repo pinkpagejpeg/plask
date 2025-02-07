@@ -3,20 +3,20 @@
 /** @type {import('sequelize-cli').Seeder} */
 module.exports = {
   async up(queryInterface) {
-    // const goals = await queryInterface.sequelize.query('SELECT id FROM goals')
+    const goals = await queryInterface.sequelize.query('SELECT id FROM goals')
 
     await queryInterface.bulkInsert('goal_items', [
       {
         info: 'Complete the project setup',
         status: true,
-        goalId: 1,
+        goalId: goals[0].id,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         info: 'Write the initial draft of documentation',
         status: false,
-        goalId: 2,
+        goalId: goals[1].id,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
