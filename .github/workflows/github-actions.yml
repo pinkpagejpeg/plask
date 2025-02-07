@@ -42,6 +42,11 @@ jobs:
         run: |
           npm run typecheck
 
+      - name: RUn tests for frontend
+        working-directory: client
+        run: |
+          npm run test
+
       - name: Build frontend
         working-directory: client
         run: |

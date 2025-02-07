@@ -24,7 +24,7 @@ module.exports = {
     {
       files: ['*.d.ts'],
       rules: {
-        '@typescript-eslint/explicit-module-boundary-types': 'off', // Отключаем правила для файлов типа d.ts
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
       },
     },
   ],

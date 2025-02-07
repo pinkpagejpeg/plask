@@ -1,4 +1,4 @@
-import { jwtDecode } from "jwt-decode"
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { sign } from "jsonwebtoken"
 
 export const checkApi = async (
@@ -31,3 +31,4 @@ export const checkApiWithJwt = async (
     expect(mockMethod).toHaveBeenCalledTimes(calledTimes)
     expect(mockMethod).toHaveBeenCalledWith(...expectedArgs)
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */

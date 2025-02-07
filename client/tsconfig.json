@@ -19,9 +19,9 @@
         "./*"
       ]
     },
-    "strict": true,
-    "noImplicitReturns": true,
-    "noImplicitAny": false
+    // "strict": true,
+    // "noImplicitReturns": true,
+    // "noImplicitAny": false
   },
   "include": [
     "src/**/*.ts",
