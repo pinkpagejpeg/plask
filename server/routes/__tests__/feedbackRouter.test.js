@@ -107,6 +107,7 @@ describe('feedbackRouter tests', () => {
 
         expect(response.status).toBe(200)
 
+        console.log(response.body)
         expect(response.body).toBeInstanceOf(Array)
         expect(response.body.length).toBeGreaterThan(0)
         response.body.forEach((feedback) => {

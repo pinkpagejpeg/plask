@@ -95,7 +95,11 @@ jobs:
       - name: Run seeders for backend
         working-directory: server
         run: |
-          npm run seed --debug
+          npx sequelize db:seed --seed userSeeder.js 
+          npx sequelize db:seed --seed feedbackSeeder.js
+          npx sequelize db:seed --seed taskSeeder.js
+          npx sequelize db:seed --seed goalSeeder.js
+          npx sequelize db:seed --seed goalItemSeeder.js
 
       - name: Run tests for backend
         working-directory: server
