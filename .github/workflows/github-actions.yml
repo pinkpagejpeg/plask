@@ -64,6 +64,7 @@ jobs:
           chmod +x ./node_modules/.bin/sequelize
           chmod +x ./node_modules/.bin/nodemon
           chmod +x ./node_modules/.bin/pm2
+          chmod +x ./node_modules/.bin/jest
           
       - name: Run lint for backend
         working-directory: server
