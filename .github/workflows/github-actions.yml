@@ -42,7 +42,7 @@ jobs:
         run: |
           npm run typecheck
 
-      - name: RUn tests for frontend
+      - name: Run tests for frontend
         working-directory: client
         run: |
           npm run test
@@ -95,6 +95,11 @@ jobs:
         working-directory: server
         run: |
           npm run seed --debug
+
+      - name: Run tests for backend
+        working-directory: server
+        run: |
+          npm run test
 
       - name: Start backend server
         working-directory: server

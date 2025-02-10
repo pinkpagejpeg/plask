@@ -15,7 +15,7 @@ module.exports = function(role) {
             const decoded = jwt.verify(token, process.env.SECRET_KEY)
             req.user = decoded
             if(decoded.role !== role){
-                return next(ApiError.forbidden())
+                return next(ApiError.forbidden('Пользователь не обладает правами администратора'))
             }
 
             next()
