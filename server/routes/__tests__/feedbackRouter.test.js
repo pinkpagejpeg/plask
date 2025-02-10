@@ -7,13 +7,13 @@ describe('feedbackRouter tests', () => {
 
     beforeAll(async () => {
         mockUserJwtToken = jwt.sign({
-            id: 22,
+            id: 1,
             email: 'user@example.com',
             role: 'USER'
         }, process.env.SECRET_KEY)
 
         mockAdminJwtToken = jwt.sign({
-            id: 23,
+            id: 2,
             email: 'admin@example.com',
             role: 'ADMIN'
         }, process.env.SECRET_KEY)
@@ -27,7 +27,7 @@ describe('feedbackRouter tests', () => {
             .set('Authorization', `Bearer ${mockUserJwtToken}`)
             .send({
                 info: '',
-                userId: 22
+                userId: 1
             })
 
         expect(response.status).toBe(400)
@@ -40,7 +40,7 @@ describe('feedbackRouter tests', () => {
             .set('Authorization', '')
             .send({
                 info: 'Great app!',
-                userId: 22
+                userId: 1
             })
 
         expect(response.status).toBe(401)
@@ -53,7 +53,7 @@ describe('feedbackRouter tests', () => {
             .set('Authorization', 'Bearer fakeToken')
             .send({
                 info: 'Great app!',
-                userId: 22
+                userId: 1
             })
 
         expect(response.status).toBe(401)
@@ -66,14 +66,14 @@ describe('feedbackRouter tests', () => {
             .set('Authorization', `Bearer ${mockUserJwtToken}`)
             .send({
                 info: 'Great app!',
-                userId: 22
+                userId: 1
             })
 
         expect(response.status).toBe(200)
         expect(response.body).toEqual(expect.objectContaining({
             info: 'Great app!',
             status: false,
-            userId: 22
+            userId: 1
         }))
 
         expect(response.body).toHaveProperty('id')

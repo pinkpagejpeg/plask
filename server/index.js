@@ -40,7 +40,9 @@ const stop = async () => {
     try {
         await sequelize.close()
         if (server) {
-            await new Promise((reject, resolve) => server.close(error ? reject() : resolve()))
+            await new Promise((resolve, reject) => server.close(
+                (error) => error ? reject(error) : resolve()
+            ))
             console.log("Server stopped")
         }
     } catch (error) {
