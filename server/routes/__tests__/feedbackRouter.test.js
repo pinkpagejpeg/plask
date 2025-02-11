@@ -107,7 +107,6 @@ describe('feedbackRouter tests', () => {
 
         expect(response.status).toBe(200)
 
-        console.log(response.body)
         expect(response.body).toBeInstanceOf(Array)
         expect(response.body.length).toBeGreaterThan(0)
         response.body.forEach((feedback) => {
@@ -162,22 +161,18 @@ describe('feedbackRouter tests', () => {
             .send({ feedbackId: 1 })
 
         expect(response.status).toBe(200)
-        expect(response.body.feedback.status).toEqual(true)
 
         expect(response.body.feedback).toHaveProperty('id')
         expect(response.body.feedback).toHaveProperty('info')
         expect(response.body.feedback).toHaveProperty('status')
+        expect(response.body.feedback.status).toBe(true)
         expect(response.body.feedback).toHaveProperty('date')
         expect(response.body.feedback).toHaveProperty('userId')
         expect(response.body.feedback).toHaveProperty('createdAt')
         expect(response.body.feedback).toHaveProperty('updatedAt')
     })
 
-    afterEach(async () => {
-        jest.clearAllMocks()
-    })
+    afterEach(() => jest.clearAllMocks())
 
-    afterAll(async () => {
-        await stop()
-    })
+    afterAll(async () => await stop())
 })

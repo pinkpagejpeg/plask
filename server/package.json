@@ -10,7 +10,7 @@
     "logs": "pm2 logs server",
     "dev": "nodemon index.js",
     "lint": "eslint \"**/*.js\"",
-    "test": "jest --no-cache  --detectOpenHandles --runInBand --forceExit",
+    "test": "jest --no-cache --forceExit",
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
     "clean": "rm -rf node_modules && npm install"
