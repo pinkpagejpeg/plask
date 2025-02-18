@@ -1,57 +1,38 @@
 const { app, start, stop } = require('../../index')
 const request = require('supertest')
-const jwt = require('jsonwebtoken')
+const { mockUserJwtToken, checkRouteWithEmptyInfo, checkRouteWithInvalidToken } = require('./checkRouter')
 
 describe('taskRouter tests', () => {
-    let mockUserJwtToken, mockTaskId
+    let mockTaskId
 
-    beforeAll(async () => {
-        mockUserJwtToken = jwt.sign({
-            id: 1,
-            email: 'user@example.com',
-            role: 'USER'
-        }, process.env.SECRET_KEY)
-
-        await start()
-    })
+    beforeAll(async () => await start())
 
     test('Create task with empty info, should return 400', async () => {
-        const response = await request(app)
-            .post('/api/task/')
-            .set('Authorization', `Bearer ${mockUserJwtToken}`)
-            .send({
-                info: '',
-                userId: 1
-            })
-
-        expect(response.status).toBe(400)
-        expect(response.body.message).toContain('Задача не введена')
+        await checkRouteWithEmptyInfo(
+            request(app).post,
+            '/api/task/',
+            mockUserJwtToken,
+            { info: '', userId: 1 },
+            'Задача не введена'
+        )
     })
 
     test('Create task by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .post('/api/task/')
-            .set('Authorization', '')
-            .send({
-                info: 'Write documentation',
-                userId: 1
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).post,
+            '/api/task/',
+            '',
+            { info: 'Write documentation', userId: 1 }
+        )
     })
 
     test('Create task by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .post('/api/task/')
-            .set('Authorization', 'Bearer fakeToken')
-            .send({
-                info: 'Write documentation',
-                userId: 1
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).post,
+            '/api/task/',
+            'Bearer fakeToken',
+            { info: 'Write documentation', userId: 1 }
+        )
     })
 
     test('Create task with valid data, should return 200', async () => {
@@ -78,29 +59,21 @@ describe('taskRouter tests', () => {
     })
 
     test('Update task by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .put('/api/task/')
-            .set('Authorization', '')
-            .send({
-                info: 'Write tests',
-                taskId: mockTaskId
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/task/',
+            '',
+            { info: 'Write tests', taskId: mockTaskId }
+        )
     })
 
     test('Update task by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .put('/api/task/')
-            .set('Authorization', 'Bearer fakeToken')
-            .send({
-                info: 'Write tests',
-                taskId: mockTaskId
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/task/',
+            'Bearer fakeToken',
+            { info: 'Write tests', taskId: mockTaskId }
+        )
     })
 
     test('Update task with valid data, should return 200', async () => {
@@ -125,29 +98,21 @@ describe('taskRouter tests', () => {
     })
 
     test('Update task status by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .put('/api/task/status')
-            .set('Authorization', '')
-            .send({
-                status: true,
-                taskId: mockTaskId
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/task/status',
+            '',
+            { status: true, taskId: mockTaskId }
+        )
     })
 
     test('Update task status by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .put('/api/task/status')
-            .set('Authorization', 'Bearer fakeToken')
-            .send({
-                status: true,
-                taskId: mockTaskId
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/task/status',
+            'Bearer fakeToken',
+            { status: true, taskId: mockTaskId }
+        )
     })
 
     test('Update task status with valid data, should return 200', async () => {
@@ -191,21 +156,19 @@ describe('taskRouter tests', () => {
     })
 
     test('Delete task by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .delete(`/api/task/${mockTaskId}`)
-            .set('Authorization', '')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).delete,
+            `/api/task/${mockTaskId}`,
+            ''
+        )
     })
 
     test('Delete task by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .delete(`/api/task/${mockTaskId}`)
-            .set('Authorization', 'Bearer fakeToken')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).delete,
+            `/api/task/${mockTaskId}`,
+            'Bearer fakeToken'
+        )
     })
 
     test('Delete task with valid data, should return 200', async () => {
@@ -218,21 +181,19 @@ describe('taskRouter tests', () => {
     })
 
     test('Get tasks by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .get('/api/task/1')
-            .set('Authorization', '')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            '/api/task/1',
+            ''
+        )
     })
 
     test('Get tasks by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .get('/api/task/1')
-            .set('Authorization', 'Bearer fakeToken')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            '/api/task/1',
+            'Bearer fakeToken'
+        )
     })
 
     test('Get tasks with valid data, should return 200', async () => {

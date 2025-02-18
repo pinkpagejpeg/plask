@@ -1,58 +1,38 @@
 const request = require('supertest')
 const { app, start, stop } = require('../../index')
-const jwt = require('jsonwebtoken')
+const { mockUserJwtToken, checkRouteWithEmptyInfo, checkRouteWithInvalidToken } = require('./checkRouter')
 
 describe('goalRouter tests', () => {
-    let mockUserJwtToken, mockGoalId, mockGoalItemId
+    let mockGoalId, mockGoalItemId
 
-    beforeAll(async () => {
-        mockUserJwtToken = jwt.sign({
-            id: 1,
-            email: 'user@example.com',
-            role: 'USER'
-        }, process.env.SECRET_KEY)
-
-        await start()
-    })
-
+    beforeAll(async () => await start())
 
     test('Create goal with empty info, should return 400', async () => {
-        const response = await request(app)
-            .post('/api/goal/')
-            .set('Authorization', `Bearer ${mockUserJwtToken}`)
-            .send({
-                userId: 1,
-                info: ''
-            })
-
-        expect(response.status).toBe(400)
-        expect(response.body.message).toContain('Цель не введена')
+        await checkRouteWithEmptyInfo(
+            request(app).post,
+            '/api/goal/',
+            mockUserJwtToken,
+            { info: '', userId: 1 },
+            'Цель не введена'
+        )
     })
 
     test('Create goal by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .post('/api/goal/')
-            .set('Authorization', '')
-            .send({
-                info: 'Learn JavaScript',
-                userId: 1
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).post,
+            '/api/goal/',
+            '',
+            { info: 'Learn JavaScript', userId: 1 }
+        )
     })
 
     test('Create goal by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .post('/api/goal/')
-            .set('Authorization', 'Bearer fakeToken')
-            .send({
-                info: 'Learn JavaScript',
-                userId: 1
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).post,
+            '/api/goal/',
+            'Bearer fakeToken',
+            { info: 'Learn JavaScript', userId: 1 }
+        )
     })
 
     test('Create goal with valid data, should return 200', async () => {
@@ -78,21 +58,19 @@ describe('goalRouter tests', () => {
     })
 
     test('Get goal progress by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .get(`/api/goal/progress/${mockGoalId}`)
-            .set('Authorization', '')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            `/api/goal/progress/${mockGoalId}`,
+            ''
+        )
     })
 
     test('Get goal progress by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .get(`/api/goal/progress/${mockGoalId}`)
-            .set('Authorization', 'Bearer fakeToken')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            `/api/goal/progress/${mockGoalId}`,
+            'Bearer fakeToken'
+        )
     })
 
     test('Get goal progress with valid data, should return 200', async () => {
@@ -105,29 +83,21 @@ describe('goalRouter tests', () => {
     })
 
     test('Update goal by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .put('/api/goal/')
-            .set('Authorization', '')
-            .send({
-                info: 'Learn C++',
-                goalId: mockGoalId
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+         await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/goal/',
+            '',
+            { info: 'Learn C++', goalId: mockGoalId }
+        )
     })
 
     test('Update goal by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .put('/api/goal/')
-            .set('Authorization', 'Bearer fakeToken')
-            .send({
-                info: 'Learn C++',
-                goalId: mockGoalId
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+         await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/goal/',
+            'Bearer fakeToken',
+            { info: 'Learn C++', goalId: mockGoalId }
+        )
     })
 
     test('Update goal with valid data, should return 200', async () => {
@@ -151,21 +121,19 @@ describe('goalRouter tests', () => {
     })
 
     test('Get goal by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .get(`/api/goal/${mockGoalId}`)
-            .set('Authorization', '')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            `/api/goal/${mockGoalId}`,
+            ''
+        )
     })
 
     test('Get goal by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .get(`/api/goal/${mockGoalId}`)
-            .set('Authorization', 'Bearer fakeToken')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            `/api/goal/${mockGoalId}`,
+            'Bearer fakeToken'
+        )
     })
 
     test('Get goal with valid data, should return 200', async () => {
@@ -185,21 +153,19 @@ describe('goalRouter tests', () => {
     })
 
     test('Get list of goals by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .get('/api/goal/user/1')
-            .set('Authorization', '')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            '/api/goal/user/1',
+            ''
+        )
     })
 
     test('Get list of goals by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .get('/api/goal/user/1')
-            .set('Authorization', 'Bearer fakeToken')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            '/api/goal/user/1',
+            'Bearer fakeToken'
+        )
     })
 
     test('Get list of goals with valid data, should return 200', async () => {
@@ -229,42 +195,31 @@ describe('goalRouter tests', () => {
     })
 
     test('Create subgoal with empty info, should return 400', async () => {
-        const response = await request(app)
-            .post('/api/goal/item')
-            .set('Authorization', `Bearer ${mockUserJwtToken}`)
-            .send({
-                info: '',
-                goalId: mockGoalId
-            })
-
-        expect(response.status).toBe(400)
-        expect(response.body.message).toContain('Задача не введена')
+        await checkRouteWithEmptyInfo(
+            request(app).post,
+            '/api/goal/item',
+            mockUserJwtToken,
+            { info: '', goalId: mockGoalId },
+            'Задача не введена'
+        )
     })
 
     test('Create subgoal by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .post('/api/goal/item')
-            .set('Authorization', '')
-            .send({
-                info: 'Learn variables',
-                goalId: mockGoalId
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).post,
+            '/api/goal/item',
+            '',
+            { info: 'Learn variables', goalId: mockGoalId }
+        )
     })
 
     test('Create subgoal by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .post('/api/goal/item')
-            .set('Authorization', 'Bearer fakeToken')
-            .send({
-                info: 'Learn variables',
-                goalId: mockGoalId
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).post,
+            '/api/goal/item',
+            'Bearer fakeToken',
+            { info: 'Learn variables', goalId: mockGoalId }
+        )
     })
 
     test('Create subgoal with valid data, should return 200', async () => {
@@ -291,29 +246,21 @@ describe('goalRouter tests', () => {
     })
 
     test('Update subgoal by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .put('/api/goal/item')
-            .set('Authorization', '')
-            .send({
-                info: 'Learn data types',
-                goalItemId: mockGoalItemId
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/goal/item',
+            '',
+            { info: 'Learn data types', goalItemId: mockGoalItemId }
+        )
     })
 
     test('Update subgoal by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .put('/api/goal/item')
-            .set('Authorization', 'Bearer fakeToken')
-            .send({
-                info: 'Learn data types',
-                goalItemId: mockGoalItemId
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/goal/item',
+            'Bearer fakeToken',
+            { info: 'Learn data types', goalItemId: mockGoalItemId }
+        )
     })
 
     test('Update subgoal with valid data, should return 200', async () => {
@@ -338,29 +285,21 @@ describe('goalRouter tests', () => {
     })
 
     test('Update subgoal status by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .put('/api/goal/item/status')
-            .set('Authorization', '')
-            .send({
-                status: true,
-                goalItemId: mockGoalItemId
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/goal/item/status',
+            '',
+            { status: true, goalItemId: mockGoalItemId }
+        )
     })
 
     test('Update subgoal status by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .put('/api/goal/item/status')
-            .set('Authorization', 'Bearer fakeToken')
-            .send({
-                status: true,
-                goalItemId: mockGoalItemId
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/goal/item/status',
+            'Bearer fakeToken',
+            { status: true, goalItemId: mockGoalItemId }
+        )
     })
 
     test('Update subgoal status with valid data, should return 200', async () => {
@@ -418,28 +357,26 @@ describe('goalRouter tests', () => {
     })
 
     test('Get list of subgoals by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .get(`/api/goal/item/${mockGoalId}`)
-            .set('Authorization', '')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            `/api/goal/item/${mockGoalId}`,
+            ''
+        )
     })
 
     test('Get list of subgoals by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .get(`/api/goal/item/${mockGoalId}`)
-            .set('Authorization', 'Bearer fakeToken')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            `/api/goal/item/${mockGoalId}`,
+            'Bearer fakeToken'
+        )
     })
 
     test('Get list of subgoals with valid data, should return 200', async () => {
         const response = await request(app)
             .get(`/api/goal/item/${mockGoalId}`)
             .set('Authorization', `Bearer ${mockUserJwtToken}`)
-        console.log(response.body)
+
         expect(response.status).toBe(200)
 
         expect(response.body).toBeInstanceOf(Array)
@@ -464,21 +401,19 @@ describe('goalRouter tests', () => {
     })
 
     test('Delete subgoal by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .delete(`/api/goal/item/${mockGoalItemId}`)
-            .set('Authorization', '')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).delete,
+            `/api/goal/item/${mockGoalItemId}`,
+            ''
+        )
     })
 
     test('Delete subgoal by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .delete(`/api/goal/item/${mockGoalItemId}`)
-            .set('Authorization', 'Bearer fakeToken')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).delete,
+            `/api/goal/item/${mockGoalItemId}`,
+            'Bearer fakeToken'
+        )
     })
 
     test('Delete subgoal with valid data, should return 200', async () => {
@@ -491,21 +426,19 @@ describe('goalRouter tests', () => {
     })
 
     test('Delete goal by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .delete(`/api/goal/${mockGoalId}`)
-            .set('Authorization', '')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).delete,
+            `/api/goal/${mockGoalId}`,
+            ''
+        )
     })
 
     test('Delete goal by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .delete(`/api/goal/${mockGoalId}`)
-            .set('Authorization', 'Bearer fakeToken')
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).delete,
+            `/api/goal/${mockGoalId}`,
+            'Bearer fakeToken'
+        )
     })
 
     test('Delete goal with valid data, should return 200', async () => {

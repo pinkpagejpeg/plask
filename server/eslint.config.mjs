@@ -21,6 +21,7 @@ export default [
       ...pluginJest.configs.recommended.rules,
       'no-unused-vars': 'warn',
       'no-console': 'off',
+      'jest/expect-expect': 'off'
     },
   }
 ]

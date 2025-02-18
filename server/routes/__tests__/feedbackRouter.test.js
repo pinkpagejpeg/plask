@@ -1,63 +1,36 @@
 const { app, start, stop } = require('../../index')
 const request = require('supertest')
-const jwt = require('jsonwebtoken')
+const { mockUserJwtToken, mockAdminJwtToken, checkRouteWithEmptyInfo, checkRouteWithInvalidToken } = require('./checkRouter')
 
 describe('feedbackRouter tests', () => {
-    let mockUserJwtToken, mockAdminJwtToken
-
-    beforeAll(async () => {
-        mockUserJwtToken = jwt.sign({
-            id: 1,
-            email: 'user@example.com',
-            role: 'USER'
-        }, process.env.SECRET_KEY)
-
-        mockAdminJwtToken = jwt.sign({
-            id: 2,
-            email: 'admin@example.com',
-            role: 'ADMIN'
-        }, process.env.SECRET_KEY)
-
-        await start()
-    })
+    beforeAll(async () => await start())
 
     test('Create feedback with empty info, should return 400', async () => {
-        const response = await request(app)
-            .post('/api/feedback/')
-            .set('Authorization', `Bearer ${mockUserJwtToken}`)
-            .send({
-                info: '',
-                userId: 1
-            })
-
-        expect(response.status).toBe(400)
-        expect(response.body.message).toContain('Сообщение не введено')
+        await checkRouteWithEmptyInfo(
+            request(app).post,
+            '/api/feedback/',
+            mockUserJwtToken,
+            { info: '', userId: 1 },
+            'Сообщение не введено'
+        )
     })
 
     test('Create feedback by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .post('/api/feedback/')
-            .set('Authorization', '')
-            .send({
-                info: 'Great app!',
-                userId: 1
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).post,
+            '/api/feedback/',
+            '',
+            { info: 'Great app!', userId: 1 }
+        )
     })
 
     test('Create feedback by user with fake token, should return 401', async () => {
-        const response = await request(app)
-            .post('/api/feedback/')
-            .set('Authorization', 'Bearer fakeToken')
-            .send({
-                info: 'Great app!',
-                userId: 1
-            })
-
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+        await checkRouteWithInvalidToken(
+            request(app).post,
+            '/api/feedback/',
+            'Bearer fakeToken',
+            { info: 'Great app!', userId: 1 }
+        )
     })
 
     test('Create feedback with valid data, should return 200', async () => {
@@ -83,12 +56,19 @@ describe('feedbackRouter tests', () => {
     })
 
     test('Get feedbacks by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .get('/api/feedback/')
-            .set('Authorization', '')
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            '/api/feedback/',
+            ''
+        )
+    })
 
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+    test('Get feedbacks by user with fake token, should return 401', async () => {
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            '/api/feedback/',
+            'Bearer fakeToken'
+        )
     })
 
     test('Get feedbacks by user which is not admin, should return 403', async () => {
@@ -135,13 +115,21 @@ describe('feedbackRouter tests', () => {
     })
 
     test('Update feedback by user which is not authorized, should return 401', async () => {
-        const response = await request(app)
-            .put('/api/feedback/')
-            .set('Authorization', '')
-            .send({ feedbackId: 1 })
+        await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/feedback/',
+            '',
+            { feedbackId: 1 }
+        )
+    })
 
-        expect(response.status).toBe(401)
-        expect(response.body.message).toBe('Пользователь не авторизован')
+    test('Update feedback by user with fake token, should return 401', async () => {
+        await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/feedback/',
+            'Bearer fakeToken',
+            { feedbackId: 1 }
+        )
     })
 
     test('Update feedback by user which is not admin, should return 403', async () => {
