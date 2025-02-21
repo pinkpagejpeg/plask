@@ -1,6 +1,6 @@
 const request = require('supertest')
 const { app, start, stop } = require('../../index')
-const { mockUserJwtToken, checkRouteWithEmptyInfo, checkRouteWithInvalidToken } = require('./checkRouter')
+const { mockUserJwtToken, checkRouteWithInvalidInfo, checkRouteWithInvalidToken } = require('./checkRouter')
 
 describe('goalRouter tests', () => {
     let mockGoalId, mockGoalItemId
@@ -8,12 +8,12 @@ describe('goalRouter tests', () => {
     beforeAll(async () => await start())
 
     test('Create goal with empty info, should return 400', async () => {
-        await checkRouteWithEmptyInfo(
+        await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/goal/',
-            mockUserJwtToken,
+            'Цель не введена',
             { info: '', userId: 1 },
-            'Цель не введена'
+            mockUserJwtToken
         )
     })
 
@@ -195,12 +195,12 @@ describe('goalRouter tests', () => {
     })
 
     test('Create subgoal with empty info, should return 400', async () => {
-        await checkRouteWithEmptyInfo(
+        await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/goal/item',
-            mockUserJwtToken,
+            'Задача не введена',
             { info: '', goalId: mockGoalId },
-            'Задача не введена'
+            mockUserJwtToken
         )
     })
 

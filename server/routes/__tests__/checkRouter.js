@@ -12,16 +12,24 @@ let mockAdminJwtToken = jwt.sign({
     role: 'ADMIN'
 }, process.env.SECRET_KEY)
 
-const checkRouteWithEmptyInfo = async (
+const checkRouteWithInvalidInfo = async (
     method,
     route,
-    token,
+    expectedResponseMessage,
     responseArgs,
-    expectedResponseMessage
+    token
 ) => {
-    const response = await method(route)
-        .set('Authorization', `Bearer ${token}`)
-        .send(responseArgs)
+    let request = method(route)
+
+    if (token) {
+        request.set('Authorization', `Bearer ${token}`)
+    }
+
+    if (responseArgs) {
+        request.send(responseArgs)
+    }
+
+    const response = await request
 
     expect(response.status).toBe(400)
     expect(response.body.message).toContain(expectedResponseMessage)
@@ -36,7 +44,7 @@ const checkRouteWithInvalidToken = async (
     let request = method(route).set('Authorization', token)
 
     if (responseArgs) {
-        request = request.send(responseArgs)
+        request.send(responseArgs)
     }
 
     const response = await request
@@ -48,6 +56,6 @@ const checkRouteWithInvalidToken = async (
 module.exports = {
     mockUserJwtToken,
     mockAdminJwtToken,
-    checkRouteWithEmptyInfo,
+    checkRouteWithInvalidInfo,
     checkRouteWithInvalidToken
 }

@@ -49,21 +49,21 @@ export const deleteUserImage = async (userId: number) => {
 // Admin
 
 export const getUsers = async () => {
-    const { data } = await $authHost.get('api/user/')
+    const { data } = await $authHost.get('api/user/admin')
     return data
 }
 
 export const createUser = async (email: string, password: string, role: string) => {
-    const { data } = await $authHost.post('api/user/', { email, password, role })
+    const { data } = await $authHost.post('api/user/admin', { email, password, role })
     return data
 }
 
 export const updateUser = async (userId: number, email: string, password: string, role: string) => {
-    const { data } = await $authHost.put(`api/user/`, { userId, email, password, role })
+    const { data } = await $authHost.put(`api/user/admin`, { userId, email, password, role })
     return data
 }
 
 export const deleteUser = async (userId: number) => {
-    const { data } = await $authHost.delete(`api/user/${userId}`)
+    const { data } = await $authHost.delete(`api/user/admin/${userId}`)
     return data
 }

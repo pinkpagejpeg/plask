@@ -1,17 +1,17 @@
 const { app, start, stop } = require('../../index')
 const request = require('supertest')
-const { mockUserJwtToken, mockAdminJwtToken, checkRouteWithEmptyInfo, checkRouteWithInvalidToken } = require('./checkRouter')
+const { mockUserJwtToken, mockAdminJwtToken, checkRouteWithInvalidInfo, checkRouteWithInvalidToken } = require('./checkRouter')
 
 describe('feedbackRouter tests', () => {
     beforeAll(async () => await start())
 
     test('Create feedback with empty info, should return 400', async () => {
-        await checkRouteWithEmptyInfo(
+        await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/feedback/',
-            mockUserJwtToken,
+            'Сообщение не введено',
             { info: '', userId: 1 },
-            'Сообщение не введено'
+            mockUserJwtToken
         )
     })
 

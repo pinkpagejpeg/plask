@@ -16,7 +16,9 @@ export const AppRouter = () => {
     }, [dispatch])
 
     const currentRouter = useMemo(() => {
-        return (user) ? router(user, isAuth, loading) : null
+        if (loading) return null
+
+        return router(user, isAuth, loading)
     }, [user, isAuth, loading])
 
     if (loading) {

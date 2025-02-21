@@ -19,15 +19,15 @@ class UserController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                const errorMessages = errors.array().map(error => error.msg);
-                return next(ApiError.badRequest({ message: `Введены некорректные данные: ${errorMessages}` }));
+                const errorMessages = errors.array().map(error => error.msg)
+                return next(ApiError.badRequest(`Введены некорректные данные: ${errorMessages}`))
             }
 
             const { email, password, role } = req.body
 
             const candidate = await User.findOne({ where: { email } })
             if (candidate) {
-                return next(ApiError.internal({ message: "Пользователь с таким именем уже существует" }))
+                return next(ApiError.badRequest("Пользователь с таким именем уже существует"))
             }
 
             const hashPassword = await bcrypt.hash(password, 5)
@@ -45,18 +45,19 @@ class UserController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return next(ApiError.badRequest({ message: "Ошибка при авторизации", errors }))
+                const errorMessages = errors.array().map(error => error.msg)
+                return next(ApiError.badRequest(`Введены некорректные данные: ${errorMessages}`))
             }
 
             const { email, password } = req.body
             const user = await User.findOne({ where: { email } })
             if (!user) {
-                return next(ApiError.internal({ message: 'Пользователь не найден' }))
+                return next(ApiError.badRequest('Пользователь не найден'))
             }
 
             let comparePassword = bcrypt.compareSync(password, user.password)
             if (!comparePassword) {
-                return next(ApiError.internal({ message: 'Введен неверный пароль' }))
+                return next(ApiError.badRequest('Введен неверный пароль'))
             }
 
             const token = generateJwt(user.id, user.email, user.role)
@@ -164,15 +165,15 @@ class UserController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                const errorMessages = errors.array().map(error => error.msg);
-                return next(ApiError.badRequest({ message: `Введены некорректные данные: ${errorMessages}` }));
+                const errorMessages = errors.array().map(error => error.msg)
+                return next(ApiError.badRequest(`Введены некорректные данные: ${errorMessages}`))
             }
 
             const { email, password, role } = req.body
 
             const candidate = await User.findOne({ where: { email } })
             if (candidate) {
-                return next(ApiError.internal({ message: "Пользователь с таким именем уже существует" }))
+                return next(ApiError.badRequest("Пользователь с таким именем уже существует"))
             }
 
             const hashPassword = await bcrypt.hash(password, 5)
@@ -240,22 +241,22 @@ class UserController {
             await user.destroy()
 
             for (const feedback of feedbacks) {
-                await feedback.destroy();
+                await feedback.destroy()
             }
-    
+
             for (const task of tasks) {
-                await task.destroy();
+                await task.destroy()
             }
-    
+
             for (const goal of goals) {
-                const goalItems = await Goal_item.findAll({ where: { goalId: goal.id } });
+                const goalItems = await Goal_item.findAll({ where: { goalId: goal.id } })
                 for (const goalItem of goalItems) {
-                    await goalItem.destroy();
+                    await goalItem.destroy()
                 }
-                await goal.destroy();
+                await goal.destroy()
             }
-            
-            return res.json({ deletedUserId: user.id });
+
+            return res.json({ deletedUserId: user.id })
         } catch (e) {
             return next(ApiError.badRequest(e.message))
         }

@@ -3,11 +3,11 @@ module.exports = async function (req, res, next) {
         const hcaptchaToken = req.body.hcaptchaToken
 
         if (!hcaptchaToken) {
-            return res.status(401).json({ message: 'Капча не пройдена' })
+            return res.status(400).json({ message: 'Капча не пройдена' })
         }
 
         next()
     } catch {
-        return res.status(401).json({ message: 'Капча не пройдена' })
+        return res.status(400).json({ message: 'Капча не пройдена' })
     }
 }

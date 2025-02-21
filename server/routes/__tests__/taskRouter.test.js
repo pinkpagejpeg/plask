@@ -1,6 +1,6 @@
 const { app, start, stop } = require('../../index')
 const request = require('supertest')
-const { mockUserJwtToken, checkRouteWithEmptyInfo, checkRouteWithInvalidToken } = require('./checkRouter')
+const { mockUserJwtToken, checkRouteWithInvalidInfo, checkRouteWithInvalidToken } = require('./checkRouter')
 
 describe('taskRouter tests', () => {
     let mockTaskId
@@ -8,12 +8,12 @@ describe('taskRouter tests', () => {
     beforeAll(async () => await start())
 
     test('Create task with empty info, should return 400', async () => {
-        await checkRouteWithEmptyInfo(
+        await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/task/',
-            mockUserJwtToken,
+            'Задача не введена',
             { info: '', userId: 1 },
-            'Задача не введена'
+            mockUserJwtToken
         )
     })
 

@@ -199,7 +199,7 @@ describe('userApi admin tests', () => {
             $authHost.get as jest.Mock,
             getUsers,
             mockData,
-            ['api/user/']
+            ['api/user/admin']
         )
     })
 
@@ -208,7 +208,7 @@ describe('userApi admin tests', () => {
             $authHost.post as jest.Mock,
             createUser,
             createdMockData,
-            ['api/user/', {
+            ['api/user/admin', {
                 email: 'newUser@example.com',
                 password: 'hashedPassword123',
                 role: 'USER'
@@ -222,7 +222,7 @@ describe('userApi admin tests', () => {
             $authHost.put as jest.Mock,
             updateUser,
             updatedEmailMockData,
-            [`api/user/`, {
+            [`api/user/admin`, {
                 userId: 24,
                 email: 'updateUser@example.com',
                 password: 'hashedPassword123',
@@ -235,7 +235,7 @@ describe('userApi admin tests', () => {
             $authHost.put as jest.Mock,
             updateUser,
             updatedPasswordMockData,
-            [`api/user/`, {
+            [`api/user/admin`, {
                 userId: 24,
                 email: 'updateUser@example.com',
                 password: 'updateHashedPassword123',
@@ -249,7 +249,7 @@ describe('userApi admin tests', () => {
             $authHost.put as jest.Mock,
             updateUser,
             updatedRoleMockData,
-            [`api/user/`, {
+            [`api/user/admin`, {
                 userId: 24,
                 email: 'updateUser@example.com',
                 password: 'hashedPassword123',
@@ -265,7 +265,7 @@ describe('userApi admin tests', () => {
             $authHost.delete as jest.Mock,
             deleteUser,
             { deletedUserId: 24 },
-            [`api/user/24`],
+            [`api/user/admin/24`],
             [24]
         )
     })
