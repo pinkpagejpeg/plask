@@ -1,6 +1,6 @@
 const { Task } = require('../models/models')
 const ApiError = require('../error/ApiError')
-const {validationResult} = require('express-validator')
+const { validationResult } = require('express-validator')
 
 class TaskController {
     async create(req, res, next) {
@@ -11,8 +11,9 @@ class TaskController {
             }
 
             const { userId, info } = req.body
+
             const task = await Task.create({ userId, info })
-            return res.json(task)
+            return res.status(201).json({ task })
         } catch (e) {
             return next(ApiError.badRequest(e.message))
         }
@@ -20,11 +21,18 @@ class TaskController {
 
     async update(req, res, next) {
         try {
-            const { taskId, info } = req.body
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+            }
+
+            const { taskId } = req.params
+            const { info } = req.body
+
             const task = await Task.findByPk(taskId)
 
             if (!task) {
-            return res.status(404).json({ message:'Задача не найдена'});
+                return next(ApiError.notFound('Задача не найдена'))
             }
 
             await task.update({ info })
@@ -36,11 +44,18 @@ class TaskController {
 
     async changeStatus(req, res, next) {
         try {
-            const { taskId, status } = req.body
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+            }
+            
+            const { taskId } = req.params
+            const { status } = req.body
+
             const task = await Task.findByPk(taskId)
 
             if (!task) {
-            return res.status(404).json({ message:'Задача не найдена'});
+                return next(ApiError.notFound('Задача не найдена'))
             }
 
             await task.update({ status })
@@ -56,11 +71,11 @@ class TaskController {
             const task = await Task.findByPk(taskId)
 
             if (!task) {
-            return res.status(404).json({ message:'Задача не найдена'});
+                return next(ApiError.notFound('Задача не найдена'))
             }
 
             await task.destroy()
-            return res.json({ deletedTaskId: task.id });
+            return res.json({ deletedTaskId: task.id })
         } catch (e) {
             return next(ApiError.badRequest(e.message))
         }
@@ -70,7 +85,7 @@ class TaskController {
         try {
             const { userId } = req.params
             const tasks = await Task.findAll({ where: { userId }, order: [['createdAt', 'DESC']] })
-            return res.json(tasks)
+            return res.json({ tasks, count: tasks.length })
         } catch (e) {
             return next(ApiError.badRequest(e.message))
         }

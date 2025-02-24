@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { ITask, ITaskState } from "./types"
+import { ITask, ITasks, ITaskState } from "./types"
 import { addTask, changeTask, changeTaskStatus, destroyTask, fetchTasksByUserId } from "../api"
 import { createPendingHandler, createRejectedHandler } from "shared/store"
 
 const initialState: ITaskState = {
     tasks: null,
+    count: 0,
     loading: false,
     error: null,
 }
@@ -24,9 +25,10 @@ const taskSlice = createSlice({
         builder
             // fetchTasksByUserId
             .addCase(fetchTasksByUserId.pending, createPendingHandler<ITaskState>())
-            .addCase(fetchTasksByUserId.fulfilled, (state: ITaskState, action: PayloadAction<ITask[]>) => {
+            .addCase(fetchTasksByUserId.fulfilled, (state: ITaskState, action: PayloadAction<ITasks>) => {
                 state.loading = false
-                state.tasks = action.payload
+                state.tasks = action.payload.tasks
+                state.count = action.payload.count
             })
             .addCase(fetchTasksByUserId.rejected, createRejectedHandler<ITaskState>())
 

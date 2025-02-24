@@ -52,7 +52,7 @@ describe('feedbackRouter tests', () => {
         )
     })
 
-    test('Create feedback with valid data, should return 200', async () => {
+    test('Create feedback with valid data, should return 201', async () => {
         const response = await request(app)
             .post('/api/feedback/')
             .set('Authorization', `Bearer ${mockUserJwtToken}`)
@@ -189,7 +189,7 @@ describe('feedbackRouter tests', () => {
         )
     })
 
-    test('Update feedback by user which does not exist, should return 400', async () => {
+    test('Update feedback which does not exist, should return 404', async () => {
         await checkRouteWithNonexistentData(
             request(app).patch,
             '/api/feedback/0',

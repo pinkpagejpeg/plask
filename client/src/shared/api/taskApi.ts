@@ -6,12 +6,12 @@ export const createTask = async (userId: number, info: string) => {
 }
 
 export const updateTask = async (taskId: number, info: string) => {
-    const { data } = await $authHost.put(`api/task/`, { taskId, info })
+    const { data } = await $authHost.patch(`api/task/${taskId}`, { info })
     return data
 }
 
 export const updateTaskStatus = async (taskId: number, status: boolean) => {
-    const { data } = await $authHost.put(`api/task/status`, { taskId, status })
+    const { data } = await $authHost.patch(`api/task/${taskId}/status`, { status })
     return data
 }
 
@@ -21,6 +21,6 @@ export const deleteTask = async (taskId: number) => {
 }
 
 export const getTask = async (userId: number) => {
-    const { data } = await $authHost.get(`api/task/${userId}`)
+    const { data } = await $authHost.get(`api/task/user/${userId}`)
     return data
 }

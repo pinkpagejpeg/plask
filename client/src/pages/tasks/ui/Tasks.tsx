@@ -19,7 +19,7 @@ export const Tasks: FC = () => {
             dispatch(fetchTasksByUserId(user?.id))
         }
     }, [dispatch, user])
-
+    console.log(tasks)
     const createTask = async (event: { preventDefault: () => void }) => {
         event.preventDefault()
         if (user && info) {

@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { ITask } from "../model"
 import { getTask } from "../../../shared/api"
+import { ITasks } from "../model/types"
 
-export const fetchTasksByUserId = createAsyncThunk<ITask[], number, { rejectValue: string }>(
+export const fetchTasksByUserId = createAsyncThunk<ITasks, number, { rejectValue: string }>(
     "task/fetchTasksByUserId",
     async (userId, { rejectWithValue }) => {
         try {

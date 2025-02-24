@@ -3,6 +3,13 @@ import { createTask, deleteTask, getTask, updateTask, updateTaskStatus } from ".
 import { checkApi } from "./checkApi"
 
 interface IMockTaskData {
+    data: {
+        tasks: IMockTask[],
+        count: number
+    }
+}
+
+interface IMockTask {
     id: number,
     info: string,
     status: boolean,
@@ -14,37 +21,42 @@ interface IMockTaskData {
 jest.mock('../http', () => ({
     $authHost: {
         post: jest.fn(),
-        put: jest.fn(),
+        patch: jest.fn(),
         delete: jest.fn(),
         get: jest.fn(),
     }
 }))
 
 describe('taskApi tests', () => {
-    let mockData: IMockTaskData[],
-        createdMockData: IMockTaskData,
-        updatedMockData: IMockTaskData,
-        updatedStatusMockData: IMockTaskData
+    let mockData: IMockTaskData,
+        createdMockData: IMockTask,
+        updatedMockData: IMockTask,
+        updatedStatusMockData: IMockTask
 
     beforeAll(() => {
-        mockData = [
-            {
-                id: 28,
-                info: "Set up the project structure",
-                status: true,
-                userId: 19,
-                createdAt: "2025-01-26 13:48:44.315+03",
-                updatedAt: "2025-01-26 13:48:44.315+03",
-            },
-            {
-                id: 29,
-                info: 'Write the first chapter of documentation',
-                status: false,
-                userId: 19,
-                createdAt: "2025-01-26 13:48:44.315+03",
-                updatedAt: "2025-01-26 13:48:44.315+03",
+        mockData = {
+            data: {
+                tasks: [
+                    {
+                        id: 28,
+                        info: "Set up the project structure",
+                        status: true,
+                        userId: 19,
+                        createdAt: "2025-01-26 13:48:44.315+03",
+                        updatedAt: "2025-01-26 13:48:44.315+03",
+                    },
+                    {
+                        id: 29,
+                        info: 'Write the first chapter of documentation',
+                        status: false,
+                        userId: 19,
+                        createdAt: "2025-01-26 13:48:44.315+03",
+                        updatedAt: "2025-01-26 13:48:44.315+03",
+                    }
+                ],
+                count: 2
             }
-        ]
+        }
 
         createdMockData = {
             id: 30,
@@ -72,28 +84,28 @@ describe('taskApi tests', () => {
 
     test('Update task api', async () => {
         await checkApi(
-            $authHost.put as jest.Mock,
+            $authHost.patch as jest.Mock,
             updateTask,
             updatedMockData,
-            [`api/task/`, { taskId: 30, info: 'Add ui' }],
+            [`api/task/30`, { info: 'Add ui' }],
             [30, 'Add ui']
         )
     })
 
     test('Update task status api', async () => {
         await checkApi(
-            $authHost.put as jest.Mock,
+            $authHost.patch as jest.Mock,
             updateTaskStatus,
             updatedStatusMockData,
-            [`api/task/status`, { taskId: 30, status: true }],
+            [`api/task/30/status`, { status: true }],
             [30, true]
         )
 
         await checkApi(
-            $authHost.put as jest.Mock,
+            $authHost.patch as jest.Mock,
             updateTaskStatus,
             updatedMockData,
-            [`api/task/status`, { taskId: 30, status: false }],
+            [`api/task/30/status`, { status: false }],
             [30, false],
             2
         )
@@ -114,7 +126,7 @@ describe('taskApi tests', () => {
             $authHost.get as jest.Mock,
             getTask,
             mockData,
-            [`api/task/19`],
+            [`api/task/user/19`],
             [19]
         )
     })

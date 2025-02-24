@@ -9,9 +9,9 @@ export const addTask = createAsyncThunk<ITask, { userId: number; info: string },
             if (!userId) {
                 throw new Error("Отсутствует идентификатор пользователя")
             }
-            
-            const data = await createTask(userId, info)
-            return data
+
+            const { task } = await createTask(userId, info)
+            return task
         } catch (error: unknown) {
             return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }

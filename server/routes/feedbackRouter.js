@@ -16,7 +16,7 @@ router.post(
     feedbackController.create
 )
 
-// Update feedback status
+// Update feedback status (admins only)
 router.patch(
     '/:feedbackId',
     check('status', 'Отсутствует статус обратной связи').exists(),
@@ -31,7 +31,7 @@ router.get(
     feedbackController.getAll
 )
 
-// Delete feedback
+// Delete feedback (admins only)
 // router.delete('/:feedbackId')
 
 module.exports = router
