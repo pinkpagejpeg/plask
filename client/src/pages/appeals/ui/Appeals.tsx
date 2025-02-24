@@ -16,7 +16,7 @@ export const Appeals: FC = () => {
         const getAppeals = async () => {
             try {
                 const data = await fetchAppeals()
-                setAppeals(data)
+                setAppeals(data.feedbacks)
             } catch (error: unknown) {
                 if (error instanceof Error) {
                     alert(`При получении обратной связи возникла ошибка: ${error.message}`)

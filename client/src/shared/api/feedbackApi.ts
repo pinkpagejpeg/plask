@@ -5,8 +5,8 @@ export const createFeedback = async (userId: number, info: string) => {
     return data
 }
 
-export const updateFeedbackStatus = async (feedbackId: number) => {
-    const { data } = await $authHost.put(`api/feedback/`, { feedbackId })
+export const updateFeedbackStatus = async (feedbackId: number, status: boolean) => {
+    const { data } = await $authHost.patch(`api/feedback/${feedbackId}`, { status })
     return data
 }
 

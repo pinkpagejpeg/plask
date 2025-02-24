@@ -5,10 +5,33 @@ const AuthMiddleware = require('../middleware/AuthMiddleware')
 const checkRoleMiddleware = require('../middleware/CheckRoleMiddleware')
 const { check } = require('express-validator')
 
-router.post('/', check('info', 'Сообщение не введено').notEmpty(),
-    AuthMiddleware, feedbackController.create)
-router.get('/', checkRoleMiddleware('ADMIN'), feedbackController.getAll)
-router.put('/', checkRoleMiddleware('ADMIN'), feedbackController.changeStatus)
-// router.delete('/:id')
+// Send feedback (authorized users)
+router.post(
+    '/',
+    [
+        check('info', 'Сообщение не введено').notEmpty(),
+        check('userId', 'Отсутствует идентификатор пользователя').exists()
+    ],
+    AuthMiddleware,
+    feedbackController.create
+)
+
+// Update feedback status
+router.patch(
+    '/:feedbackId',
+    check('status', 'Отсутствует статус обратной связи').exists(),
+    checkRoleMiddleware('ADMIN'),
+    feedbackController.changeStatus
+)
+
+// Get all the feedback (admins only)    
+router.get(
+    '/',
+    checkRoleMiddleware('ADMIN'),
+    feedbackController.getAll
+)
+
+// Delete feedback
+// router.delete('/:feedbackId')
 
 module.exports = router

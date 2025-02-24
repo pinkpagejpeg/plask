@@ -15,7 +15,7 @@ interface IMockFeedbackData {
 jest.mock('../http', () => ({
     $authHost: {
         post: jest.fn(),
-        put: jest.fn(),
+        patch: jest.fn(),
         get: jest.fn(),
     }
 }))
@@ -72,11 +72,11 @@ describe('feedbackApi tests', () => {
 
     test('Update feedback api', async () => {
         await checkApi(
-            $authHost.put as jest.Mock,
+            $authHost.patch as jest.Mock,
             updateFeedbackStatus,
             updatedMockData,
-            [`api/feedback/`, { feedbackId: 3 }],
-            [3],
+            [`api/feedback/3`, { status: true }],
+            [3, true],
         )
     })
 

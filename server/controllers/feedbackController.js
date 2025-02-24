@@ -11,8 +11,9 @@ class FeedbackController {
             }
 
             const { userId, info } = req.body
+
             const feedback = await Feedback.create({ userId, info })
-            return res.json(feedback)
+            return res.status(201).json({ feedback })
         } catch (e) {
             return next(ApiError.badRequest(e.message))
         }
@@ -20,14 +21,21 @@ class FeedbackController {
 
     async changeStatus(req, res, next) {
         try {
-            const { feedbackId } = req.body
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+            }
+            
+            const { feedbackId } = req.params
+            const { status } = req.body
+
             const feedback = await Feedback.findByPk(feedbackId)
 
             if (!feedback) {
-                return next(ApiError.badRequest('Обращение не найдено'))
+                return next(ApiError.notFound('Обращение не найдено'))
             }
 
-            await feedback.update({ status: true })
+            await feedback.update({ status })
             return res.json({ feedback })
         } catch (e) {
             return next(ApiError.badRequest(e.message))
@@ -37,10 +45,10 @@ class FeedbackController {
     async getAll(req, res, next) {
         try {
             const feedbacks = await Feedback.findAll({
-                include: [{ model: User, attributes: ['email'] }], 
+                include: [{ model: User, attributes: ['email'] }],
                 order: [['createdAt', 'DESC']]
-            });
-            return res.json(feedbacks)
+            })
+            return res.json({ feedbacks, count: feedbacks.length })
         } catch (e) {
             return next(ApiError.badRequest(e.message))
         }

@@ -7,8 +7,8 @@ jest.mock('@/shared/api', () => ({
 
 describe('changeAppealStatus tests', () => {
     test('Change appeal status', async() => {
-        await changeAppealStatus(2)
+        await changeAppealStatus(2, true)
         expect(updateFeedbackStatus).toHaveBeenCalledTimes(1)
-        expect(updateFeedbackStatus).toHaveBeenCalledWith(2)
+        expect(updateFeedbackStatus).toHaveBeenCalledWith(2, true)
     })
 })
