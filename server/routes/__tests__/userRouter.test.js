@@ -5,7 +5,7 @@ const { app, start, stop } = require('../../index')
 const { mockAdminJwtToken, checkRouteWithInvalidInfo, checkRouteWithInvalidToken } = require('./checkRouter')
 
 describe('userRouter tests', () => {
-    let mockUserId, mockUserToken
+    let mockUserId, mockUserToken, mockUserPassword
     const filePath = `${__dirname}/test_image.jpg`
 
     beforeAll(async () => await start())
@@ -197,6 +197,8 @@ describe('userRouter tests', () => {
         expect(response.body).toHaveProperty('img')
         expect(response.body).toHaveProperty('createdAt')
         expect(response.body).toHaveProperty('updatedAt')
+
+        mockUserPassword = response.body.password
     })
 
     test('Update info by user which is not authorized, should return 401', async () => {
@@ -247,19 +249,6 @@ describe('userRouter tests', () => {
     })
 
     test('Update password with valid data, should return 200', async () => {
-        let userInfo = await request(app)
-            .get(`/api/user/${mockUserId}`)
-            .set('Authorization', `Bearer ${mockUserToken}`)
-
-        expect(userInfo.status).toBe(200)
-        expect(userInfo.body).toEqual(expect.objectContaining({
-            id: mockUserId,
-            email: 'user11@example.com',
-            role: 'USER'
-        }))
-
-        const prevPassword = userInfo.body.password
-
         const response = await request(app)
             .put('/api/user/info')
             .set('Authorization', `Bearer ${mockUserToken}`)
@@ -277,7 +266,7 @@ describe('userRouter tests', () => {
         expect(decoded.email).toEqual('user11@example.com')
         expect(decoded.role).toEqual('USER')
 
-        userInfo = await request(app)
+        const userInfo = await request(app)
             .get(`/api/user/${mockUserId}`)
             .set('Authorization', `Bearer ${mockUserToken}`)
 
@@ -288,19 +277,18 @@ describe('userRouter tests', () => {
             role: 'USER'
         }))
 
-        expect(userInfo.body.password).not.toBe(prevPassword)
-        
+        expect(userInfo.body.password).not.toBe(mockUserPassword)
     })
 
     test('Update image by user which is not authorized, should return 401', async () => {
         try {
             await fs.access(filePath)
-    
+
             const response = await request(app)
                 .put(`/api/user/${mockUserId}/image`)
                 .set('Authorization', '')
                 .attach('file', filePath)
-    
+
             expect(response.status).toBe(401)
             expect(response.body.message).toBe('Пользователь не авторизован')
         } catch (err) {
@@ -311,29 +299,29 @@ describe('userRouter tests', () => {
     test('Update image by user with fake token, should return 401', async () => {
         try {
             await fs.access(filePath)
-    
+
             const response = await request(app)
                 .put(`/api/user/${mockUserId}/image`)
                 .set('Authorization', 'Bearer fakeToken')
                 .attach('file', filePath)
-    
+
             expect(response.status).toBe(401)
             expect(response.body.message).toBe('Пользователь не авторизован')
         } catch (err) {
             throw new Error(`Ошибка при проверке файла: ${err.message}`)
         }
     })
-    
+
 
     test('Update image by user which does not exist, should return 400', async () => {
         try {
             await fs.access(filePath)
-    
+
             const response = await request(app)
                 .put(`/api/user/0/image`)
                 .set('Authorization', `Bearer ${mockUserToken}`)
                 .attach('file', filePath)
-    
+
             expect(response.status).toBe(400)
             expect(response.body.message).toBe('Пользователь не найден')
         } catch (err) {
@@ -344,12 +332,12 @@ describe('userRouter tests', () => {
     test('Update image with valid data, should return 200', async () => {
         try {
             await fs.access(filePath)
-    
+
             const response = await request(app)
                 .put(`/api/user/${mockUserId}/image`)
                 .set('Authorization', `Bearer ${mockUserToken}`)
                 .attach('file', filePath)
-    
+
             expect(response.status).toBe(200)
             expect(response.body.user).toEqual(expect.objectContaining({
                 id: mockUserId,
@@ -357,7 +345,7 @@ describe('userRouter tests', () => {
                 role: 'USER',
                 img: expect.stringMatching(/\.jpg$/)
             }))
-    
+
             expect(response.body.user).toHaveProperty('password')
             expect(response.body.user).toHaveProperty('createdAt')
             expect(response.body.user).toHaveProperty('updatedAt')
@@ -463,7 +451,7 @@ describe('userRouter tests', () => {
             request(app).post,
             '/api/user/admin',
             'Введены некорректные данные: Длина пароля должна составлять от 6 до 12 символов',
-            { email: 'admin@example.com', password: '12345', role: 'ADMIN' },
+            { email: 'admin1@example.com', password: '12345', role: 'ADMIN' },
             mockAdminJwtToken
         )
     })
@@ -473,7 +461,7 @@ describe('userRouter tests', () => {
             request(app).post,
             '/api/user/admin',
             '',
-            { email: 'admin@example.com', password: '12345678', role: 'ADMIN' }
+            { email: 'admin1@example.com', password: '12345678', role: 'ADMIN' }
         )
     })
 
@@ -482,7 +470,7 @@ describe('userRouter tests', () => {
             request(app).post,
             '/api/user/admin',
             'Bearer fakeToken',
-            { email: 'admin@example.com', password: '12345678', role: 'ADMIN' }
+            { email: 'admin1@example.com', password: '12345678', role: 'ADMIN' }
         )
     })
 
@@ -490,7 +478,7 @@ describe('userRouter tests', () => {
         const response = await request(app)
             .post('/api/user/admin')
             .set('Authorization', `Bearer ${mockUserToken}`)
-            .send({ email: 'admin1@example.com', password: '12345678', role: 'ADMIN'})
+            .send({ email: 'admin1@example.com', password: '12345678', role: 'ADMIN' })
 
         expect(response.status).toBe(403)
         expect(response.body.message).toBe('Пользователь не обладает правами администратора')
@@ -500,7 +488,7 @@ describe('userRouter tests', () => {
         const response = await request(app)
             .post('/api/user/admin')
             .set('Authorization', `Bearer ${mockAdminJwtToken}`)
-            .send({ email: 'admin1@example.com', password: '12345678', role: 'ADMIN'})
+            .send({ email: 'admin1@example.com', password: '12345678', role: 'ADMIN' })
 
         const decoded = jwtDecode(response.body.token)
 
@@ -520,6 +508,150 @@ describe('userRouter tests', () => {
             '/api/user/admin',
             'Пользователь с таким именем уже существует',
             { email: 'admin1@example.com', password: '12345678', role: 'ADMIN' },
+            mockAdminJwtToken
+        )
+    })
+
+    test('Get users by admin which is not authorized, should return 401', async () => {
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            `/api/user/admin`,
+            ''
+        )
+    })
+
+    test('Get users by admin with fake token, should return 401', async () => {
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            `/api/user/admin`,
+            'Bearer fakeToken'
+        )
+    })
+
+    test('Get users by admin which is not admin, should return 403', async () => {
+        const response = await request(app)
+            .get(`/api/user/admin`)
+            .set('Authorization', `Bearer ${mockUserToken}`)
+
+        expect(response.status).toBe(403)
+        expect(response.body.message).toBe('Пользователь не обладает правами администратора')
+    })
+
+    test('Get users by admin with valid data, should return 200', async () => {
+        const response = await request(app)
+            .get(`/api/user/admin`)
+            .set('Authorization', `Bearer ${mockAdminJwtToken}`)
+
+        expect(response.status).toBe(200)
+
+        expect(response.body).toBeInstanceOf(Array)
+        expect(response.body.length).toBeGreaterThan(0)
+        response.body.forEach((user) => {
+            expect(user).toHaveProperty('id')
+            expect(typeof user.id).toBe('number')
+            expect(user).toHaveProperty('email')
+            expect(typeof user.email).toBe('string')
+            expect(user).toHaveProperty('password')
+            expect(typeof user.password).toBe('string')
+            expect(user).toHaveProperty('role')
+            expect(typeof user.role).toBe('string')
+            expect(user).toHaveProperty('img')
+            expect(typeof user.img).toBe('string')
+            expect(user).toHaveProperty('createdAt')
+            expect(typeof user.createdAt).toBe('string')
+            expect(user).toHaveProperty('updatedAt')
+            expect(typeof user.updatedAt).toBe('string')
+        })
+
+        const ids = response.body.map((f) => f.id)
+        expect(new Set(ids).size).toBe(ids.length)
+    })
+
+    test('Update user by admin which is not authorized, should return 401', async () => {
+        await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/user/admin',
+            '',
+            { userId: mockUserId, email: 'admin1@example.com', password: '123456789', role: 'ADMIN' }
+        )
+    })
+
+    test('Update user by admin with fake token, should return 401', async () => {
+        await checkRouteWithInvalidToken(
+            request(app).put,
+            '/api/user/admin',
+            'Bearer fakeToken',
+            { userId: mockUserId, email: 'admin1@example.com', password: '123456789', role: 'ADMIN' }
+        )
+    })
+
+    test('Update user by admin which is not admin, should return 403', async () => {
+        const response = await request(app)
+            .put('/api/user/admin')
+            .set('Authorization', `Bearer ${mockUserToken}`)
+            .send({ userId: mockUserId, email: 'admin1@example.com', password: '123456789', role: 'ADMIN' })
+
+        expect(response.status).toBe(403)
+        expect(response.body.message).toBe('Пользователь не обладает правами администратора')
+    })
+
+    test('Update user role with valid data, should return 200', async () => {
+        const response = await request(app)
+            .put('/api/user/admin')
+            .set('Authorization', `Bearer ${mockAdminJwtToken}`)
+            .send({ userId: mockUserId, email: 'admin1@example.com', password: '', role: 'USER' })
+
+        expect(response.status).toBe(200)
+        expect(response.body.user.email).toBe('admin1@example.com')
+        expect(response.body.user.role).toBe('USER')
+        expect(response.body.user).toHaveProperty('id')
+        expect(response.body.user).toHaveProperty('password')
+        expect(response.body.user).toHaveProperty('img')
+        expect(response.body.user).toHaveProperty('createdAt')
+        expect(response.body.user).toHaveProperty('updatedAt')
+
+        mockUserPassword = response.body.user.password
+    })
+
+    test('Update user password with valid data, should return 200', async () => {
+        const response = await request(app)
+            .put('/api/user/admin')
+            .set('Authorization', `Bearer ${mockAdminJwtToken}`)
+            .send({ userId: mockUserId, email: 'admin1@example.com', password: '123456789', role: 'USER' })
+
+        expect(response.status).toBe(200)
+        expect(response.body.user.email).toBe('admin1@example.com')
+        expect(response.body.user.role).toBe('USER')
+        expect(response.body.user).toHaveProperty('id')
+        expect(response.body.user).toHaveProperty('password')
+        expect(response.body.user.password).not.toBe(mockUserPassword)
+        expect(response.body.user).toHaveProperty('img')
+        expect(response.body.user).toHaveProperty('createdAt')
+        expect(response.body.user).toHaveProperty('updatedAt')
+    })
+
+    test('Update user email with valid data, should return 200', async () => {
+        const response = await request(app)
+            .put('/api/user/admin')
+            .set('Authorization', `Bearer ${mockAdminJwtToken}`)
+            .send({ userId: mockUserId, email: 'admin11@example.com', password: '', role: 'USER' })
+
+        expect(response.status).toBe(200)
+        expect(response.body.user.email).toBe('admin11@example.com')
+        expect(response.body.user.role).toBe('USER')
+        expect(response.body.user).toHaveProperty('id')
+        expect(response.body.user).toHaveProperty('password')
+        expect(response.body.user).toHaveProperty('img')
+        expect(response.body.user).toHaveProperty('createdAt')
+        expect(response.body.user).toHaveProperty('updatedAt')
+    })
+
+    test('Update user with another candidate, should return 400', async () => {
+        await checkRouteWithInvalidInfo(
+            request(app).put,
+            '/api/user/admin',
+            'Пользователь с таким именем уже существует',
+            { userId: mockUserId, email: 'admin@example.com', password: '', role: 'USER' },
             mockAdminJwtToken
         )
     })

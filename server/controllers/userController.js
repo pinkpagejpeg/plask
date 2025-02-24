@@ -211,7 +211,7 @@ class UserController {
                 if (role === user.role) {
                     const candidate = await User.findOne({ where: { email } })
                     if (candidate) {
-                        return next(ApiError.internal("Пользователь с таким именем уже существует"))
+                        return next(ApiError.badRequest("Пользователь с таким именем уже существует"))
                     }
                     await user.update({ email })
                 } else {
@@ -266,9 +266,10 @@ class UserController {
         try {
             const users = await User.findAll({
                 order: [['createdAt', 'DESC']]
-            });
+            })
             return res.json(users)
         } catch (e) {
+            console.log(e.message)
             return next(ApiError.badRequest(e.message))
         }
     }
