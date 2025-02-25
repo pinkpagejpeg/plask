@@ -1,7 +1,7 @@
 import { ICommonState } from "shared/store"
 
 export interface ITaskState extends ICommonState {
-    tasks: ITask[] | null
+    tasks: ITask[] | null,
     count: number
 }
 

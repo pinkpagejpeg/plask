@@ -1,9 +1,10 @@
 const Router = require('express')
 const feedbackController = require('../controllers/feedbackController')
-const router = new Router()
 const AuthMiddleware = require('../middleware/AuthMiddleware')
 const checkRoleMiddleware = require('../middleware/CheckRoleMiddleware')
 const { check } = require('express-validator')
+
+const router = new Router()
 
 // Send feedback (authorized users)
 router.post(

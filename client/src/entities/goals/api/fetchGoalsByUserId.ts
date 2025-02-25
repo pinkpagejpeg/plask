@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { IGoal } from "../model"
 import { getGoalProgress, getGoals } from "../../../shared/api"
+import { IGoals } from "../model/types"
 
-export const fetchGoalsByUserId = createAsyncThunk<IGoal[], number, { rejectValue: string }>(
+export const fetchGoalsByUserId = createAsyncThunk<IGoals, number, { rejectValue: string }>(
     "goal/fetchGoalsByUserId",
     async (userId, { rejectWithValue }) => {
         try {
@@ -10,14 +10,14 @@ export const fetchGoalsByUserId = createAsyncThunk<IGoal[], number, { rejectValu
                 throw new Error("Отсутствует идентификатор пользователя")
             }
 
-            const goals = await getGoals(userId)
+            const { goals, count } = await getGoals(userId)
             const data = await Promise.all(
                 goals.map(async (goal) => {
-                    const progress = await getGoalProgress(goal.id)
+                    const { progress } = await getGoalProgress(goal.id)
                     return { ...goal, progress }
                 })
             )
-            return data
+            return { goals: data, count }
         } catch (error: unknown) {
             return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }

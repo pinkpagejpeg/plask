@@ -5,8 +5,8 @@ export const destroyGoal = createAsyncThunk<number, number, { rejectValue: strin
     "goal/destroyGoal",
     async (goalId, { rejectWithValue }) => {
         try {
-            const data = await deleteGoal(goalId)
-            return data.deletedGoalId
+            const { deletedGoalId } = await deleteGoal(goalId)
+            return deletedGoalId
         } catch (error: unknown) {
             return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }

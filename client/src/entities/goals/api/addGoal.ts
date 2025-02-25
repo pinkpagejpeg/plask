@@ -10,9 +10,9 @@ export const addGoal = createAsyncThunk<IGoal, { userId: number; info: string },
                 throw new Error("Отсутствует идентификатор пользователя")
             }
 
-            const data = await createGoal(userId, info)
-            data.progress = 0
-            return data
+            const { goal } = await createGoal(userId, info)
+            goal.progress = 0
+            return goal
         } catch (error: unknown) {
             return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }

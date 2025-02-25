@@ -277,6 +277,9 @@ describe('taskRouter tests', () => {
             expect(typeof task.userId).toBe('number')
         })
 
+        expect(response.body.tasks.length).toBe(response.body.count)
+        expect(typeof response.body.count).toBe('number')
+
         const ids = response.body.tasks.map((f) => f.id)
         expect(new Set(ids).size).toBe(ids.length)
     })

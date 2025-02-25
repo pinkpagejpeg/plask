@@ -149,6 +149,9 @@ describe('feedbackRouter tests', () => {
             expect(typeof feedback.user.email).toBe('string')
         })
 
+        expect(response.body.feedbacks.length).toBe(response.body.count)
+        expect(typeof response.body.count).toBe('number')
+
         const ids = response.body.feedbacks.map((f) => f.id)
         expect(new Set(ids).size).toBe(ids.length)
     })

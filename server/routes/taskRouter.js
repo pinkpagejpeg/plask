@@ -1,9 +1,9 @@
 const Router = require('express')
-const router = new Router()
 const taskController = require('../controllers/taskController')
 const AuthMiddleware = require('../middleware/AuthMiddleware')
 const { check } = require('express-validator')
 
+const router = new Router()
 router.use(AuthMiddleware)
 
 // Add task (authorized users)

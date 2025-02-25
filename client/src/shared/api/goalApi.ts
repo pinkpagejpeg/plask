@@ -7,7 +7,7 @@ export const createGoal = async (userId: number, info: string) => {
 }
 
 export const updateGoal = async (goalId: number, info: string) => {
-    const { data } = await $authHost.put(`api/goal/`, { goalId, info})
+    const { data } = await $authHost.patch(`api/goal/${goalId}`, { info })
     return data
 }
 
@@ -27,32 +27,32 @@ export const getGoal = async (goalId: number) => {
 }
 
 export const getGoalProgress = async (goalId: number) => {
-    const { data } = await $authHost.get(`api/goal/progress/${goalId}`)
+    const { data } = await $authHost.get(`api/goal/${goalId}/progress`)
     return data
 }
 
 // Subgoal
 export const createGoalItem = async (goalId: number, info: string) => {
-    const { data } = await $authHost.post(`api/goal/item`, { goalId, info })
+    const { data } = await $authHost.post(`api/goal/${goalId}/items`, { info })
     return data
 }
 
-export const updateGoalItem = async (goalItemId: number, info: string) => {
-    const { data } = await $authHost.put(`api/goal/item`, { goalItemId, info})
+export const updateGoalItem = async (goalId: number, goalItemId: number, info: string) => {
+    const { data } = await $authHost.patch(`api/goal/${goalId}/items/${goalItemId}`, { info })
     return data
 }
 
-export const updateGoalItemStatus = async (goalItemId: number, status: boolean) => {
-    const { data } = await $authHost.put(`api/goal/item/status`, { goalItemId, status })
+export const updateGoalItemStatus = async (goalId: number, goalItemId: number, status: boolean) => {
+    const { data } = await $authHost.patch(`api/goal/${goalId}/items/${goalItemId}/status`, { status })
     return data
 }
 
-export const deleteGoalItem = async (goalItemId: number) => {
-    const { data } = await $authHost.delete(`api/goal/item/${goalItemId}`)
+export const deleteGoalItem = async (goalId: number, goalItemId: number) => {
+    const { data } = await $authHost.delete(`api/goal/${goalId}/items/${goalItemId}`)
     return data
 }
 
 export const getGoalItems = async (goalId: number) => {
-    const { data } = await $authHost.get(`api/goal/item/${goalId}`)
+    const { data } = await $authHost.get(`api/goal/${goalId}/items`)
     return data
 }

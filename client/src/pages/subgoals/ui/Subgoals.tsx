@@ -27,13 +27,13 @@ export const Subgoals: FC = () => {
     // }
 
     const fetchProgress = useCallback(async () => {
-        const progress = await getGoalProgress(goalId)
-        setProgress(progress.progress)
+        const { progress } = await getGoalProgress(goalId)
+        setProgress(progress)
     }, [goalId])
 
     const fetchSubgoals = useCallback(async () => {
-        const subgoals = await getGoalItems(goalId)
-        setSubgoals(subgoals)
+        const { goalItems } = await getGoalItems(goalId)
+        setSubgoals(goalItems)
         fetchProgress()
     }, [goalId, fetchProgress])
 
@@ -45,7 +45,7 @@ export const Subgoals: FC = () => {
         const fetchGoal = async () => {
             try {
                 if (id) {
-                    const goal = await getGoal(goalId)
+                    const { goal } = await getGoal(goalId)
                     // setGoal(goal)
                     setGoalInfo(goal.info)
                     setGoalPrevInfo(goal.info)
@@ -95,21 +95,21 @@ export const Subgoals: FC = () => {
 
     const changeSubgoal = async (goalItemId: number, info: string) => {
         if (info && goalItemId) {
-            await updateGoalItem(goalItemId, info)
+            await updateGoalItem(goalId, goalItemId, info)
             fetchSubgoals()
         }
     }
 
     const changeSubgoalStatus = async (goalItemId: number, status: boolean) => {
         if (goalItemId) {
-            await updateGoalItemStatus(goalItemId, status)
+            await updateGoalItemStatus(goalId, goalItemId, status)
             fetchSubgoals()
         }
     }
 
     const destroySubgoal = async (goalItemId: number) => {
         if (goalItemId) {
-            await deleteGoalItem(goalItemId)
+            await deleteGoalItem(goalId, goalItemId)
             fetchSubgoals()
         }
     }

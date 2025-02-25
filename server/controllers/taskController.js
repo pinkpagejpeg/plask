@@ -7,7 +7,7 @@ class TaskController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+                return res.status(400).json({ message: errors.array().map(error => error.msg) })
             }
 
             const { userId, info } = req.body
@@ -23,7 +23,7 @@ class TaskController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+                return res.status(400).json({ message: errors.array().map(error => error.msg) })
             }
 
             const { taskId } = req.params
@@ -46,7 +46,7 @@ class TaskController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+                return res.status(400).json({ message: errors.array().map(error => error.msg) })
             }
             
             const { taskId } = req.params

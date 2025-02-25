@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IGoal, IGoalState } from "./types"
+import { IGoal, IGoals, IGoalState } from "./types"
 import { addGoal, changeGoal, destroyGoal, fetchGoalsByUserId } from "../api"
 import { createPendingHandler, createRejectedHandler } from "shared/store"
 
 const initialState: IGoalState = {
     goals: null,
+    count: 0,
     loading: false,
     error: null,
 }
@@ -24,9 +25,10 @@ const goalSlice = createSlice({
         builder
             // fetchGoalsByUserId
             .addCase(fetchGoalsByUserId.pending, createPendingHandler<IGoalState>())
-            .addCase(fetchGoalsByUserId.fulfilled, (state: IGoalState, action: PayloadAction<IGoal[]>) => {
+            .addCase(fetchGoalsByUserId.fulfilled, (state: IGoalState, action: PayloadAction<IGoals>) => {
                 state.loading = false
-                state.goals = action.payload
+                state.goals = action.payload.goals
+                state.count = action.payload.count
             })
             .addCase(fetchGoalsByUserId.rejected, createRejectedHandler<IGoalState>())
 

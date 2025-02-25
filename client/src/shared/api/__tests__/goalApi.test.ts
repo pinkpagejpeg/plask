@@ -3,6 +3,13 @@ import { $authHost } from "../http"
 import { checkApi } from "./checkApi"
 
 interface IMockGoalData {
+    data: {
+        goals: IMockGoal[],
+        count: number
+    }
+}
+
+interface IMockGoal {
     id: number,
     info: string,
     userId: number,
@@ -11,6 +18,13 @@ interface IMockGoalData {
 }
 
 interface IMockSubgoalData {
+    data: {
+        goalItems: IMockSubgoal[],
+        count: number
+    }
+}
+
+interface IMockSubgoal {
     id: number,
     info: string,
     status: boolean,
@@ -22,34 +36,39 @@ interface IMockSubgoalData {
 jest.mock('../http', () => ({
     $authHost: {
         post: jest.fn(),
-        put: jest.fn(),
+        patch: jest.fn(),
         delete: jest.fn(),
         get: jest.fn(),
     }
 }))
 
 describe('goalApi tests', () => {
-    let mockData: IMockGoalData[],
-        createdMockData: IMockGoalData,
-        updatedMockData: IMockGoalData
+    let mockData: IMockGoalData,
+        createdMockData: IMockGoal,
+        updatedMockData: IMockGoal
 
     beforeAll(() => {
-        mockData = [
-            {
-                id: 18,
-                info: 'Complete the project',
-                userId: 19,
-                createdAt: "2025-01-26 13:48:44.315+03",
-                updatedAt: "2025-01-26 13:48:44.315+03",
-            },
-            {
-                id: 19,
-                info: 'Write documentation',
-                userId: 19,
-                createdAt: "2025-01-26 13:48:44.315+03",
-                updatedAt: "2025-01-26 13:48:44.315+03",
+        mockData = {
+            data: {
+                goals: [
+                    {
+                        id: 18,
+                        info: 'Complete the project',
+                        userId: 19,
+                        createdAt: "2025-01-26 13:48:44.315+03",
+                        updatedAt: "2025-01-26 13:48:44.315+03",
+                    },
+                    {
+                        id: 19,
+                        info: 'Write documentation',
+                        userId: 19,
+                        createdAt: "2025-01-26 13:48:44.315+03",
+                        updatedAt: "2025-01-26 13:48:44.315+03",
+                    }
+                ],
+                count: 2
             }
-        ]
+        }
 
         createdMockData = {
             id: 20,
@@ -74,10 +93,10 @@ describe('goalApi tests', () => {
 
     test('Update goal api', async () => {
         await checkApi(
-            $authHost.put as jest.Mock,
+            $authHost.patch as jest.Mock,
             updateGoal,
             updatedMockData,
-            [`api/goal/`, { goalId: 20, info: 'Add ui' }],
+            [`api/goal/20`, { info: 'Add ui' }],
             [20, 'Add ui']
         )
     })
@@ -117,7 +136,7 @@ describe('goalApi tests', () => {
             $authHost.get as jest.Mock,
             getGoalProgress,
             0,
-            [`api/goal/progress/19`],
+            [`api/goal/19/progress`],
             [19]
         )
     })
@@ -126,30 +145,35 @@ describe('goalApi tests', () => {
 })
 
 describe('goalApi subgoals tests', () => {
-    let mockData: IMockSubgoalData[],
-        createdMockData: IMockSubgoalData,
-        updatedMockData: IMockSubgoalData,
-        updatedStatusMockData: IMockSubgoalData
+    let mockData: IMockSubgoalData,
+        createdMockData: IMockSubgoal,
+        updatedMockData: IMockSubgoal,
+        updatedStatusMockData: IMockSubgoal
 
     beforeAll(() => {
-        mockData = [
-            {
-                id: 14,
-                info: 'Complete the project setup',
-                status: true,
-                goalId: 18,
-                createdAt: "2025-01-26 13:48:44.315+03",
-                updatedAt: "2025-01-26 13:48:44.315+03",
-            },
-            {
-                id: 15,
-                info: 'Write the initial draft of documentation',
-                status: false,
-                goalId: 19,
-                createdAt: "2025-01-26 13:48:44.315+03",
-                updatedAt: "2025-01-26 13:48:44.315+03",
+        mockData = {
+            data: {
+                goalItems: [
+                    {
+                        id: 14,
+                        info: 'Complete the project setup',
+                        status: true,
+                        goalId: 18,
+                        createdAt: "2025-01-26 13:48:44.315+03",
+                        updatedAt: "2025-01-26 13:48:44.315+03",
+                    },
+                    {
+                        id: 15,
+                        info: 'Write the initial draft of documentation',
+                        status: false,
+                        goalId: 19,
+                        createdAt: "2025-01-26 13:48:44.315+03",
+                        updatedAt: "2025-01-26 13:48:44.315+03",
+                    }
+                ],
+                count: 2
             }
-        ]
+        }
 
         createdMockData = {
             id: 16,
@@ -170,36 +194,36 @@ describe('goalApi subgoals tests', () => {
             $authHost.post as jest.Mock,
             createGoalItem,
             createdMockData,
-            [`api/goal/item`, { goalId: 19, info: 'Add unit test' }],
+            [`api/goal/19/items`, { info: 'Add unit test' }],
             [19, 'Add unit test']
         )
     })
 
     test('Update subgoal goal api', async () => {
         await checkApi(
-            $authHost.put as jest.Mock,
+            $authHost.patch as jest.Mock,
             updateGoalItem,
             updatedMockData,
-            [`api/goal/item`, { goalItemId: 16, info: 'Add unit and screenshot tests' }],
-            [16, 'Add unit and screenshot tests']
+            [`api/goal/19/items/16`, { info: 'Add unit and screenshot tests' }],
+            [19, 16, 'Add unit and screenshot tests']
         )
     })
 
     test('Update subgoal status goal api', async () => {
         await checkApi(
-            $authHost.put as jest.Mock,
+            $authHost.patch as jest.Mock,
             updateGoalItemStatus,
             updatedStatusMockData,
-            [`api/goal/item/status`, { goalItemId: 16, status: true }],
-            [16, true]
+            [`api/goal/19/items/16/status`, { status: true }],
+            [19, 16, true]
         )
 
         await checkApi(
-            $authHost.put as jest.Mock,
+            $authHost.patch as jest.Mock,
             updateGoalItemStatus,
             updatedMockData,
-            [`api/goal/item/status`, { goalItemId: 16, status: false }],
-            [16, false],
+            [`api/goal/19/items/16/status`, { status: false }],
+            [19, 16, false],
             2
         )
     })
@@ -209,8 +233,8 @@ describe('goalApi subgoals tests', () => {
             $authHost.delete as jest.Mock,
             deleteGoalItem,
             { deletedGoalItemId: 16 },
-            [`api/goal/item/16`],
-            [16]
+            [`api/goal/19/items/16`],
+            [19, 16]
         )
     })
 
@@ -219,7 +243,7 @@ describe('goalApi subgoals tests', () => {
             $authHost.get as jest.Mock,
             getGoalItems,
             mockData,
-            [`api/goal/item/19`],
+            [`api/goal/19/items`],
             [19]
         )
     })
