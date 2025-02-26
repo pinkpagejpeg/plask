@@ -6,6 +6,12 @@ let mockUserJwtToken = jwt.sign({
     role: 'USER'
 }, process.env.SECRET_KEY)
 
+let mockFakeUserJwtToken = jwt.sign({
+    id: 0,
+    email: 'user@example.com',
+    role: 'USER'
+}, process.env.SECRET_KEY)
+
 let mockAdminJwtToken = jwt.sign({
     id: 2,
     email: 'admin@example.com',
@@ -73,11 +79,15 @@ const checkRouteWithoutAdminRights = async (
 const checkRouteWithNonexistentData = async (
     method,
     route,
-    token,
     message,
+    token,
     responseArgs
 ) => {
-    let request = method(route).set('Authorization', `Bearer ${token}`)
+    let request = method(route)
+
+    if (token) {
+        request.set('Authorization', `Bearer ${token}`)
+    }
 
     if (responseArgs) {
         request.send(responseArgs)
@@ -92,6 +102,7 @@ const checkRouteWithNonexistentData = async (
 module.exports = {
     mockUserJwtToken,
     mockAdminJwtToken,
+    mockFakeUserJwtToken,
     checkRouteWithInvalidInfo,
     checkRouteWithInvalidToken,
     checkRouteWithNonexistentData,

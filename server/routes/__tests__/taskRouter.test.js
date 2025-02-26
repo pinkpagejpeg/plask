@@ -111,8 +111,8 @@ describe('taskRouter tests', () => {
         await checkRouteWithNonexistentData(
             request(app).patch,
             '/api/task/0',
-            mockUserJwtToken,
             'Задача не найдена',
+            mockUserJwtToken,
             { info: 'Write tests' }
         )
     })
@@ -177,8 +177,8 @@ describe('taskRouter tests', () => {
         await checkRouteWithNonexistentData(
             request(app).patch,
             '/api/task/0/status',
-            mockUserJwtToken,
             'Задача не найдена',
+            mockUserJwtToken,
             { status: true }
         )
     })
@@ -304,8 +304,8 @@ describe('taskRouter tests', () => {
         await checkRouteWithNonexistentData(
             request(app).delete,
             '/api/task/0',
+            'Задача не найдена',
             mockUserJwtToken,
-            'Задача не найдена'
         )
     })
 

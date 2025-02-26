@@ -97,8 +97,8 @@ describe('goalRouter tests', () => {
         await checkRouteWithNonexistentData(
             request(app).get,
             '/api/goal/0/progress',
+            'Цель не найдена',
             mockUserJwtToken,
-            'Цель не найдена'
         )
     })
 
@@ -144,8 +144,8 @@ describe('goalRouter tests', () => {
         await checkRouteWithNonexistentData(
             request(app).patch,
             '/api/goal/0',
-            mockUserJwtToken,
             'Цель не найдена',
+            mockUserJwtToken,
             { info: 'Learn C++' }
         )
     })
@@ -195,8 +195,8 @@ describe('goalRouter tests', () => {
         await checkRouteWithNonexistentData(
             request(app).get,
             '/api/goal/0',
+            'Цель не найдена',
             mockUserJwtToken,
-            'Цель не найдена'
         )
     })
 
@@ -289,8 +289,8 @@ describe('goalRouter tests', () => {
         await checkRouteWithNonexistentData(
             request(app).delete,
             `/api/goal/0`,
+            'Цель не найдена',
             mockUserJwtToken,
-            'Цель не найдена'
         )
     })
 

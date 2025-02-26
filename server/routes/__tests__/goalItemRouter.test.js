@@ -110,8 +110,8 @@ describe('goalRouter tests', () => {
         await checkRouteWithNonexistentData(
             request(app).patch,
             `/api/goal/${mockGoalId}/items/0`,
-            mockUserJwtToken,
             'Подцель не найдена',
+            mockUserJwtToken,
             { info: 'Learn data types' }
         )
     })
@@ -175,8 +175,8 @@ describe('goalRouter tests', () => {
         await checkRouteWithNonexistentData(
             request(app).patch,
             `/api/goal/${mockGoalId}/items/0/status`,
-            mockUserJwtToken,
             'Подцель не найдена',
+            mockUserJwtToken,
             { status: true }
         )
     })
@@ -316,8 +316,8 @@ describe('goalRouter tests', () => {
         await checkRouteWithNonexistentData(
             request(app).delete,
             `/api/goal/${mockGoalId}/items/0`,
+            'Подцель не найдена',
             mockUserJwtToken,
-            'Подцель не найдена'
         )
     })
 
