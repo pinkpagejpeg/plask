@@ -10,9 +10,9 @@ export const AppRouter = () => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        check().then((data) => {
-            dispatch(fetchUserById(data.id))
-        })
+        check()
+            .then(() => dispatch(fetchUserById()))
+            .catch(() => console.log("Пользователь не авторизован"))
     }, [dispatch])
 
     const currentRouter = useMemo(() => {

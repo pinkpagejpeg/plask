@@ -8,10 +8,7 @@ const router = new Router()
 // Send feedback (authorized users)
 router.post(
     '/',
-    [
-        check('info', 'Сообщение не введено').notEmpty(),
-        check('userId', 'Отсутствует идентификатор пользователя').exists()
-    ],
+    check('info', 'Сообщение не введено').notEmpty(),
     AuthMiddleware,
     feedbackController.create
 )

@@ -1,8 +1,8 @@
 import { fetchAppeals } from "../fetchAppeals"
-import { getFeedback } from "@/shared/api"
+import { getFeedbacks } from "@/shared/api"
 
 jest.mock("@/shared/api", () => ({
-    getFeedback: jest.fn(),
+    getFeedbacks: jest.fn(),
 }))
 
 describe('fetchAppeals tests', () => {
@@ -40,14 +40,14 @@ describe('fetchAppeals tests', () => {
     })
 
     test('Get data of users appeals', async () => {
-        (getFeedback as jest.Mock).mockResolvedValue(mockData)
+        (getFeedbacks as jest.Mock).mockResolvedValue(mockData)
         const data = await fetchAppeals()
         expect(data).toEqual(mockData)
-        expect(getFeedback).toHaveBeenCalledTimes(1)
+        expect(getFeedbacks).toHaveBeenCalledTimes(1)
     })
 
     // test('Get error', async () => {
-    //     (getFeedback as jest.Mock).mockResolvedValue(mockError)
+    //     (getFeedbacks as jest.Mock).mockResolvedValue(mockError)
     //     const data = await fetchAppeals()
     //     expect(data).toEqual(mockError)
     //     expect(global.console).toHaveBeenCalledWith('Ошибка при получении обратной связи: Неправильный запрос')

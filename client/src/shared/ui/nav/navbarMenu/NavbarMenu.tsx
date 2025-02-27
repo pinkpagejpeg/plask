@@ -1,15 +1,15 @@
 import { FC } from 'react'
 import classes from './NavbarMenu.module.scss'
 import { menuClose, profileIcon, usersIcon, feedbackIcon, logoutIcon, mainIcon, goalsIcon, tasksIcon } from '../../../assets'
-import { ADMIN_FEEDBACK_ROUTE, ADMIN_ROUTE, ADMIN_USER_ROUTE, FEEDBACK_ROUTE, GOALS_ROUTE, PROFILE_ROUTE, TASKS_ROUTE, WELCOME_ROUTE } from '../../../config'
-import { NavLink } from 'react-router-dom'
+import { ADMIN_FEEDBACK_ROUTE, ADMIN_ROUTE, ADMIN_USER_ROUTE, FEEDBACK_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, TASKS_ROUTE, WELCOME_ROUTE } from '../../../config'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useTypedSelector } from 'shared/store'
 // import { setAuthFalse } from '../../../../entities/users'
 import { INavbarMenu } from './types'
 
 export const NavbarMenu: FC<INavbarMenu> = ({ show, setShow }) => {
     const { user } = useTypedSelector(state => state.user)
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
     // const dispatch = useAppDispatch()
     const rootClasses = [classes.menu__content]
 
@@ -22,9 +22,9 @@ export const NavbarMenu: FC<INavbarMenu> = ({ show, setShow }) => {
     }
 
     const logOut = () => {
-        // localStorage.removeItem('token')
+        localStorage.removeItem('token')
         // dispatch(setAuthFalse())
-        // navigate(LOGIN_ROUTE)
+        navigate(LOGIN_ROUTE)
     }
 
 

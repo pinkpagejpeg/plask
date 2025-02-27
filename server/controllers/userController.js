@@ -176,9 +176,9 @@ class UserController {
                 return next(ApiError.notFound('Пользователь не найден'))
             }
 
-            const feedbacks = await Feedback.findAll({ where: { id } })
-            const tasks = await Task.findAll({ where: { id } })
-            const goals = await Goal.findAll({ where: { id } })
+            const feedbacks = await Feedback.findAll({ where: { userId: id } })
+            const tasks = await Task.findAll({ where: { userId: id } })
+            const goals = await Goal.findAll({ where: { userId: id } })
 
             for (const feedback of feedbacks) {
                 await feedback.destroy()

@@ -29,7 +29,7 @@ export const Auth: FC = () => {
                     data = await registration(email, password, hcaptchaToken)
                 }
 
-                dispatch(fetchUserById(data.id))
+                dispatch(fetchUserById())
 
                 if (data.role === 'ADMIN') {
                     navigate(`${ADMIN_ROUTE}?from=${isLogin ? 'login' : 'registration'}`)

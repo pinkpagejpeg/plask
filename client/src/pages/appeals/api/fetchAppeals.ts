@@ -1,8 +1,8 @@
-import { getFeedback } from "../../../shared/api"
+import { getFeedbacks } from "../../../shared/api"
 
 export const fetchAppeals = async () => {
     try {
-        const data = await getFeedback()
+        const data = await getFeedbacks()
         return data
     } catch (error: unknown) {
         if (error instanceof Error) {

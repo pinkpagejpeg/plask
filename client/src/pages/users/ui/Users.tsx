@@ -21,8 +21,8 @@ export const Users: FC = () => {
 
     const getUsers = async () => {
         try {
-            const data = await fetchUsers()
-            setUsers(data)
+            const { users } = await fetchUsers()
+            setUsers(users)
         } catch (error: unknown) {
             if (error instanceof Error) {
                 alert(`При получении пользователей возникла ошибка: ${error.message}`)
@@ -32,10 +32,10 @@ export const Users: FC = () => {
         }
     }
 
-    const addButtonHandler = (event) => {
+    const addButtonHandler = async (event) => {
         event.preventDefault()
         try {
-            addUser({email, password, role})
+            await addUser({ email, password, role })
             setEmail('')
             setPassword('')
             getUsers()

@@ -1,13 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { getUser } from "../../../shared/api"
+import { getInfo } from "../../../shared/api"
 import { IUser } from "../model"
 
-export const fetchUserById = createAsyncThunk<IUser, number, { rejectValue: string }>(
+export const fetchUserById = createAsyncThunk<IUser, void, { rejectValue: string }>(
     "user/fetchUserById",
-    async (userId, { rejectWithValue }) => {
+    async (_, { rejectWithValue }) => {
         try {
-            const data = await getUser(userId)
-            return data
+            const { user } = await getInfo()
+            return user
         } catch (error: unknown) {
             return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
         }

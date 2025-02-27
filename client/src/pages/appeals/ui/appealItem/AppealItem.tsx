@@ -13,10 +13,10 @@ export const AppealItem: FC<IAppealItemComponent> = ({ id, info, date, status, u
         replyHandler()
     }
 
-    const replyHandler = () => {
+    const replyHandler = async () => {
         try {
             if (id) {
-                changeAppealStatus(id, !appealStatus)
+                await changeAppealStatus(id, !appealStatus)
             }
         } catch (error: unknown) {
             if (error instanceof Error) {

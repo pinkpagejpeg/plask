@@ -10,26 +10,29 @@ describe('fetchUsers tests', () => {
 
     beforeAll(() => {
         mockData = {
-            data: [
-                {   
-                    id: 22,
-                    email: "user@example.com",
-                    password: "hashedPassword123",
-                    role: "USER",
-                    img: "user_default_image.jpg",
-                    createdAt: "2025-01-26 13:48:44.241+03",
-                    updatedAt: "2025-01-26 13:48:44.241+03",
-                },
-                {
-                    id: 23,
-                    email: "admin@example.com",
-                    password: "hashedAdminPassword123",
-                    role: "ADMIN",
-                    img: "user_default_image.jpg",
-                    createdAt: "2025-01-26 13:48:44.241+03",
-                    updatedAt: "2025-01-26 13:48:44.241+03",
-                },
-            ]
+            data: {
+                users: [
+                    {
+                        id: 22,
+                        email: 'user@example.com',
+                        password: 'hashedPassword123',
+                        role: 'USER',
+                        img: 'user_default_image.jpg',
+                        createdAt: "2025-01-26 13:48:44.315+03",
+                        updatedAt: "2025-01-26 13:48:44.315+03",
+                    },
+                    {
+                        id: 23,
+                        email: 'admin@example.com',
+                        password: 'hashedAdminPassword123',
+                        role: 'ADMIN',
+                        img: 'user_default_image.jpg',
+                        createdAt: "2025-01-26 13:48:44.315+03",
+                        updatedAt: "2025-01-26 13:48:44.315+03",
+                    }
+                ],
+                count: 2
+            }
         }
     })
 

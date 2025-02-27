@@ -37,7 +37,7 @@ export const Profile: FC = () => {
                 const formData = new FormData()
                 formData.append('file', file)
 
-                dispatch(changeUserImage({ userId: user?.id, formData }))
+                dispatch(changeUserImage({ formData }))
             }
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -51,7 +51,7 @@ export const Profile: FC = () => {
     const deleteUserImage = async () => {
         try {
             if (user) {
-                dispatch(destroyUserImage(user?.id))
+                dispatch(destroyUserImage())
             }
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -66,8 +66,9 @@ export const Profile: FC = () => {
         try {
             if (user) {
                 const confirmed = window.confirm("Вы уверены, что хотите удалить аккаунт?")
+
                 if (confirmed) {
-                    dispatch(destroyUser(user?.id))
+                    await dispatch(destroyUser())
                     localStorage.removeItem('token')
                     navigate(REGISTRATION_ROUTE)
                 }

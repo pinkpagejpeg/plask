@@ -34,7 +34,7 @@ export const ProfileInfo: FC = () => {
     const handleEmailBlur = () => {
         if (user) {
             if (prevEmail !== email && email.trim() !== '') {
-                dispatch(changeUserInfo({ userId: user?.id, email, password }))
+                dispatch(changeUserInfo({ email, password }))
                 setPrevEmail(email)
             } else {
                 setEmail(prevEmail)
@@ -50,7 +50,7 @@ export const ProfileInfo: FC = () => {
     const handlePasswordBlur = () => {
         if (user) {
             if (password.trim() !== '') {
-                dispatch(changeUserInfo({ userId: user?.id, email, password }))
+                dispatch(changeUserInfo({ email, password }))
             }
             setIsPasswordEditing(false)
             setPassword('')

@@ -25,45 +25,28 @@ export const check = async () => {
     return jwtDecode<CustomJwtPayload>(data.token)
 }
 
-export const getUser = async (userId: number) => {
-    const { data } = await $authHost.get(`api/user/${userId}`)
+export const getInfo = async () => {
+    const { data } = await $authHost.get(`api/user/`)
     return data
 }
 
-export const updateUserInfo = async (userId: number, email: string, password: string) => {
-    const { data } = await $authHost.put(`api/user/info`, { userId, email, password })
+export const updateInfo = async (email: string, password: string) => {
+    const { data } = await $authHost.patch(`api/user/info`, { email, password })
     localStorage.setItem('token', data.token)
     return jwtDecode<CustomJwtPayload>(data.token)
 }
 
-export const updateUserImage = async (userId: number, formData: FormData) => {
-    const { data } = await $authHost.put(`api/user/${userId}/image`, formData);
+export const updateImage = async (formData: FormData) => {
+    const { data } = await $authHost.patch(`api/user/image`, formData)
     return data
 }
 
-export const deleteUserImage = async (userId: number) => {
-    const { data } = await $authHost.put(`api/user/image`, { userId });
+export const deleteImage = async () => {
+    const { data } = await $authHost.delete(`api/user/image`)
     return data
 }
 
-// Admin
-
-export const getUsers = async () => {
-    const { data } = await $authHost.get('api/user/admin')
-    return data
-}
-
-export const createUser = async (email: string, password: string, role: string) => {
-    const { data } = await $authHost.post('api/user/admin', { email, password, role })
-    return data
-}
-
-export const updateUser = async (userId: number, email: string, password: string, role: string) => {
-    const { data } = await $authHost.put(`api/user/admin`, { userId, email, password, role })
-    return data
-}
-
-export const deleteUser = async (userId: number) => {
-    const { data } = await $authHost.delete(`api/user/admin/${userId}`)
+export const deleteAccount = async () => {
+    const { data } = await $authHost.delete(`api/user/`)
     return data
 }

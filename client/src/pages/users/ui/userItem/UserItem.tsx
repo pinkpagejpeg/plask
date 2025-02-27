@@ -60,7 +60,7 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
 
     const changeUserHandler = async () => {
         try {
-            changeUser({ userId: user.id, email, password, role })
+            await changeUser({ userId: user.id, email, password, role })
             onUserChange()
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -73,7 +73,7 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
 
     const destroyButtonHandler = async () => {
         try {
-            destroyUser(user.id)
+            await destroyUser(user.id)
             onUserChange()
         }
         catch (error: unknown) {

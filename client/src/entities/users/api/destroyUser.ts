@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
-import { deleteUser } from "../../../shared/api"
+import { deleteAccount } from "../../../shared/api"
 
-export const destroyUser = createAsyncThunk<number, number, { rejectValue: string }>(
+export const destroyUser = createAsyncThunk<number, void, { rejectValue: string }>(
     "user/destroyUser",
-    async (userId, { rejectWithValue }) => {
+    async (_, { rejectWithValue }) => {
         try {
-            const data = await deleteUser(userId)
+            const data = await deleteAccount()
             return data
         } catch (error: unknown) {
             return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')

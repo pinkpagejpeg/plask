@@ -1,9 +1,10 @@
 import { createFeedback } from "../../../shared/api"
 import { IAddFeedback } from "../model"
 
-export const addFeedback = async ({ userId, info }: IAddFeedback) => {
+export const addFeedback = async ({ info }: IAddFeedback) => {
     try {
-        await createFeedback(userId, info)
+        const { feedback } = await createFeedback(info)
+        return feedback
     } catch (error: unknown) {
         if (error instanceof Error) {
             alert(`При отправке обратной связи возникла ошибка: ${error.message}`)

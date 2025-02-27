@@ -14,17 +14,7 @@ describe('feedbackRouter tests', () => {
             request(app).post,
             '/api/feedback/',
             'Сообщение не введено',
-            { info: '', userId: 1 },
-            mockUserJwtToken
-        )
-    })
-
-    test('Create feedback with empty userId, should return 400', async () => {
-        await checkRouteWithInvalidInfo(
-            request(app).post,
-            '/api/feedback/',
-            'Отсутствует идентификатор пользователя',
-            { info: 'Great app!' },
+            { info: '' },
             mockUserJwtToken
         )
     })
@@ -34,7 +24,7 @@ describe('feedbackRouter tests', () => {
             request(app).post,
             '/api/feedback/',
             '',
-            { info: 'Great app!', userId: 1 }
+            { info: 'Great app!' }
         )
     })
 
@@ -43,7 +33,7 @@ describe('feedbackRouter tests', () => {
             request(app).post,
             '/api/feedback/',
             'Bearer fakeToken',
-            { info: 'Great app!', userId: 1 }
+            { info: 'Great app!' }
         )
     })
 
@@ -51,20 +41,18 @@ describe('feedbackRouter tests', () => {
         const response = await request(app)
             .post('/api/feedback/')
             .set('Authorization', `Bearer ${mockUserJwtToken}`)
-            .send({
-                info: 'Great app!',
-                userId: 1
-            })
+            .send({ info: 'Great app!' })
 
         expect(response.status).toBe(201)
 
         expect(response.body.feedback).toEqual(expect.objectContaining({
             info: 'Great app!',
             status: false,
-            userId: 1
         }))
         expect(typeof response.body.feedback.info).toBe('string')
         expect(typeof response.body.feedback.status).toBe('boolean')
+
+        expect(response.body.feedback).toHaveProperty('userId')
         expect(typeof response.body.feedback.userId).toBe('number')
 
         expect(response.body.feedback).toHaveProperty('id')

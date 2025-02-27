@@ -12,13 +12,16 @@ export const Feedback: FC = () => {
     //     return <Navigate to={LOGIN_ROUTE} />;
     // }
 
-    const buttonHandler = (event) => {
+    const buttonHandler = async (event) => {
         event.preventDefault()
         try {
             if (user && info) {
-                addFeedback({ userId: user?.id, info })
+                const data = await addFeedback({ info })
                 setInfo('')
-                alert('Обратная связь отправлена')
+
+                if (data) {
+                    alert('Обратная связь отправлена')
+                }
             }
         } catch (error: unknown) {
             if (error instanceof Error) {
