@@ -17,7 +17,7 @@ export const Goals: FC = () => {
 
     useEffect(() => {
         if (user) {
-            dispatch(fetchGoalsByUserId(user?.id))
+            dispatch(fetchGoalsByUserId())
         }
 
     }, [dispatch, user])
@@ -26,7 +26,7 @@ export const Goals: FC = () => {
         event.preventDefault()
         try {
             if (user && info) {
-                dispatch(addGoal({ userId: user?.id, info }))
+                dispatch(addGoal({ info }))
                 setInfo('')
             }
         } catch (error: unknown) {

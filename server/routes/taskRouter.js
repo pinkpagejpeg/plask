@@ -9,10 +9,7 @@ router.use(AuthMiddleware)
 // Add task (authorized users)
 router.post(
     '/',
-    [
-        check('info', 'Задача не введена').notEmpty(),
-        check('userId', 'Отсутствует идентификатор пользователя').exists()
-    ],
+    check('info', 'Задача не введена').notEmpty(),
     taskController.create
 )
 
@@ -38,7 +35,7 @@ router.delete(
 
 // Get tasks by user (authorized users)
 router.get(
-    '/user/:userId',
+    '/user',
     taskController.getAll
 )
 

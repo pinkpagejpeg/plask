@@ -23,8 +23,8 @@ export const Welcome: FC = () => {
 
     useEffect(() => {
         if (user && user.id) {
-            dispatch(fetchTasksByUserId(user.id))
-            dispatch(fetchGoalsByUserId(user.id))
+            dispatch(fetchTasksByUserId())
+            dispatch(fetchGoalsByUserId())
         }
     }, [dispatch, user])
 

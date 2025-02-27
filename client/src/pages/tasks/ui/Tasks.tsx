@@ -16,14 +16,14 @@ export const Tasks: FC = () => {
 
     useEffect(() => {
         if (user) {
-            dispatch(fetchTasksByUserId(user?.id))
+            dispatch(fetchTasksByUserId())
         }
     }, [dispatch, user])
 
     const createTask = async (event: { preventDefault: () => void }) => {
         event.preventDefault()
         if (user && info) {
-            dispatch(addTask({ userId: user?.id, info }))
+            dispatch(addTask({ info }))
             setInfo('')
         }
     }

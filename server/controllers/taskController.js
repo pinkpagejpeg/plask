@@ -10,9 +10,10 @@ class TaskController {
                 return res.status(400).json({ message: errors.array().map(error => error.msg) })
             }
 
-            const { userId, info } = req.body
+            const { id } = req.user
+            const { info } = req.body
 
-            const task = await Task.create({ userId, info })
+            const task = await Task.create({ userId: id, info })
             return res.status(201).json({ task })
         } catch (e) {
             return next(ApiError.badRequest(e.message))
@@ -83,8 +84,8 @@ class TaskController {
 
     async getAll(req, res, next) {
         try {
-            const { userId } = req.params
-            const tasks = await Task.findAll({ where: { userId }, order: [['createdAt', 'DESC']] })
+            const { id } = req.user
+            const tasks = await Task.findAll({ where: { userId:  id }, order: [['createdAt', 'DESC']] })
             return res.json({ tasks, count: tasks.length })
         } catch (e) {
             return next(ApiError.badRequest(e.message))

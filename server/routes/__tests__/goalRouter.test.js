@@ -17,17 +17,7 @@ describe('goalRouter tests', () => {
             request(app).post,
             '/api/goal/',
             'Цель не введена',
-            { info: '', userId: 1 },
-            mockUserJwtToken
-        )
-    })
-
-    test('Create goal with empty userId, should return 400', async () => {
-        await checkRouteWithInvalidInfo(
-            request(app).post,
-            '/api/goal/',
-            'Отсутствует идентификатор пользователя',
-            { info: 'Learn JavaScript' },
+            { info: '' },
             mockUserJwtToken
         )
     })
@@ -37,7 +27,7 @@ describe('goalRouter tests', () => {
             request(app).post,
             '/api/goal/',
             '',
-            { info: 'Learn JavaScript', userId: 1 }
+            { info: 'Learn JavaScript' }
         )
     })
 
@@ -46,7 +36,7 @@ describe('goalRouter tests', () => {
             request(app).post,
             '/api/goal/',
             'Bearer fakeToken',
-            { info: 'Learn JavaScript', userId: 1 }
+            { info: 'Learn JavaScript' }
         )
     })
 
@@ -54,15 +44,15 @@ describe('goalRouter tests', () => {
         const response = await request(app)
             .post('/api/goal/')
             .set('Authorization', `Bearer ${mockUserJwtToken}`)
-            .send({ info: 'Learn JavaScript', userId: 1 })
+            .send({ info: 'Learn JavaScript' })
 
         expect(response.status).toBe(201)
         expect(response.body.goal).toEqual(expect.objectContaining({
             info: 'Learn JavaScript',
-            userId: 1
         }))
-
         expect(typeof response.body.goal.info).toBe('string')
+
+        expect(response.body.goal).toHaveProperty('userId')
         expect(typeof response.body.goal.userId).toBe('number')
 
         expect(response.body.goal).toHaveProperty('id')
@@ -227,7 +217,7 @@ describe('goalRouter tests', () => {
     test('Get list of goals by user which is not authorized, should return 401', async () => {
         await checkRouteWithInvalidToken(
             request(app).get,
-            '/api/goal/user/1',
+            '/api/goal/user',
             ''
         )
     })
@@ -235,14 +225,14 @@ describe('goalRouter tests', () => {
     test('Get list of goals by user with fake token, should return 401', async () => {
         await checkRouteWithInvalidToken(
             request(app).get,
-            '/api/goal/user/1',
+            '/api/goal/user',
             'Bearer fakeToken'
         )
     })
 
     test('Get list of goals with valid data, should return 200', async () => {
         const response = await request(app)
-            .get('/api/goal/user/1')
+            .get('/api/goal/user')
             .set('Authorization', `Bearer ${mockUserJwtToken}`)
 
         expect(response.status).toBe(200)

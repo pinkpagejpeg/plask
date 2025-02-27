@@ -15,10 +15,7 @@ router.get(
 // Add goal (authorized users)
 router.post(
     '/',
-    [
-        check('info', 'Цель не введена').notEmpty(),
-        check('userId', 'Отсутствует идентификатор пользователя').exists()
-    ],
+    check('info', 'Цель не введена').notEmpty(),
     goalController.create
 )
 
@@ -37,7 +34,7 @@ router.delete(
 
 // Get goals by user (authorized users)
 router.get(
-    '/user/:userId',
+    '/user',
     goalController.getAll
 )
 

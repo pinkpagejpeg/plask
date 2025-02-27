@@ -1,7 +1,7 @@
 import { $authHost } from "./http"
 
-export const createTask = async (userId: number, info: string) => {
-    const { data } = await $authHost.post(`api/task/`, { userId, info })
+export const createTask = async (info: string) => {
+    const { data } = await $authHost.post(`api/task/`, { info })
     return data
 }
 
@@ -20,7 +20,7 @@ export const deleteTask = async (taskId: number) => {
     return data
 }
 
-export const getTask = async (userId: number) => {
-    const { data } = await $authHost.get(`api/task/user/${userId}`)
+export const getTasks = async () => {
+    const { data } = await $authHost.get(`api/task/user`)
     return data
 }

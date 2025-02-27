@@ -39,7 +39,7 @@ export const Subgoals: FC = () => {
 
     useEffect(() => {
         if (user) {
-            dispatch(fetchGoalsByUserId(user?.id))
+            dispatch(fetchGoalsByUserId())
         }
 
         const fetchGoal = async () => {

@@ -2,15 +2,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import { createGoal } from "../../../shared/api"
 import { IGoal } from "../model"
 
-export const addGoal = createAsyncThunk<IGoal, { userId: number; info: string }, { rejectValue: string }>(
+export const addGoal = createAsyncThunk<IGoal, { info: string }, { rejectValue: string }>(
     "goal/addGoal",
-    async ({ userId, info }, { rejectWithValue }) => {
+    async ({ info }, { rejectWithValue }) => {
         try {
-            if (!userId) {
-                throw new Error("Отсутствует идентификатор пользователя")
-            }
-
-            const { goal } = await createGoal(userId, info)
+            const { goal } = await createGoal(info)
             goal.progress = 0
             return goal
         } catch (error: unknown) {

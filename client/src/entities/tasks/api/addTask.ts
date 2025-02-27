@@ -2,15 +2,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import { createTask } from "../../../shared/api"
 import { ITask } from "../model"
 
-export const addTask = createAsyncThunk<ITask, { userId: number; info: string }, { rejectValue: string }>(
+export const addTask = createAsyncThunk<ITask, { info: string }, { rejectValue: string }>(
     "task/addTask",
-    async ({ userId, info }, { rejectWithValue }) => {
+    async ({ info }, { rejectWithValue }) => {
         try {
-            if (!userId) {
-                throw new Error("Отсутствует идентификатор пользователя")
-            }
-
-            const { task } = await createTask(userId, info)
+            const { task } = await createTask(info)
             return task
         } catch (error: unknown) {
             return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')

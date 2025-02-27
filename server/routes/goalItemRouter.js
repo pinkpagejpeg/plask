@@ -1,5 +1,5 @@
 const Router = require('express')
-const goalController = require('../controllers/goalController')
+const goalItemController = require('../controllers/goalItemController')
 const AuthMiddleware = require('../middleware/AuthMiddleware')
 const { check } = require('express-validator')
 
@@ -10,33 +10,33 @@ router.use(AuthMiddleware)
 router.post(
     '/:goalId/items',
     check('info', 'Подцель не введена').notEmpty(),
-    goalController.createItem
+    goalItemController.createItem
 )
 
 // Update subgoal status (authorized users)
 router.patch(
     '/:goalId/items/:goalItemId/status', 
     check('status', 'Отсутствует статус подцели').exists(),
-    goalController.changeItemStatus
+    goalItemController.changeItemStatus
 )
 
 // Update subgoal (authorized users)
 router.patch(
     '/:goalId/items/:goalItemId',
     check('info', 'Подцель не введена').notEmpty(),
-    goalController.updateItem
+    goalItemController.updateItem
 )
 
 // Delete subgoal (authorized users)
 router.delete(
     '/:goalId/items/:goalItemId', 
-    goalController.deleteItem
+    goalItemController.deleteItem
 )
 
 // Get subgoals by goal id (authorized users)
 router.get(
     '/:goalId/items', 
-    goalController.getAllItems
+    goalItemController.getAllItems
 )
 
 module.exports = router

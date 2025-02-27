@@ -17,17 +17,7 @@ describe('taskRouter tests', () => {
             request(app).post,
             '/api/task/',
             'Задача не введена',
-            { info: '', userId: 1 },
-            mockUserJwtToken
-        )
-    })
-
-    test('Create task with empty userId, should return 400', async () => {
-        await checkRouteWithInvalidInfo(
-            request(app).post,
-            '/api/task/',
-            'Отсутствует идентификатор пользователя',
-            { info: '' },
+            { info: ''},
             mockUserJwtToken
         )
     })
@@ -37,7 +27,7 @@ describe('taskRouter tests', () => {
             request(app).post,
             '/api/task/',
             '',
-            { info: 'Write documentation', userId: 1 }
+            { info: 'Write documentation' }
         )
     })
 
@@ -46,7 +36,7 @@ describe('taskRouter tests', () => {
             request(app).post,
             '/api/task/',
             'Bearer fakeToken',
-            { info: 'Write documentation', userId: 1 }
+            { info: 'Write documentation' }
         )
     })
 
@@ -54,17 +44,18 @@ describe('taskRouter tests', () => {
         const response = await request(app)
             .post('/api/task/')
             .set('Authorization', `Bearer ${mockUserJwtToken}`)
-            .send({ info: 'Write documentation', userId: 1 })
+            .send({ info: 'Write documentation'})
 
         expect(response.status).toBe(201)
         expect(response.body.task).toEqual(expect.objectContaining({
             info: 'Write documentation',
             status: false,
-            userId: 1
         }))
 
         expect(typeof response.body.task.info).toBe('string')
         expect(typeof response.body.task.status).toBe('boolean')
+
+        expect(response.body.task).toHaveProperty('userId')
         expect(typeof response.body.task.userId).toBe('number')
 
         expect(response.body.task).toHaveProperty('id')
@@ -240,7 +231,7 @@ describe('taskRouter tests', () => {
     test('Get tasks by user which is not authorized, should return 401', async () => {
         await checkRouteWithInvalidToken(
             request(app).get,
-            '/api/task/user/1',
+            '/api/task/user',
             ''
         )
     })
@@ -248,14 +239,14 @@ describe('taskRouter tests', () => {
     test('Get tasks by user with fake token, should return 401', async () => {
         await checkRouteWithInvalidToken(
             request(app).get,
-            '/api/task/user/1',
+            '/api/task/user',
             'Bearer fakeToken'
         )
     })
 
     test('Get tasks with valid data, should return 200', async () => {
         const response = await request(app)
-            .get('/api/task/user/1')
+            .get('/api/task/user')
             .set('Authorization', `Bearer ${mockUserJwtToken}`)
 
         expect(response.status).toBe(200)
