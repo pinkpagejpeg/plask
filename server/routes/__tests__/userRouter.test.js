@@ -487,12 +487,7 @@ describe('userRouter tests', () => {
         expect(typeof response.body.user.updatedAt).toBe('string')
 
         const imagePath = path.resolve(__dirname, '..', 'static', mockUserImg)
-        try {
-            await fs.access(imagePath)
-            throw new Error(`Image ${mockUserImg} still exists`)
-        } catch (err) {
-            expect(err.code).toBe('ENOENT')
-        }
+        await expect(fs.access(imagePath)).rejects.toThrow()
     })
 
     test('Delete user by user which is not authorized, should return 401', async () => {
