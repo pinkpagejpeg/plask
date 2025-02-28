@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
 const { v4: uuidv4 } = require('uuid')
 const path = require('path')
+const fs = require('mz/fs')
 
 const generateJwt = (id, email, role) => {
     return jwt.sign(
@@ -143,6 +144,14 @@ class UserController {
 
             if (!user) {
                 return next(ApiError.notFound('Пользователь не найден'))
+            }
+
+            if (user.img && user.img !== 'user_default_image.jpg') {
+                const imagePath = path.resolve(__dirname, '..', 'static', user.img)
+
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath)
+                }
             }
 
             await user.update({ img: 'user_default_image.jpg' })

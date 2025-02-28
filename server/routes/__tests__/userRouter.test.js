@@ -1,4 +1,5 @@
 const request = require('supertest')
+const path = require('path')
 const fs = require('mz/fs')
 const { jwtDecode } = require('jwt-decode')
 const { app, start, stop } = require('../../index')
@@ -11,7 +12,7 @@ const {
 } = require('./checkRouter')
 
 describe('userRouter tests', () => {
-    let mockUserId, mockUserToken, mockUserPassword
+    let mockUserId, mockUserToken, mockUserPassword, mockUserImg
 
     const filePath = `${__dirname}/test_image.jpg`
 
@@ -426,6 +427,8 @@ describe('userRouter tests', () => {
 
             expect(response.body.user).toHaveProperty('updatedAt')
             expect(typeof response.body.user.updatedAt).toBe('string')
+
+            mockUserImg = response.body.user.img
         } catch (err) {
             throw new Error(`Ошибка при проверке файла: ${err.message}`)
         }
@@ -482,6 +485,14 @@ describe('userRouter tests', () => {
 
         expect(response.body.user).toHaveProperty('updatedAt')
         expect(typeof response.body.user.updatedAt).toBe('string')
+
+        const imagePath = path.resolve(__dirname, '..', 'static', mockUserImg)
+        try {
+            await fs.access(imagePath)
+            throw new Error(`Image ${mockUserImg} still exists`)
+        } catch (err) {
+            expect(err.code).toBe('ENOENT')
+        }
     })
 
     test('Delete user by user which is not authorized, should return 401', async () => {
