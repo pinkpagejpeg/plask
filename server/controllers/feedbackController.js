@@ -1,4 +1,4 @@
-const { Feedback } = require('../models/models')
+const { Feedback, User } = require('../models/models')
 const ApiError = require('../error/ApiError')
 const { validationResult } = require('express-validator')
 
@@ -12,6 +12,11 @@ class FeedbackController {
 
             const { id } = req.user
             const { info } = req.body
+
+            const user = await User.findByPk(id)
+            if (!user) {
+                return next(ApiError.notFound('Пользователь не найден'))
+            }
 
             const feedback = await Feedback.create({ userId: id, info })
             return res.status(201).json({ feedback })

@@ -1,4 +1,4 @@
-const { Goal, Goal_item } = require('../models/models')
+const { Goal, Goal_item, User } = require('../models/models')
 const ApiError = require('../error/ApiError')
 const { validationResult } = require('express-validator')
 
@@ -12,6 +12,11 @@ class GoalController {
 
             const { id } = req.user
             const { info } = req.body
+
+            const user = await User.findByPk(id)
+            if (!user) {
+                return next(ApiError.notFound('Пользователь не найден'))
+            }
 
             const goal = await Goal.create({ userId: id, info })
             return res.status(201).json({ goal })
@@ -31,7 +36,6 @@ class GoalController {
             const { info } = req.body
 
             const goal = await Goal.findByPk(goalId)
-
             if (!goal) {
                 return next(ApiError.notFound('Цель не найдена'))
             }
@@ -69,6 +73,12 @@ class GoalController {
     async getAll(req, res, next) {
         try {
             const { id } = req.user
+            const user = await User.findByPk(id)
+            
+            if (!user) {
+                return next(ApiError.notFound('Пользователь не найден'))
+            }
+            
             const goals = await Goal.findAll({ where: { userId: id }, order: [['createdAt', 'DESC']] })
             return res.json({ goals, count: goals.length })
         } catch (e) {

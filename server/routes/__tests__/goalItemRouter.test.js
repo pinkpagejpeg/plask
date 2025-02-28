@@ -49,6 +49,16 @@ describe('goalRouter tests', () => {
         )
     })
 
+    test('Create subgoal for goal which does not exist, should return 404', async () => {
+        await checkRouteWithNonexistentData(
+            request(app).post,
+            `/api/goal/0/items`,
+            'Цель не найдена',
+            mockUserJwtToken,
+            { info: 'Learn variables' }
+        )
+    })
+
     test('Create subgoal with valid data, should return 201', async () => {
         const response = await request(app)
             .post(`/api/goal/${mockGoalId}/items`)
@@ -262,6 +272,15 @@ describe('goalRouter tests', () => {
             request(app).get,
             `/api/goal/${mockGoalId}/items`,
             'Bearer fakeToken'
+        )
+    })
+
+    test('Get list of subgoals for goal which does not exist, should return 404', async () => {
+        await checkRouteWithNonexistentData(
+            request(app).get,
+            `/api/goal/0/items`,
+            'Цель не найдена',
+            mockUserJwtToken
         )
     })
 

@@ -88,7 +88,6 @@ class UserController {
             const { email, password } = req.body
 
             const user = await User.findByPk(id)
-
             if (!user) {
                 return next(ApiError.notFound('Пользователь не найден'))
             }

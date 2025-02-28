@@ -1,4 +1,4 @@
-const { Task } = require('../models/models')
+const { Task, User } = require('../models/models')
 const ApiError = require('../error/ApiError')
 const { validationResult } = require('express-validator')
 
@@ -12,6 +12,11 @@ class TaskController {
 
             const { id } = req.user
             const { info } = req.body
+
+            const user = await User.findByPk(id)
+            if (!user) {
+                return next(ApiError.notFound('Пользователь не найден'))
+            }
 
             const task = await Task.create({ userId: id, info })
             return res.status(201).json({ task })
@@ -31,7 +36,6 @@ class TaskController {
             const { info } = req.body
 
             const task = await Task.findByPk(taskId)
-
             if (!task) {
                 return next(ApiError.notFound('Задача не найдена'))
             }
@@ -54,7 +58,6 @@ class TaskController {
             const { status } = req.body
 
             const task = await Task.findByPk(taskId)
-
             if (!task) {
                 return next(ApiError.notFound('Задача не найдена'))
             }
@@ -85,6 +88,12 @@ class TaskController {
     async getAll(req, res, next) {
         try {
             const { id } = req.user
+            const user = await User.findByPk(id)
+            
+            if (!user) {
+                return next(ApiError.notFound('Пользователь не найден'))
+            }
+
             const tasks = await Task.findAll({ where: { userId:  id }, order: [['createdAt', 'DESC']] })
             return res.json({ tasks, count: tasks.length })
         } catch (e) {

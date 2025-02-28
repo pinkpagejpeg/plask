@@ -393,13 +393,15 @@ describe('userRouter tests', () => {
             .get('/api/task/user')
             .set('Authorization', `Bearer ${mockUserToken}`)
 
-        expect(tasks.body.count).toBe(0)
+        expect(tasks.status).toBe(404)
+        expect(tasks.body.message).toBe('Пользователь не найден')
 
         const goals = await request(app)
             .get('/api/goal/user')
             .set('Authorization', `Bearer ${mockUserToken}`)
 
-        expect(goals.body.count).toBe(0)
+        expect(goals.status).toBe(404)
+        expect(goals.body.message).toBe('Пользователь не найден')
     })
 
     test('Get feedbacks by user which is not authorized, should return 401', async () => {

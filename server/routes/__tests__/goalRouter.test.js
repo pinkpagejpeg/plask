@@ -2,6 +2,7 @@ const request = require('supertest')
 const { app, start, stop } = require('../../index')
 const {
     mockUserJwtToken,
+    mockFakeUserJwtToken,
     checkRouteWithInvalidInfo,
     checkRouteWithInvalidToken,
     checkRouteWithNonexistentData,
@@ -36,6 +37,16 @@ describe('goalRouter tests', () => {
             request(app).post,
             '/api/goal/',
             'Bearer fakeToken',
+            { info: 'Learn JavaScript' }
+        )
+    })
+
+    test('Create goal by user which does not exist, should return 404', async () => {
+        await checkRouteWithNonexistentData(
+            request(app).post,
+            '/api/goal/',
+            'Пользователь не найден',
+            mockFakeUserJwtToken,
             { info: 'Learn JavaScript' }
         )
     })
@@ -229,6 +240,15 @@ describe('goalRouter tests', () => {
             'Bearer fakeToken'
         )
     })
+
+    test('Get list of goals by user which does not exist, should return 404', async () => {
+            await checkRouteWithNonexistentData(
+                request(app).get,
+                '/api/goal/user',
+                'Пользователь не найден',
+                mockFakeUserJwtToken
+            )
+        })
 
     test('Get list of goals with valid data, should return 200', async () => {
         const response = await request(app)

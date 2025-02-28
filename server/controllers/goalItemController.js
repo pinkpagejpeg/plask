@@ -1,4 +1,4 @@
-const { Goal_item } = require('../models/models')
+const { Goal_item, Goal } = require('../models/models')
 const ApiError = require('../error/ApiError')
 const { validationResult } = require('express-validator')
 
@@ -12,6 +12,11 @@ class GoalController {
 
             const { goalId } = req.params
             const { info } = req.body
+
+            const goal = await Goal.findByPk(goalId)
+            if (!goal) {
+                return next(ApiError.notFound('Цель не найдена'))
+            }
 
             const goalItem = await Goal_item.create({ goalId, info })
             return res.status(201).json({ goalItem })
@@ -31,7 +36,6 @@ class GoalController {
             const { info } = req.body
 
             const goalItem = await Goal_item.findByPk(goalItemId)
-
             if (!goalItem) {
                 return next(ApiError.notFound('Подцель не найдена'))
             }
@@ -54,7 +58,6 @@ class GoalController {
             const { status } = req.body
 
             const goalItem = await Goal_item.findByPk(goalItemId)
-
             if (!goalItem) {
                 return next(ApiError.notFound('Подцель не найдена'))
             }
@@ -69,6 +72,12 @@ class GoalController {
     async getAllItems(req, res, next) {
         try {
             const { goalId } = req.params
+            const goal = await Goal.findByPk(goalId)
+
+            if (!goal) {
+                return next(ApiError.notFound('Цель не найдена'))
+            }
+            
             const goalItems = await Goal_item.findAll({ where: { goalId }, order: [['createdAt', 'DESC']] })
             return res.json({ goalItems, count: goalItems.length })
         } catch (e) {

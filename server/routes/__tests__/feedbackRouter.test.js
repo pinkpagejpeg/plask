@@ -2,8 +2,10 @@ const { app, start, stop } = require('../../index')
 const request = require('supertest')
 const {
     mockUserJwtToken,
+    mockFakeUserJwtToken,
     checkRouteWithInvalidInfo,
     checkRouteWithInvalidToken,
+    checkRouteWithNonexistentData
 } = require('./checkRouter')
 
 describe('feedbackRouter tests', () => {
@@ -33,6 +35,16 @@ describe('feedbackRouter tests', () => {
             request(app).post,
             '/api/feedback/',
             'Bearer fakeToken',
+            { info: 'Great app!' }
+        )
+    })
+
+    test('Create feedback by user which does not exist, should return 404', async () => {
+        await checkRouteWithNonexistentData(
+            request(app).post,
+            '/api/feedback/',
+            'Пользователь не найден',
+            mockFakeUserJwtToken,
             { info: 'Great app!' }
         )
     })

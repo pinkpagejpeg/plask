@@ -2,6 +2,7 @@ const { app, start, stop } = require('../../index')
 const request = require('supertest')
 const {
     mockUserJwtToken,
+    mockFakeUserJwtToken,
     checkRouteWithInvalidInfo,
     checkRouteWithInvalidToken,
     checkRouteWithNonexistentData,
@@ -36,6 +37,16 @@ describe('taskRouter tests', () => {
             request(app).post,
             '/api/task/',
             'Bearer fakeToken',
+            { info: 'Write documentation' }
+        )
+    })
+
+    test('Create task by user which does not exist, should return 404', async () => {
+        await checkRouteWithNonexistentData(
+            request(app).post,
+            '/api/task/',
+            'Пользователь не найден',
+            mockFakeUserJwtToken,
             { info: 'Write documentation' }
         )
     })
@@ -241,6 +252,15 @@ describe('taskRouter tests', () => {
             request(app).get,
             '/api/task/user',
             'Bearer fakeToken'
+        )
+    })
+
+    test('Get tasks by user which does not exist, should return 404', async () => {
+        await checkRouteWithNonexistentData(
+            request(app).get,
+            '/api/task/user',
+            'Пользователь не найден',
+            mockFakeUserJwtToken
         )
     })
 
