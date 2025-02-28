@@ -11,7 +11,7 @@ const {
 } = require('./checkRouter')
 
 describe('userRouter tests', () => {
-    let mockUserId, mockUserPassword, mockFeedbackId
+    let mockUserId, mockUserPassword, mockFeedbackId, mockUserToken
 
     beforeAll(async () => {
         await start()
@@ -104,6 +104,7 @@ describe('userRouter tests', () => {
         expect(decoded).toHaveProperty('iat')
 
         mockUserId = decoded.id
+        mockUserToken = response.body.token
     })
 
     test('Create user with another candidate, should return 400', async () => {
@@ -380,6 +381,25 @@ describe('userRouter tests', () => {
 
         expect(response.status).toBe(200)
         expect(response.body.deletedUserId).toBe(mockUserId)
+
+        const feedbacks = await request(app)
+            .get('/api/admin/feedbacks')
+            .set('Authorization', `Bearer ${mockAdminJwtToken}`)
+
+        const userFeedbacks = feedbacks.body.feedbacks.filter((item) => item.userId === mockUserId)
+        expect(userFeedbacks.length).toBe(0)
+
+        const tasks = await request(app)
+            .get('/api/task/user')
+            .set('Authorization', `Bearer ${mockUserToken}`)
+
+        expect(tasks.body.count).toBe(0)
+
+        const goals = await request(app)
+            .get('/api/goal/user')
+            .set('Authorization', `Bearer ${mockUserToken}`)
+
+        expect(goals.body.count).toBe(0)
     })
 
     test('Get feedbacks by user which is not authorized, should return 401', async () => {

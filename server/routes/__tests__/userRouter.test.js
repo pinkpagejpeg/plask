@@ -4,6 +4,7 @@ const { jwtDecode } = require('jwt-decode')
 const { app, start, stop } = require('../../index')
 const {
     mockFakeUserJwtToken,
+    mockAdminJwtToken,
     checkRouteWithInvalidInfo,
     checkRouteWithInvalidToken,
     checkRouteWithNonexistentData
@@ -515,6 +516,25 @@ describe('userRouter tests', () => {
 
         expect(response.status).toBe(200)
         expect(response.body.deletedUserId).toBe(mockUserId)
+
+        const feedbacks = await request(app)
+            .get('/api/admin/feedbacks')
+            .set('Authorization', `Bearer ${mockAdminJwtToken}`)
+
+        const userFeedbacks = feedbacks.body.feedbacks.filter((item) => item.userId === mockUserId)
+        expect(userFeedbacks.length).toBe(0)
+
+        const tasks = await request(app)
+            .get('/api/task/user')
+            .set('Authorization', `Bearer ${mockUserToken}`)
+
+        expect(tasks.body.count).toBe(0)
+
+        const goals = await request(app)
+            .get('/api/goal/user')
+            .set('Authorization', `Bearer ${mockUserToken}`)
+
+        expect(goals.body.count).toBe(0)
     })
 
     afterEach(() => jest.clearAllMocks())
