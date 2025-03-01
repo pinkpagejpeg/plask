@@ -1,5 +1,6 @@
 const { Goal_item, Goal } = require('../models/models')
 const ApiError = require('../error/ApiError')
+const formatErrorMessages = require('../error/formatErrorMessages')
 const { validationResult } = require('express-validator')
 
 class GoalController {
@@ -7,7 +8,9 @@ class GoalController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+                return next(ApiError.badRequest(
+                    `Введены некорректные данные: ${formatErrorMessages(errors.array().map(error => error.msg))}`
+                ))
             }
 
             const { goalId } = req.params
@@ -29,7 +32,9 @@ class GoalController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+                return next(ApiError.badRequest(
+                    `Введены некорректные данные: ${formatErrorMessages(errors.array().map(error => error.msg))}`
+                ))
             }
 
             const { goalItemId } = req.params
@@ -51,7 +56,9 @@ class GoalController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+                return next(ApiError.badRequest(
+                    `Введены некорректные данные: ${formatErrorMessages(errors.array().map(error => error.msg))}`
+                ))
             }
 
             const { goalItemId } = req.params
@@ -77,7 +84,7 @@ class GoalController {
             if (!goal) {
                 return next(ApiError.notFound('Цель не найдена'))
             }
-            
+
             const goalItems = await Goal_item.findAll({ where: { goalId }, order: [['createdAt', 'DESC']] })
             return res.json({ goalItems, count: goalItems.length })
         } catch (e) {

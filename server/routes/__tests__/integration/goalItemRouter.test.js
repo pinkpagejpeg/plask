@@ -1,5 +1,5 @@
 const request = require('supertest')
-const { app, start, stop } = require('../../index')
+const { app, start, stop } = require('../../../index')
 const {
     mockUserJwtToken,
     checkRouteWithInvalidInfo,
@@ -25,7 +25,7 @@ describe('goalRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).post,
             `/api/goal/${mockGoalId}/items`,
-            'Подцель не введена',
+            'Введены некорректные данные: подцель не введена',
             { info: '' },
             mockUserJwtToken
         )
@@ -92,7 +92,7 @@ describe('goalRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).patch,
             `/api/goal/${mockGoalId}/items/${mockGoalItemId}`,
-            'Подцель не введена',
+            'Введены некорректные данные: подцель не введена',
             { info: '' },
             mockUserJwtToken
         )
@@ -157,7 +157,7 @@ describe('goalRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).patch,
             `/api/goal/${mockGoalId}/items/${mockGoalItemId}/status`,
-            'Отсутствует статус подцели',
+            'Введены некорректные данные: отсутствует статус подцели',
             {},
             mockUserJwtToken
         )

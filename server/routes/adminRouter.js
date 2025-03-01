@@ -11,9 +11,9 @@ router.use(checkRoleMiddleware('ADMIN'))
 router.post(
     '/users',
     [
-        check('email', 'Email пользователя не заполнен').notEmpty(),
-        check('role', 'Роль пользователя не заполнена').notEmpty(),
-        check('password', 'Длина пароля должна составлять от 6 до 12 символов').isLength({ min: 6, max: 12 })
+        check('email', 'email пользователя не заполнен').notEmpty(),
+        check('role', 'роль пользователя не заполнена').notEmpty(),
+        check('password', 'длина пароля должна составлять от 6 до 12 символов').isLength({ min: 6, max: 12 })
     ],
     adminController.create
 )
@@ -22,8 +22,8 @@ router.post(
 router.patch(
     '/users/:userId', 
     [
-        check('email', 'Email пользователя не заполнен').notEmpty(),
-        check('role', 'Роль пользователя не заполнена').notEmpty(),
+        check('email', 'email пользователя не заполнен').notEmpty(),
+        check('role', 'роль пользователя не заполнена').notEmpty(),
     ],
     adminController.update
 )
@@ -50,7 +50,7 @@ router.get(
 // Update feedback status (admins only)
 router.patch(
     '/feedbacks/:feedbackId',
-    check('status', 'Отсутствует статус обратной связи').exists(),
+    check('status', 'отсутствует статус обратной связи').exists(),
     adminController.changeStatus
 )
 

@@ -15,14 +15,14 @@ router.get(
 // Add goal (authorized users)
 router.post(
     '/',
-    check('info', 'Цель не введена').notEmpty(),
+    check('info', 'цель не введена').notEmpty(),
     goalController.create
 )
 
 // Update goal (authorized users)
 router.patch(
     '/:goalId',
-    check('info', 'Цель не введена').notEmpty(),
+    check('info', 'цель не введена').notEmpty(),
     goalController.update
 )
 

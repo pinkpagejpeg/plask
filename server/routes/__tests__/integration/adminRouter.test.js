@@ -1,6 +1,6 @@
 const request = require('supertest')
 const { jwtDecode } = require('jwt-decode')
-const { app, start, stop } = require('../../index')
+const { app, start, stop } = require('../../../index')
 const {
     mockAdminJwtToken,
     mockUserJwtToken,
@@ -31,7 +31,7 @@ describe('userRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/admin/users',
-            'Введены некорректные данные: Email пользователя не заполнен',
+            'Введены некорректные данные: email пользователя не заполнен',
             { email: '', password: '12345678', role: 'ADMIN' },
             mockAdminJwtToken
         )
@@ -41,18 +41,28 @@ describe('userRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/admin/users',
-            'Введены некорректные данные: Роль пользователя не заполнена',
+            'Введены некорректные данные: роль пользователя не заполнена',
             { email: 'admin1@example.com', password: '12345678', role: '' },
             mockAdminJwtToken
         )
     })
 
-    test('Create user with empty password, should return 400', async () => {
+    test('Create user with invalid password, should return 400', async () => {
         await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/admin/users',
-            'Введены некорректные данные: Длина пароля должна составлять от 6 до 12 символов',
+            'Введены некорректные данные: длина пароля должна составлять от 6 до 12 символов',
             { email: 'admin1@example.com', password: '12345', role: 'ADMIN' },
+            mockAdminJwtToken
+        )
+    })
+
+    test('Create user with invalid password, role and email, should return 400', async () => {
+        await checkRouteWithInvalidInfo(
+            request(app).post,
+            '/api/admin/users',
+            'Введены некорректные данные: email пользователя не заполнен, роль пользователя не заполнена и длина пароля должна составлять от 6 до 12 символов',
+            { email: '', password: '12345', role: '' },
             mockAdminJwtToken
         )
     })
@@ -177,7 +187,7 @@ describe('userRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).patch,
             `/api/admin/users/${mockUserId}`,
-            'Введены некорректные данные: Email пользователя не заполнен',
+            'Введены некорректные данные: email пользователя не заполнен',
             { email: '', password: '', role: 'ADMIN' },
             mockAdminJwtToken
         )
@@ -187,8 +197,18 @@ describe('userRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).patch,
             `/api/admin/users/${mockUserId}`,
-            'Введены некорректные данные: Роль пользователя не заполнена',
+            'Введены некорректные данные: роль пользователя не заполнена',
             { email: 'admin1@example.com', password: '', role: '' },
+            mockAdminJwtToken
+        )
+    })
+
+    test('Update user with empty email and role, should return 400', async () => {
+        await checkRouteWithInvalidInfo(
+            request(app).patch,
+            `/api/admin/users/${mockUserId}`,
+            'Введены некорректные данные: email пользователя не заполнен и роль пользователя не заполнена',
+            { email: '', password: '', role: '' },
             mockAdminJwtToken
         )
     })
@@ -197,7 +217,7 @@ describe('userRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).patch,
             `/api/admin/users/${mockUserId}`,
-            'Введены некорректные данные: Длина пароля должна составлять от 6 до 12 символов',
+            'Введены некорректные данные: длина пароля должна составлять от 6 до 12 символов',
             { email: 'user1@example.com', password: '12345', role: 'ADMIN' },
             mockAdminJwtToken
         )
@@ -477,7 +497,7 @@ describe('userRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).patch,
             `/api/admin/feedbacks/${mockFeedbackId}`,
-            'Отсутствует статус обратной связи',
+            'Введены некорректные данные: отсутствует статус обратной связи',
             {},
             mockAdminJwtToken
         )

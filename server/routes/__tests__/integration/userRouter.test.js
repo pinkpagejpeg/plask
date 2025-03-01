@@ -2,7 +2,7 @@ const request = require('supertest')
 const path = require('path')
 const fs = require('mz/fs')
 const { jwtDecode } = require('jwt-decode')
-const { app, start, stop } = require('../../index')
+const { app, start, stop } = require('../../../index')
 const {
     mockFakeUserJwtToken,
     mockAdminJwtToken,
@@ -22,7 +22,7 @@ describe('userRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/user/registration',
-            'Введены некорректные данные: Email пользователя не заполнен',
+            'Введены некорректные данные: email пользователя не заполнен',
             { email: '', password: '12345678', role: 'USER', hcaptchaToken: '123' }
         )
     })
@@ -31,8 +31,17 @@ describe('userRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/user/registration',
-            'Введены некорректные данные: Длина пароля должна составлять от 6 до 12 символов',
+            'Введены некорректные данные: длина пароля должна составлять от 6 до 12 символов',
             { email: 'user1@example.com', password: '12345', role: 'USER', hcaptchaToken: '123' }
+        )
+    })
+
+    test('User registration with invalid password and email, should return 400', async () => {
+        await checkRouteWithInvalidInfo(
+            request(app).post,
+            '/api/user/registration',
+            'Введены некорректные данные: email пользователя не заполнен и длина пароля должна составлять от 6 до 12 символов',
+            { email: '', password: '12345', role: 'USER', hcaptchaToken: '123' }
         )
     })
 
@@ -86,17 +95,26 @@ describe('userRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/user/login',
-            'Введены некорректные данные: Email пользователя не заполнен',
+            'Введены некорректные данные: email пользователя не заполнен',
             { email: '', password: '12345678', hcaptchaToken: '123' }
         )
     })
 
-    test('User login with empty password, should return 400', async () => {
+    test('User login with invalid password, should return 400', async () => {
         await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/user/login',
-            'Введены некорректные данные: Длина пароля должна составлять от 6 до 12 символов',
+            'Введены некорректные данные: длина пароля должна составлять от 6 до 12 символов',
             { email: 'user1@example.com', password: '12345', hcaptchaToken: '123' }
+        )
+    })
+
+    test('User login with invalid password and email, should return 400', async () => {
+        await checkRouteWithInvalidInfo(
+            request(app).post,
+            '/api/user/login',
+            'Введены некорректные данные: email пользователя не заполнен и длина пароля должна составлять от 6 до 12 символов',
+            { email: '', password: '12345', hcaptchaToken: '123' }
         )
     })
 
@@ -239,7 +257,7 @@ describe('userRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).patch,
             '/api/user/info',
-            'Введены некорректные данные: Email пользователя не заполнен',
+            'Введены некорректные данные: email пользователя не заполнен',
             { email: '', password: '' },
             mockUserToken
         )
@@ -249,7 +267,7 @@ describe('userRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).patch,
             '/api/user/info',
-            'Введены некорректные данные: Длина пароля должна составлять от 6 до 12 символов',
+            'Введены некорректные данные: длина пароля должна составлять от 6 до 12 символов',
             { email: 'user1@example.com', password: '12345' },
             mockUserToken
         )

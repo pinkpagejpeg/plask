@@ -1,4 +1,4 @@
-const { app, start, stop } = require('../../index')
+const { app, start, stop } = require('../../../index')
 const request = require('supertest')
 const {
     mockUserJwtToken,
@@ -15,7 +15,7 @@ describe('feedbackRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/feedback/',
-            'Сообщение не введено',
+            'Введены некорректные данные: сообщение не введено',
             { info: '' },
             mockUserJwtToken
         )

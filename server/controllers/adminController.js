@@ -2,6 +2,7 @@ const { Feedback, Task, Goal, Goal_item, User } = require('../models/models')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const ApiError = require('../error/ApiError')
+const formatErrorMessages = require('../error/formatErrorMessages')
 const { validationResult } = require('express-validator')
 
 const generateJwt = (id, email, role) => {
@@ -13,12 +14,14 @@ const generateJwt = (id, email, role) => {
 }
 
 class AdminController {
+    // Users
     async create(req, res, next) {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                const errorMessages = errors.array().map(error => error.msg)
-                return next(ApiError.badRequest(`Введены некорректные данные: ${errorMessages}`))
+                return next(ApiError.badRequest(
+                    `Введены некорректные данные: ${formatErrorMessages(errors.array().map(error => error.msg))}`
+                ))
             }
 
             const { email, password, role } = req.body
@@ -42,8 +45,9 @@ class AdminController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                const errorMessages = errors.array().map(error => error.msg)
-                return next(ApiError.badRequest(`Введены некорректные данные: ${errorMessages}`))
+                return next(ApiError.badRequest(
+                    `Введены некорректные данные: ${formatErrorMessages(errors.array().map(error => error.msg))}`
+                ))
             }
 
             const { userId } = req.params
@@ -57,7 +61,7 @@ class AdminController {
 
             if (password) {
                 if (password.length < 6 || password.length > 12) {
-                    return next(ApiError.badRequest('Введены некорректные данные: Длина пароля должна составлять от 6 до 12 символов'))
+                    return next(ApiError.badRequest('Введены некорректные данные: длина пароля должна составлять от 6 до 12 символов'))
                 }
 
                 const hashPassword = await bcrypt.hash(password, 5)
@@ -127,11 +131,14 @@ class AdminController {
         }
     }
 
+    // Feedbacks
     async changeStatus(req, res, next) {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+                return next(ApiError.badRequest(
+                    `Введены некорректные данные: ${formatErrorMessages(errors.array().map(error => error.msg))}`
+                ))
             }
 
             const { feedbackId } = req.params

@@ -1,5 +1,5 @@
 const request = require('supertest')
-const { app, start, stop } = require('../../index')
+const { app, start, stop } = require('../../../index')
 const {
     mockUserJwtToken,
     mockFakeUserJwtToken,
@@ -17,7 +17,7 @@ describe('goalRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/goal/',
-            'Цель не введена',
+            'Введены некорректные данные: цель не введена',
             { info: '' },
             mockUserJwtToken
         )
@@ -117,7 +117,7 @@ describe('goalRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).patch,
             `/api/goal/${mockGoalId}`,
-            'Цель не введена',
+            'Введены некорректные данные: цель не введена',
             { info: '' },
             mockUserJwtToken
         )

@@ -1,4 +1,5 @@
 const ApiError = require('../error/ApiError')
+const formatErrorMessages = require('../error/formatErrorMessages')
 const { User, Feedback, Task, Goal, Goal_item } = require('../models/models')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -20,8 +21,9 @@ class UserController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                const errorMessages = errors.array().map(error => error.msg)
-                return next(ApiError.badRequest(`Введены некорректные данные: ${errorMessages}`))
+                return next(ApiError.badRequest(
+                    `Введены некорректные данные: ${formatErrorMessages(errors.array().map(error => error.msg))}`
+                ))
             }
 
             const { email, password, role } = req.body
@@ -45,8 +47,9 @@ class UserController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                const errorMessages = errors.array().map(error => error.msg)
-                return next(ApiError.badRequest(`Введены некорректные данные: ${errorMessages}`))
+                return next(ApiError.badRequest(
+                    `Введены некорректные данные: ${formatErrorMessages(errors.array().map(error => error.msg))}`
+                ))
             }
 
             const { email, password } = req.body
@@ -80,8 +83,9 @@ class UserController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                const errorMessages = errors.array().map(error => error.msg)
-                return next(ApiError.badRequest(`Введены некорректные данные: ${errorMessages}`))
+                return next(ApiError.badRequest(
+                    `Введены некорректные данные: ${formatErrorMessages(errors.array().map(error => error.msg))}`
+                ))
             }
 
             const { id } = req.user
@@ -94,7 +98,7 @@ class UserController {
 
             if (password) {
                 if (password.length < 6 || password.length > 12) {
-                    return next(ApiError.badRequest('Введены некорректные данные: Длина пароля должна составлять от 6 до 12 символов'));
+                    return next(ApiError.badRequest('Введены некорректные данные: длина пароля должна составлять от 6 до 12 символов'));
                 }
 
                 const hashPassword = await bcrypt.hash(password, 5)

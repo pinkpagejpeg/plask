@@ -10,8 +10,8 @@ const router = new Router()
 router.post(
     '/registration',
     [
-        check('email', 'Email пользователя не заполнен').notEmpty(),
-        check('password', 'Длина пароля должна составлять от 6 до 12 символов').isLength({ min: 6, max: 12 }),
+        check('email', 'email пользователя не заполнен').notEmpty(),
+        check('password', 'длина пароля должна составлять от 6 до 12 символов').isLength({ min: 6, max: 12 }),
     ],
     CaptchaMiddleware,
     userController.registration
@@ -21,8 +21,8 @@ router.post(
 router.post(
     '/login',
     [
-        check('email', 'Email пользователя не заполнен').notEmpty(),
-        check('password', 'Длина пароля должна составлять от 6 до 12 символов').isLength({ min: 6, max: 12 })
+        check('email', 'email пользователя не заполнен').notEmpty(),
+        check('password', 'длина пароля должна составлять от 6 до 12 символов').isLength({ min: 6, max: 12 })
     ],
     CaptchaMiddleware,
     userController.login
@@ -45,7 +45,7 @@ router.get(
 // Update user info (authorized users)
 router.patch(
     '/info', 
-    check('email', 'Email пользователя не заполнен').notEmpty(),
+    check('email', 'email пользователя не заполнен').notEmpty(),
     AuthMiddleware, 
     userController.updateInfo
 )

@@ -1,5 +1,6 @@
 const { Feedback, User } = require('../models/models')
 const ApiError = require('../error/ApiError')
+const formatErrorMessages = require('../error/formatErrorMessages')
 const { validationResult } = require('express-validator')
 
 class FeedbackController {
@@ -7,7 +8,9 @@ class FeedbackController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+                return next(ApiError.badRequest(
+                    `Введены некорректные данные: ${formatErrorMessages(errors.array().map(error => error.msg))}`
+                ))
             }
 
             const { id } = req.user

@@ -9,21 +9,21 @@ router.use(AuthMiddleware)
 // Add subgoal (authorized users)
 router.post(
     '/:goalId/items',
-    check('info', 'Подцель не введена').notEmpty(),
+    check('info', 'подцель не введена').notEmpty(),
     goalItemController.createItem
 )
 
 // Update subgoal status (authorized users)
 router.patch(
     '/:goalId/items/:goalItemId/status', 
-    check('status', 'Отсутствует статус подцели').exists(),
+    check('status', 'отсутствует статус подцели').exists(),
     goalItemController.changeItemStatus
 )
 
 // Update subgoal (authorized users)
 router.patch(
     '/:goalId/items/:goalItemId',
-    check('info', 'Подцель не введена').notEmpty(),
+    check('info', 'подцель не введена').notEmpty(),
     goalItemController.updateItem
 )
 

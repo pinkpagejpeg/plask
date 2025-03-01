@@ -1,4 +1,4 @@
-const { app, start, stop } = require('../../index')
+const { app, start, stop } = require('../../../index')
 const request = require('supertest')
 const {
     mockUserJwtToken,
@@ -17,7 +17,7 @@ describe('taskRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).post,
             '/api/task/',
-            'Задача не введена',
+            'Введены некорректные данные: задача не введена',
             { info: ''},
             mockUserJwtToken
         )
@@ -85,7 +85,7 @@ describe('taskRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).patch,
             `/api/task/${mockTaskId}`,
-            'Задача не введена',
+            'Введены некорректные данные: задача не введена',
             { info: '' },
             mockUserJwtToken
         )
@@ -151,7 +151,7 @@ describe('taskRouter tests', () => {
         await checkRouteWithInvalidInfo(
             request(app).patch,
             `/api/task/${mockTaskId}/status`,
-            'Отсутствует статус задачи',
+            'Введены некорректные данные: отсутствует статус задачи',
             {},
             mockUserJwtToken
         )

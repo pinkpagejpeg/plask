@@ -1,5 +1,6 @@
 const { Goal, Goal_item, User } = require('../models/models')
 const ApiError = require('../error/ApiError')
+const formatErrorMessages = require('../error/formatErrorMessages')
 const { validationResult } = require('express-validator')
 
 class GoalController {
@@ -7,7 +8,9 @@ class GoalController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+                return next(ApiError.badRequest(
+                    `Введены некорректные данные: ${formatErrorMessages(errors.array().map(error => error.msg))}`
+                ))
             }
 
             const { id } = req.user
@@ -29,7 +32,9 @@ class GoalController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: errors.array().map(error => error.msg) });
+                return next(ApiError.badRequest(
+                    `Введены некорректные данные: ${formatErrorMessages(errors.array().map(error => error.msg))}`
+                ))
             }
 
             const { goalId } = req.params
@@ -74,11 +79,11 @@ class GoalController {
         try {
             const { id } = req.user
             const user = await User.findByPk(id)
-            
+
             if (!user) {
                 return next(ApiError.notFound('Пользователь не найден'))
             }
-            
+
             const goals = await Goal.findAll({ where: { userId: id }, order: [['createdAt', 'DESC']] })
             return res.json({ goals, count: goals.length })
         } catch (e) {
