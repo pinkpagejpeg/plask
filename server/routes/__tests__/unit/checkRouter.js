@@ -85,8 +85,38 @@ const checkRouteWithInvalidToken = async (
     expect(handler).not.toHaveBeenCalled()
 }
 
+const checkRouteWithNonexistentData = async (
+    method,
+    route,
+    handler,
+    message,
+    token,
+    responseArgs
+) => {
+    handler.mockImplementation((req, res, next) => {
+        return next(ApiError.notFound(message))
+    })
+
+    let request = method(route)
+
+    if (token) {
+        request.set('Authorization', `Bearer ${token}`)
+    }
+
+    if (responseArgs) {
+        request.send(responseArgs)
+    }
+
+    const response = await request
+
+    expect(response.status).toBe(404)
+    expect(response.body.message).toBe(message)
+    expect(handler).toHaveBeenCalledTimes(1)
+}
+
 module.exports = {
     checkRouteWithInvalidInfo,
     checkRouteWithoutToken,
-    checkRouteWithInvalidToken
+    checkRouteWithInvalidToken,
+    checkRouteWithNonexistentData
 }
