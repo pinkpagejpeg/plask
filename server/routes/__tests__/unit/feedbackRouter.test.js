@@ -3,7 +3,7 @@ const express = require('express')
 const feedbackController = require('../../../controllers/feedbackController')
 const errorHandler = require('../../../middleware/ErrorHandlingMiddleware')
 const feedbackRouter = require('../../feedbackRouter')
-const { mockUserJwtToken, mockFakeUserJwtToken } = require('../__mocks__/jwtTokenMocks')
+const { mockUserJwtToken, mockFakeUserJwtToken } = require('@mocks/jwtTokenMocks')
 const {
     checkRouteWithInvalidInfo, checkRouteWithoutToken,
     checkRouteWithInvalidToken, checkRouteWithNonexistentData

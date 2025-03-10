@@ -3,7 +3,7 @@ const path = require('path')
 const fs = require('mz/fs')
 const { jwtDecode } = require('jwt-decode')
 const { app, start, stop } = require('../../../index')
-const { mockAdminJwtToken, mockFakeUserJwtToken } = require('../__mocks__/jwtTokenMocks')
+const { mockAdminJwtToken, mockFakeUserJwtToken } = require('@mocks/jwtTokenMocks')
 const {
     checkRouteWithInvalidInfo,
     checkRouteWithInvalidToken,

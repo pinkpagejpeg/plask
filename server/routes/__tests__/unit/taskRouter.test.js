@@ -3,7 +3,7 @@ const express = require('express')
 const taskController = require('../../../controllers/taskController')
 const errorHandler = require('../../../middleware/ErrorHandlingMiddleware')
 const taskRouter = require('../../taskRouter')
-const { mockUserJwtToken, mockFakeUserJwtToken } = require('../__mocks__/jwtTokenMocks')
+const { mockUserJwtToken, mockFakeUserJwtToken } = require('@mocks/jwtTokenMocks')
 const { checkRouteWithInvalidInfo, checkRouteWithoutToken,
     checkRouteWithInvalidToken, checkRouteWithNonexistentData } = require('./checkRouter')
 

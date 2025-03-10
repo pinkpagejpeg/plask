@@ -1,4 +1,4 @@
-const { mockUserJwtToken } = require('../__mocks__/jwtTokenMocks')
+const { mockUserJwtToken } = require('@mocks/jwtTokenMocks')
 
 const checkRouteWithInvalidInfo = async (
     method,

@@ -5,5 +5,8 @@ module.exports = {
         '<rootDir>/routes/__tests__/integration/checkRouter.js',
         '<rootDir>/routes/__tests__/unit/checkRouter.js',
     ],
-    setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
+    setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+    moduleNameMapper: {
+        "^@mocks/(.*)$": "<rootDir>/routes/__tests__/__mocks__/$1"
+    }
 }
