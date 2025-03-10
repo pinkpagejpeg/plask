@@ -1,9 +1,8 @@
 const request = require('supertest')
 const { jwtDecode } = require('jwt-decode')
 const { app, start, stop } = require('../../../index')
+const { mockAdminJwtToken, mockUserJwtToken } = require('../__mocks__/jwtTokenMocks')
 const {
-    mockAdminJwtToken,
-    mockUserJwtToken,
     checkRouteWithInvalidInfo,
     checkRouteWithInvalidToken,
     checkRouteWithoutAdminRights,

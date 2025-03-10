@@ -1,7 +1,7 @@
 const request = require('supertest')
 const { app, start, stop } = require('../../../index')
+const { mockUserJwtToken } = require('../__mocks__/jwtTokenMocks')
 const {
-    mockUserJwtToken,
     checkRouteWithInvalidInfo,
     checkRouteWithInvalidToken,
     checkRouteWithNonexistentData,

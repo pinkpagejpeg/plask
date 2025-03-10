@@ -2,8 +2,8 @@ const request = require('supertest')
 const express = require('express')
 const taskController = require('../../../controllers/taskController')
 const errorHandler = require('../../../middleware/ErrorHandlingMiddleware')
-const { mockUserJwtToken, mockFakeUserJwtToken } = require('../integration/checkRouter')
 const taskRouter = require('../../taskRouter')
+const { mockUserJwtToken, mockFakeUserJwtToken } = require('../__mocks__/jwtTokenMocks')
 const { checkRouteWithInvalidInfo, checkRouteWithoutToken,
     checkRouteWithInvalidToken, checkRouteWithNonexistentData } = require('./checkRouter')
 
