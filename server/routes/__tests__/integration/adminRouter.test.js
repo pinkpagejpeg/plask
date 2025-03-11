@@ -9,7 +9,7 @@ const {
     checkRouteWithNonexistentData
 } = require('./checkRouter')
 
-describe('userRouter tests', () => {
+describe('adminRouter tests', () => {
     let mockUserId, mockUserPassword, mockFeedbackId, mockUserToken
 
     beforeAll(async () => {
@@ -377,7 +377,7 @@ describe('userRouter tests', () => {
         )
     })
 
-    test('Delete user by admin which is not admin, should return 403', async () => {
+    test('Delete user by user which is not admin, should return 403', async () => {
         await checkRouteWithoutAdminRights(
             request(app).delete,
             `/api/admin/users/${mockUserId}`

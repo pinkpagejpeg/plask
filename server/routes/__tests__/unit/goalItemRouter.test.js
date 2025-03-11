@@ -4,8 +4,7 @@ const goalItemController = require('../../../controllers/goalItemController')
 const errorHandler = require('../../../middleware/ErrorHandlingMiddleware')
 const goalItemRouter = require('../../goalItemRouter')
 const { mockUserJwtToken } = require('@mocks/jwtTokenMocks')
-const { checkRouteWithInvalidInfo, checkRouteWithoutToken,
-    checkRouteWithInvalidToken, checkRouteWithNonexistentData } = require('./checkRouter')
+const { checkRouteWithInvalidInfo, checkRouteWithInvalidToken, checkRouteWithNonexistentData } = require('./checkRouter')
 
 jest.mock('../../../controllers/goalItemController', () => ({
     createItem: jest.fn(),
@@ -17,13 +16,20 @@ jest.mock('../../../controllers/goalItemController', () => ({
 
 jest.mock('../../../middleware/AuthMiddleware', () => {
     const ApiError = require('../../../error/ApiError')
+    const jwt = require('jsonwebtoken')
     return jest.fn((req, res, next) => {
         const token = req.headers.authorization.split(' ')[1]
         if (!token) {
             return next(ApiError.unauthorized('Пользователь не авторизован'))
         }
-        req.user = { id: 19, email: 'user@example.com', role: 'USER' }
-        next()
+        try {
+            const decoded = jwt.verify(token, process.env.SECRET_KEY)
+            req.user = decoded
+            next()
+        }
+        catch {
+            return next(ApiError.unauthorized('Пользователь не авторизован'))
+        }
     })
 })
 
@@ -104,10 +110,11 @@ describe('goalItemRouter unit tests', () => {
     })
 
     test('Create subgoal by user which is not authorized, should return 401', async () => {
-        await checkRouteWithoutToken(
+        await checkRouteWithInvalidToken(
             request(app).post,
             '/api/goal/1/items',
             goalItemController.createItem,
+            '',
             { info: 'Add unit test' }
         )
     })
@@ -117,6 +124,7 @@ describe('goalItemRouter unit tests', () => {
             request(app).post,
             '/api/goal/1/items',
             goalItemController.createItem,
+            'Bearer fakeToken',
             { info: 'Add unit test' }
         )
     })
@@ -161,10 +169,11 @@ describe('goalItemRouter unit tests', () => {
     })
 
     test('Update subgoal by user which is not authorized, should return 401', async () => {
-        await checkRouteWithoutToken(
+        await checkRouteWithInvalidToken(
             request(app).patch,
             `/api/goal/1/items/${mockGoalItemId}`,
             goalItemController.updateItem,
+            '',
             { info: 'Add unit and screenshot tests' }
         )
     })
@@ -174,6 +183,7 @@ describe('goalItemRouter unit tests', () => {
             request(app).patch,
             `/api/goal/1/items/${mockGoalItemId}`,
             goalItemController.updateItem,
+            'Bearer fakeToken',
             { info: 'Add unit and screenshot tests' }
         )
     })
@@ -216,10 +226,11 @@ describe('goalItemRouter unit tests', () => {
     })
 
     test('Update subgoal status by user which is not authorized, should return 401', async () => {
-        await checkRouteWithoutToken(
+        await checkRouteWithInvalidToken(
             request(app).patch,
             `/api/goal/1/items/${mockGoalItemId}/status`,
             goalItemController.changeItemStatus,
+            '',
             { status: true }
         )
     })
@@ -229,6 +240,7 @@ describe('goalItemRouter unit tests', () => {
             request(app).patch,
             `/api/goal/1/items/${mockGoalItemId}/status`,
             goalItemController.changeItemStatus,
+            'Bearer fakeToken',
             { status: true }
         )
     })
@@ -260,10 +272,11 @@ describe('goalItemRouter unit tests', () => {
     })
 
     test('Get list of subgoals by user which is not authorized, should return 401', async () => {
-        await checkRouteWithoutToken(
+        await checkRouteWithInvalidToken(
             request(app).get,
             `/api/goal/1/items`,
             goalItemController.getAllItems,
+            ''
         )
     })
 
@@ -272,6 +285,7 @@ describe('goalItemRouter unit tests', () => {
             request(app).get,
             `/api/goal/1/items`,
             goalItemController.getAllItems,
+            'Bearer fakeToken',
         )
     })
 
@@ -300,10 +314,11 @@ describe('goalItemRouter unit tests', () => {
     })
 
     test('Delete subgoal by user which is not authorized, should return 401', async () => {
-        await checkRouteWithoutToken(
+        await checkRouteWithInvalidToken(
             request(app).delete,
             `/api/goal/1/items/${mockGoalItemId}`,
-            goalItemController.deleteItem
+            goalItemController.deleteItem,
+            ''
         )
     })
 
@@ -312,6 +327,7 @@ describe('goalItemRouter unit tests', () => {
             request(app).delete,
             `/api/goal/1/items/${mockGoalItemId}`,
             goalItemController.deleteItem,
+            'Bearer fakeToken',
         )
     })
 

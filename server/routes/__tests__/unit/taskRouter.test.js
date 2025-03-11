@@ -4,8 +4,7 @@ const taskController = require('../../../controllers/taskController')
 const errorHandler = require('../../../middleware/ErrorHandlingMiddleware')
 const taskRouter = require('../../taskRouter')
 const { mockUserJwtToken, mockFakeUserJwtToken } = require('@mocks/jwtTokenMocks')
-const { checkRouteWithInvalidInfo, checkRouteWithoutToken,
-    checkRouteWithInvalidToken, checkRouteWithNonexistentData } = require('./checkRouter')
+const { checkRouteWithInvalidInfo, checkRouteWithInvalidToken, checkRouteWithNonexistentData } = require('./checkRouter')
 
 jest.mock('../../../controllers/taskController', () => ({
     create: jest.fn(),
@@ -17,13 +16,20 @@ jest.mock('../../../controllers/taskController', () => ({
 
 jest.mock('../../../middleware/AuthMiddleware', () => {
     const ApiError = require('../../../error/ApiError')
+    const jwt = require('jsonwebtoken')
     return jest.fn((req, res, next) => {
         const token = req.headers.authorization.split(' ')[1]
         if (!token) {
             return next(ApiError.unauthorized('Пользователь не авторизован'))
         }
-        req.user = { id: 19, email: 'user@example.com', role: 'USER' }
-        next()
+        try {
+            const decoded = jwt.verify(token, process.env.SECRET_KEY)
+            req.user = decoded
+            next()
+        }
+        catch {
+            return next(ApiError.unauthorized('Пользователь не авторизован'))
+        }
     })
 })
 
@@ -102,10 +108,11 @@ describe('taskRouter unit tests', () => {
     })
 
     test('Create task by user which is not authorized, should return 401', async () => {
-        await checkRouteWithoutToken(
+        await checkRouteWithInvalidToken(
             request(app).post,
             '/api/task/',
             taskController.create,
+            '',
             { info: 'Write documentation' }
         )
     })
@@ -115,6 +122,7 @@ describe('taskRouter unit tests', () => {
             request(app).post,
             '/api/task/',
             taskController.create,
+            'Bearer fakeToken',
             { info: 'Write documentation' }
         )
     })
@@ -159,10 +167,11 @@ describe('taskRouter unit tests', () => {
     })
 
     test('Update task by user which is not authorized, should return 401', async () => {
-        await checkRouteWithoutToken(
+        await checkRouteWithInvalidToken(
             request(app).patch,
             `/api/task/${mockTaskId}`,
             taskController.update,
+            '',
             { info: 'Add ui' }
         )
     })
@@ -172,6 +181,7 @@ describe('taskRouter unit tests', () => {
             request(app).patch,
             `/api/task/${mockTaskId}`,
             taskController.update,
+            'Bearer fakeToken',
             { info: 'Add ui' }
         )
     })
@@ -214,10 +224,11 @@ describe('taskRouter unit tests', () => {
     })
 
     test('Update task status by user which is not authorized, should return 401', async () => {
-        await checkRouteWithoutToken(
+        await checkRouteWithInvalidToken(
             request(app).patch,
             `/api/task/${mockTaskId}/status`,
             taskController.changeStatus,
+            '',
             { status: true }
         )
     })
@@ -227,6 +238,7 @@ describe('taskRouter unit tests', () => {
             request(app).patch,
             `/api/task/${mockTaskId}/status`,
             taskController.changeStatus,
+            'Bearer fakeToken',
             { status: true }
         )
     })
@@ -258,10 +270,11 @@ describe('taskRouter unit tests', () => {
     })
 
     test('Get tasks by user which is not authorized, should return 401', async () => {
-        await checkRouteWithoutToken(
+        await checkRouteWithInvalidToken(
             request(app).get,
             `/api/task/user`,
             taskController.getAll,
+            ''
         )
     })
 
@@ -270,6 +283,7 @@ describe('taskRouter unit tests', () => {
             request(app).get,
             `/api/task/user`,
             taskController.getAll,
+            'Bearer fakeToken',
         )
     })
 
@@ -298,10 +312,11 @@ describe('taskRouter unit tests', () => {
     })
 
     test('Delete task by user which is not authorized, should return 401', async () => {
-        await checkRouteWithoutToken(
+        await checkRouteWithInvalidToken(
             request(app).delete,
             `/api/task/${mockTaskId}`,
-            taskController.delete
+            taskController.delete,
+            ''
         )
     })
 
@@ -310,6 +325,7 @@ describe('taskRouter unit tests', () => {
             request(app).delete,
             `/api/task/${mockTaskId}`,
             taskController.delete,
+            'Bearer fakeToken'
         )
     })
 

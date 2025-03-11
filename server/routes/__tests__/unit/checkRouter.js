@@ -1,7 +1,7 @@
 const ApiError = require('../../../error/ApiError')
 const formatErrorMessages = require('../../../error/formatErrorMessages')
-const AuthMiddleware = require('../../../middleware/AuthMiddleware')
 const { validationResult } = require('express-validator')
+const { mockUserJwtToken } = require('@mocks/jwtTokenMocks')
 
 const checkRouteWithInvalidInfo = async (
     validatorMessage,
@@ -13,7 +13,7 @@ const checkRouteWithInvalidInfo = async (
 ) => {
     validationResult.mockImplementationOnce(() => ({
         isEmpty: jest.fn(() => false),
-        array: jest.fn(() => [{ msg: validatorMessage }])
+        array: jest.fn(() => validatorMessage.split(/, |\sи\s/).map(msg => ({ msg })))
     }))
 
     handler.mockImplementationOnce((req, res, next) => {
@@ -39,17 +39,19 @@ const checkRouteWithInvalidInfo = async (
     const response = await request
 
     expect(response.status).toBe(400)
-    expect(response.body.message).toContain(`Введены некорректные данные: ${validatorMessage}`)
     expect(handler).toHaveBeenCalledTimes(1)
+    expect(response.body.message).toBe(`Введены некорректные данные: ${validatorMessage}`)
+
 }
 
-const checkRouteWithoutToken = async (
+const checkRouteWithInvalidToken = async (
     method,
     route,
     handler,
+    token,
     responseArgs
 ) => {
-    let request = method(route).set('Authorization', '')
+    let request = method(route).set('Authorization', token)
 
     if (responseArgs) {
         request.send(responseArgs)
@@ -62,17 +64,13 @@ const checkRouteWithoutToken = async (
     expect(handler).not.toHaveBeenCalled()
 }
 
-const checkRouteWithInvalidToken = async (
+const checkRouteWithoutAdminRights = async (
     method,
     route,
     handler,
     responseArgs
 ) => {
-    AuthMiddleware.mockImplementationOnce((req, res, next) =>
-        next(ApiError.unauthorized('Пользователь не авторизован'))
-    )
-
-    let request = method(route).set('Authorization', 'Bearer fakeToken')
+    let request = method(route).set('Authorization', `Bearer ${mockUserJwtToken}`)
 
     if (responseArgs) {
         request.send(responseArgs)
@@ -80,8 +78,8 @@ const checkRouteWithInvalidToken = async (
 
     const response = await request
 
-    expect(response.status).toBe(401)
-    expect(response.body.message).toContain('Пользователь не авторизован')
+    expect(response.status).toBe(403)
+    expect(response.body.message).toContain('Пользователь не обладает правами администратора')
     expect(handler).not.toHaveBeenCalled()
 }
 
@@ -114,9 +112,40 @@ const checkRouteWithNonexistentData = async (
     expect(handler).toHaveBeenCalledTimes(1)
 }
 
+const checkRouteWithAnotherCandidate = async (
+    errorMessage,
+    handler,
+    requestMethod,
+    route,
+    token,
+    responseArgs,
+) => {
+    handler.mockImplementationOnce((req, res, next) => {
+        return next(ApiError.badRequest(errorMessage))
+    })
+
+    let request = requestMethod(route)
+
+    if (token) {
+        request.set('Authorization', `Bearer ${token}`)
+    }
+
+    if (responseArgs) {
+        request.send(responseArgs)
+    }
+
+    const response = await request
+
+    expect(response.status).toBe(400)
+    expect(handler).toHaveBeenCalledTimes(1)
+    expect(response.body.message).toBe(errorMessage)
+
+}
+
 module.exports = {
     checkRouteWithInvalidInfo,
-    checkRouteWithoutToken,
     checkRouteWithInvalidToken,
-    checkRouteWithNonexistentData
+    checkRouteWithNonexistentData,
+    checkRouteWithoutAdminRights,
+    checkRouteWithAnotherCandidate
 }

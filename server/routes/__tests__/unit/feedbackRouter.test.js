@@ -4,10 +4,7 @@ const feedbackController = require('../../../controllers/feedbackController')
 const errorHandler = require('../../../middleware/ErrorHandlingMiddleware')
 const feedbackRouter = require('../../feedbackRouter')
 const { mockUserJwtToken, mockFakeUserJwtToken } = require('@mocks/jwtTokenMocks')
-const {
-    checkRouteWithInvalidInfo, checkRouteWithoutToken,
-    checkRouteWithInvalidToken, checkRouteWithNonexistentData
-} = require('./checkRouter')
+const { checkRouteWithInvalidInfo, checkRouteWithInvalidToken, checkRouteWithNonexistentData } = require('./checkRouter')
 
 jest.mock('../../../controllers/feedbackController', () => ({
     create: jest.fn(),
@@ -15,13 +12,21 @@ jest.mock('../../../controllers/feedbackController', () => ({
 
 jest.mock('../../../middleware/AuthMiddleware', () => {
     const ApiError = require('../../../error/ApiError')
+    const jwt = require('jsonwebtoken')
     return jest.fn((req, res, next) => {
         const token = req.headers.authorization.split(' ')[1]
         if (!token) {
             return next(ApiError.unauthorized('Пользователь не авторизован'))
         }
-        req.user = { id: 19, email: 'user@example.com', role: 'USER' }
-        next()
+
+        try {
+            const decoded = jwt.verify(token, process.env.SECRET_KEY)
+            req.user = decoded
+            next()
+        }
+        catch {
+            return next(ApiError.unauthorized('Пользователь не авторизован'))
+        }
     })
 })
 
@@ -75,10 +80,11 @@ describe('feedbackRouter unit tests', () => {
     })
 
     test('Create feedback by user which is not authorized, should return 401', async () => {
-        await checkRouteWithoutToken(
+        await checkRouteWithInvalidToken(
             request(app).post,
             '/api/feedback/',
             feedbackController.create,
+            '',
             { info: 'Great app!' }
         )
     })
@@ -88,6 +94,7 @@ describe('feedbackRouter unit tests', () => {
             request(app).post,
             '/api/feedback/',
             feedbackController.create,
+            'Bearer fakeToken',
             { info: 'Great app!' }
         )
     })
