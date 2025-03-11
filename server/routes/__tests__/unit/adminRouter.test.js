@@ -48,7 +48,6 @@ jest.mock('../../../middleware/CheckRoleMiddleware', () => {
     })
 })
 
-
 jest.mock('express-validator', () => {
     const mockValidationChain = jest.fn((req, res, next) => next())
 
@@ -109,7 +108,15 @@ describe('adminRouter unit tests', () => {
             role: 'ADMIN'
         }, process.env.SECRET_KEY)
 
-        updatedRoleMockData = { ...createdMockData, role: 'USER' }
+        updatedRoleMockData = {
+            id: 23,
+            email: 'admin1@example.com',
+            password: 'hashedAdminPassword123',
+            role: 'USER',
+            img: 'user_default_image.jpg',
+            createdAt: "2025-01-26 13:48:44.315+03",
+            updatedAt: "2025-01-26 13:48:44.315+03",
+        }
         updatedPasswordMockData = { ...updatedRoleMockData, password: '123456789' }
         updatedEmailMockData = { ...updatedPasswordMockData, email: 'admin11@example.com' }
 
@@ -229,7 +236,12 @@ describe('adminRouter unit tests', () => {
         expect(response.body.token).toEqual(createdMockData)
         expect(adminController.create).toHaveBeenCalledTimes(1)
 
-        mockUserId = jwtDecode(response.body.token).id
+        const decoded = jwtDecode(response.body.token)
+        expect(decoded.email).toBe('admin1@example.com')
+        expect(decoded.role).toBe('ADMIN')
+        expect(decoded).toHaveProperty('id')
+
+        mockUserId = decoded.id
     })
 
     test('Create user with another candidate, should return 400', async () => {

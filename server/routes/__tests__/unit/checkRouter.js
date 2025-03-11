@@ -91,7 +91,7 @@ const checkRouteWithNonexistentData = async (
     token,
     responseArgs
 ) => {
-    handler.mockImplementation((req, res, next) => {
+    handler.mockImplementationOnce((req, res, next) => {
         return next(ApiError.notFound(message))
     })
 
@@ -142,10 +142,43 @@ const checkRouteWithAnotherCandidate = async (
 
 }
 
+const checkRouteWithEmptyCaptcha = async (
+    handler,
+    requestMethod,
+    route,
+    token,
+    responseArgs,
+) => {
+    // CaptchaMiddleware.mockImplementationOnce((req, res, next) => {
+    //     if (!req.body.hcaptchaToken) {
+    //         return next(ApiError.badRequest('Капча не пройдена'))
+    //     }
+    //     next()
+    // })
+
+    let request = requestMethod(route)
+
+    if (token) {
+        request.set('Authorization', `Bearer ${token}`)
+    }
+
+    if (responseArgs) {
+        request.send(responseArgs)
+    }
+
+    const response = await request
+
+    expect(response.status).toBe(400)
+    expect(handler).not.toHaveBeenCalled()
+    expect(response.body.message).toBe('Капча не пройдена')
+
+}
+
 module.exports = {
     checkRouteWithInvalidInfo,
     checkRouteWithInvalidToken,
     checkRouteWithNonexistentData,
     checkRouteWithoutAdminRights,
-    checkRouteWithAnotherCandidate
+    checkRouteWithAnotherCandidate,
+    checkRouteWithEmptyCaptcha
 }

@@ -140,7 +140,7 @@ describe('userRouter tests', () => {
             request(app).post,
             '/api/user/login',
             'Пользователь не найден',
-            mockUserToken,
+            '',
             { email: 'user1@exmple.com', password: '12345678', hcaptchaToken: '123' }
         )
     })
@@ -186,13 +186,14 @@ describe('userRouter tests', () => {
         const response = await request(app)
             .get('/api/user/auth')
             .set('Authorization', `Bearer ${mockUserToken}`)
-            .send({
-                info: 'Great app!',
-                userId: 1
-            })
 
         expect(response.status).toBe(200)
         expect(jwtDecode(response.body.token)).toEqual(jwtDecode(mockUserToken))
+
+        const decoded = jwtDecode(response.body.token)
+        expect(decoded.id).toBe(mockUserId)
+        expect(decoded.email).toBe('user1@example.com')
+        expect(decoded.role).toBe('USER')
     })
 
     test('Get info by user which is not authorized, should return 401', async () => {
@@ -395,7 +396,6 @@ describe('userRouter tests', () => {
             throw new Error(`Ошибка при проверке файла: ${err.message}`)
         }
     })
-
 
     test('Update image by user which does not exist, should return 404', async () => {
         try {
