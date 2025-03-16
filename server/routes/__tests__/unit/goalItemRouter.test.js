@@ -20,15 +20,19 @@ jest.mock('../../../middleware/AuthMiddleware', () => {
     return jest.fn((req, res, next) => {
         const token = req.headers.authorization.split(' ')[1]
         if (!token) {
-            return next(ApiError.unauthorized('Пользователь не авторизован'))
+            throw ApiError.unauthorized('Пользователь не авторизован')
         }
+        
         try {
             const decoded = jwt.verify(token, process.env.SECRET_KEY)
             req.user = decoded
             next()
-        }
-        catch {
-            return next(ApiError.unauthorized('Пользователь не авторизован'))
+        } catch (error) {
+            if (error instanceof jwt.JsonWebTokenError) {
+                return next(ApiError.unauthorized('Неверный или просроченный токен'))
+            }
+    
+            next(error)
         }
     })
 })

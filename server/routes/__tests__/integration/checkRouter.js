@@ -38,7 +38,7 @@ const checkRouteWithInvalidToken = async (
     const response = await request
 
     expect(response.status).toBe(401)
-    expect(response.body.message).toBe('Пользователь не авторизован')
+    expect(response.body.message).toBe(!token ? 'Пользователь не авторизован' : 'Неверный или просроченный токен')
 }
 
 const checkRouteWithoutAdminRights = async (

@@ -30,7 +30,7 @@ jest.mock('../../../middleware/CheckRoleMiddleware', () => {
         return jest.fn((req, res, next) => {
             const token = req.headers.authorization?.split(' ')[1]
             if (!token) {
-                return next(ApiError.unauthorized('Пользователь не авторизован'))
+                throw ApiError.unauthorized('Пользователь не авторизован')
             }
 
             try {
@@ -41,8 +41,12 @@ jest.mock('../../../middleware/CheckRoleMiddleware', () => {
                 }
 
                 next()
-            } catch {
-                return res.status(401).json({ message: 'Пользователь не авторизован' })
+            } catch (error) {
+                if (error instanceof jwt.JsonWebTokenError) {
+                    return next(ApiError.unauthorized('Неверный или просроченный токен'))
+                }
+        
+                next(error)
             }
         })
     })

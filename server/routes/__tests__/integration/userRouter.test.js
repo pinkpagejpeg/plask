@@ -391,7 +391,7 @@ describe('userRouter tests', () => {
                 .attach('file', filePath)
 
             expect(response.status).toBe(401)
-            expect(response.body.message).toBe('Пользователь не авторизован')
+            expect(response.body.message).toBe('Неверный или просроченный токен')
         } catch (err) {
             throw new Error(`Ошибка при проверке файла: ${err.message}`)
         }

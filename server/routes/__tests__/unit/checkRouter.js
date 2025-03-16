@@ -60,7 +60,7 @@ const checkRouteWithInvalidToken = async (
     const response = await request
 
     expect(response.status).toBe(401)
-    expect(response.body.message).toContain('Пользователь не авторизован')
+    expect(response.body.message).toContain(!token ? 'Пользователь не авторизован' : 'Неверный или просроченный токен')
     expect(handler).not.toHaveBeenCalled()
 }
 
