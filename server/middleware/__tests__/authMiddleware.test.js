@@ -60,7 +60,17 @@ describe('AuthMiddleware unit tests', () => {
 
         expect(jwt.verify).toHaveBeenCalledWith(mockUserJwtToken, process.env.SECRET_KEY)
         expect(next).toHaveBeenCalledTimes(1)
+        expect(next).toHaveBeenCalledWith() 
         expect(ApiError.unauthorized).not.toHaveBeenCalled()
+    })
+
+    test('Unexpected error in middleware, should call next with error', () => {
+        const error = new Error('Unexpected error')
+        jest.spyOn(ApiError, 'unauthorized').mockImplementation(() => { throw error }) 
+        
+        AuthMiddleware(req, res, next)
+    
+        expect(next).toHaveBeenCalledWith(error)
     })
 
     afterEach(() => jest.clearAllMocks())

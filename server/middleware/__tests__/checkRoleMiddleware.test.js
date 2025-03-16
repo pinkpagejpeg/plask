@@ -75,8 +75,19 @@ describe('CheckRoleMiddleware unit tests', () => {
 
         expect(jwt.verify).toHaveBeenCalledWith(mockAdminJwtToken, process.env.SECRET_KEY)
         expect(next).toHaveBeenCalledTimes(1)
+        expect(next).toHaveBeenCalledWith() 
         expect(ApiError.unauthorized).not.toHaveBeenCalled()
         expect(ApiError.forbidden).not.toHaveBeenCalled()
+    })
+
+    test('Unexpected error in middleware, should call next with error', () => {
+        const error = new Error('Unexpected error')
+        jest.spyOn(ApiError, 'unauthorized').mockImplementation(() => { throw error }) 
+        
+        const checkRole = CheckRoleMiddleware('ADMIN')
+        checkRole(req, res, next)
+    
+        expect(next).toHaveBeenCalledWith(error)
     })
 
     afterEach(() => jest.clearAllMocks())

@@ -1,13 +1,19 @@
-module.exports = async function (req, res, next) {
+const ApiError = require('../error/ApiError')
+
+module.exports = function (req, res, next) {
+    if (req.method === "OPTIONS") {
+        return next()
+    }
+
     try {
         const hcaptchaToken = req.body.hcaptchaToken
 
         if (!hcaptchaToken) {
-            return res.status(400).json({ message: 'Капча не пройдена' })
+            throw ApiError.badRequest('Капча не пройдена')
         }
 
         next()
-    } catch {
-        return res.status(400).json({ message: 'Капча не пройдена' })
+    } catch (error) {
+        next(error)
     }
 }
