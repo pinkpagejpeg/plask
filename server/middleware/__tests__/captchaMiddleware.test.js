@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken')
 const CaptchaMiddleware = require('../CaptchaMiddleware')
 const ApiError = require('../../error/ApiError')
 const { mockUserJwtToken } = require('@mocks/jwtTokenMocks')
