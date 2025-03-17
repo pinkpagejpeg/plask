@@ -23,8 +23,8 @@ class FeedbackController {
 
             const feedback = await Feedback.create({ userId: id, info })
             return res.status(201).json({ feedback })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 }
