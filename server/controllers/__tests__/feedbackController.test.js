@@ -55,7 +55,7 @@ describe('feedbackController unit tests', () => {
         }
     })
 
-    test('Validation result has an error, should return 400', async () => {
+    test('Create feedback with validation error, should return 400', async () => {
         validationResult.mockReturnValue({ isEmpty: () => false, array: () => [{ msg: 'сообщение не введено' }] })
 
         await feedbackController.create(req, res, next)
@@ -82,7 +82,7 @@ describe('feedbackController unit tests', () => {
         expect(res.json).not.toHaveBeenCalled()
     })
 
-    test('Unexpected error, should return 500', async () => {
+    test('Create feedback with unexpected error, should return 500', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
         User.findByPk.mockRejectedValue(new Error('Unexpected error'))
 

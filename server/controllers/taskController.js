@@ -23,8 +23,8 @@ class TaskController {
 
             const task = await Task.create({ userId: id, info })
             return res.status(201).json({ task })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -47,8 +47,8 @@ class TaskController {
 
             await task.update({ info })
             return res.json({ task })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -72,7 +72,7 @@ class TaskController {
             await task.update({ status })
             return res.json({ task })
         } catch (e) {
-            return next(ApiError.badRequest(e.message))
+            return next(ApiError.internal(e.message))
         }
     }
 
@@ -88,7 +88,7 @@ class TaskController {
             await task.destroy()
             return res.json({ deletedTaskId: task.id })
         } catch (e) {
-            return next(ApiError.badRequest(e.message))
+            return next(ApiError.internal(e.message))
         }
     }
 
@@ -104,7 +104,7 @@ class TaskController {
             const tasks = await Task.findAll({ where: { userId: id }, order: [['createdAt', 'DESC']] })
             return res.json({ tasks, count: tasks.length })
         } catch (e) {
-            return next(ApiError.badRequest(e.message))
+            return next(ApiError.internal(e.message))
         }
     }
 }
