@@ -16,15 +16,14 @@ jest.mock('express-validator', () => ({
 jest.mock('../../error/formatErrorMessages', () => jest.fn((errorMessages) => {
     if (errorMessages.length === 1) return errorMessages
     if (errorMessages.length === 2) return errorMessages.join(' и ')
-    return errorMessages.slice(0, -2).map(item => item + ', ') + errorMessages.slice(-2).join(' и ')
+    return errorMessages.slice(0, -2).map(item => item + ', ') +
+        errorMessages.slice(-2).join(' и ')
 }))
 
 jest.mock('../../models/models', () => ({
     User: { findByPk: jest.fn() },
     Task: {
         create: jest.fn(),
-        // update: jest.fn(),
-        destroy: jest.fn(),
         findAll: jest.fn(),
         findByPk: jest.fn()
     }
@@ -82,12 +81,16 @@ describe('taskController unit tests', () => {
     })
 
     test('Create task with validation error, should return 400', async () => {
-        validationResult.mockReturnValue({ isEmpty: () => false, array: () => [{ msg: 'задача не введена' }] })
+        validationResult.mockReturnValue({
+            isEmpty: () => false,
+            array: () => [{ msg: 'задача не введена' }]
+        })
 
         req.body.info = ''
         await taskController.create(req, res, next)
 
-        expect(ApiError.badRequest).toHaveBeenCalledWith('Введены некорректные данные: задача не введена')
+        expect(ApiError.badRequest)
+            .toHaveBeenCalledWith('Введены некорректные данные: задача не введена')
         expect(next).toHaveBeenCalledWith(expect.objectContaining({
             message: 'Введены некорректные данные: задача не введена'
         }))
@@ -140,12 +143,16 @@ describe('taskController unit tests', () => {
     })
 
     test('Update task with validation error, should return 400', async () => {
-        validationResult.mockReturnValue({ isEmpty: () => false, array: () => [{ msg: 'задача не введена' }] })
+        validationResult.mockReturnValue({
+            isEmpty: () => false,
+            array: () => [{ msg: 'задача не введена' }]
+        })
 
         req.body.info = ''
         await taskController.update(req, res, next)
 
-        expect(ApiError.badRequest).toHaveBeenCalledWith('Введены некорректные данные: задача не введена')
+        expect(ApiError.badRequest)
+            .toHaveBeenCalledWith('Введены некорректные данные: задача не введена')
         expect(next).toHaveBeenCalledWith(expect.objectContaining({
             message: 'Введены некорректные данные: задача не введена'
         }))
@@ -200,11 +207,15 @@ describe('taskController unit tests', () => {
     })
 
     test('Update task status with validation error, should return 400', async () => {
-        validationResult.mockReturnValue({ isEmpty: () => false, array: () => [{ msg: 'отсутствует статус задачи' }] })
+        validationResult.mockReturnValue({
+            isEmpty: () => false,
+            array: () => [{ msg: 'отсутствует статус задачи' }]
+        })
 
         await taskController.changeStatus(req, res, next)
 
-        expect(ApiError.badRequest).toHaveBeenCalledWith('Введены некорректные данные: отсутствует статус задачи')
+        expect(ApiError.badRequest)
+            .toHaveBeenCalledWith('Введены некорректные данные: отсутствует статус задачи')
         expect(next).toHaveBeenCalledWith(expect.objectContaining({
             message: 'Введены некорректные данные: отсутствует статус задачи'
         }))

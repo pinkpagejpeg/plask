@@ -23,8 +23,8 @@ class GoalController {
 
             const goalItem = await Goal_item.create({ goalId, info })
             return res.status(201).json({ goalItem })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -47,8 +47,8 @@ class GoalController {
 
             await goalItem.update({ info })
             return res.json({ goalItem })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -71,8 +71,8 @@ class GoalController {
 
             await goalItem.update({ status })
             return res.json({ goalItem })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -87,8 +87,8 @@ class GoalController {
 
             const goalItems = await Goal_item.findAll({ where: { goalId }, order: [['createdAt', 'DESC']] })
             return res.json({ goalItems, count: goalItems.length })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -103,8 +103,8 @@ class GoalController {
 
             await goalItem.destroy()
             return res.json({ deletedGoalItemId: goalItem.id });
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 }

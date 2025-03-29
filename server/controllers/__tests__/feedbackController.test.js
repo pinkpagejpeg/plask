@@ -16,7 +16,8 @@ jest.mock('express-validator', () => ({
 jest.mock('../../error/formatErrorMessages', () => jest.fn((errorMessages) => {
     if (errorMessages.length === 1) return errorMessages
     if (errorMessages.length === 2) return errorMessages.join(' и ')
-    return errorMessages.slice(0, -2).map(item => item + ', ') + errorMessages.slice(-2).join(' и ')
+    return errorMessages.slice(0, -2).map(item => item + ', ') +
+        errorMessages.slice(-2).join(' и ')
 }))
 
 jest.mock('../../models/models', () => ({
@@ -56,11 +57,15 @@ describe('feedbackController unit tests', () => {
     })
 
     test('Create feedback with validation error, should return 400', async () => {
-        validationResult.mockReturnValue({ isEmpty: () => false, array: () => [{ msg: 'сообщение не введено' }] })
+        validationResult.mockReturnValue({
+            isEmpty: () => false,
+            array: () => [{ msg: 'сообщение не введено' }]
+        })
 
         await feedbackController.create(req, res, next)
 
-        expect(ApiError.badRequest).toHaveBeenCalledWith('Введены некорректные данные: сообщение не введено')
+        expect(ApiError.badRequest)
+            .toHaveBeenCalledWith('Введены некорректные данные: сообщение не введено')
         expect(next).toHaveBeenCalledWith(expect.objectContaining({
             message: 'Введены некорректные данные: сообщение не введено'
         }))
