@@ -202,8 +202,6 @@ describe('taskController unit tests', () => {
         expect(ApiError.internal).not.toHaveBeenCalled()
         expect(next).not.toHaveBeenCalled()
         expect(res.json).toHaveBeenCalledWith({ task: updatedTask })
-
-        mockTask.info = 'Updated task info'
     })
 
     test('Update task status with validation error, should return 400', async () => {
@@ -265,8 +263,6 @@ describe('taskController unit tests', () => {
         expect(ApiError.internal).not.toHaveBeenCalled()
         expect(next).not.toHaveBeenCalled()
         expect(res.json).toHaveBeenCalledWith({ task: updatedTask })
-
-        mockTask.status = true
     })
 
     test('Get tasks by user which does not exist, should return 404', async () => {

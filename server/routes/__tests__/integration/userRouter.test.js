@@ -163,7 +163,7 @@ describe('userRouter tests', () => {
         expect(typeof decoded.iat).toBe('number')
         expect(decoded).toHaveProperty('exp')
         expect(typeof decoded.exp).toBe('number')
-        expect(decoded).toEqual(jwtDecode(mockUserToken))
+        expect(decoded.id).toEqual(jwtDecode(mockUserToken).id)
     })
 
     test('Check user which is not authorized, should return 401', async () => {
@@ -188,12 +188,12 @@ describe('userRouter tests', () => {
             .set('Authorization', `Bearer ${mockUserToken}`)
 
         expect(response.status).toBe(200)
-        expect(jwtDecode(response.body.token)).toEqual(jwtDecode(mockUserToken))
 
         const decoded = jwtDecode(response.body.token)
         expect(decoded.id).toBe(mockUserId)
         expect(decoded.email).toBe('user1@example.com')
         expect(decoded.role).toBe('USER')
+        expect(decoded.id).toEqual(jwtDecode(mockUserToken).id)
     })
 
     test('Get info by user which is not authorized, should return 401', async () => {

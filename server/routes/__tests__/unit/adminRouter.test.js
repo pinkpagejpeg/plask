@@ -5,8 +5,6 @@ const errorHandler = require('../../../middleware/ErrorHandlingMiddleware')
 const adminRouter = require('../../adminRouter')
 const ApiError = require('../../../error/ApiError')
 const { mockAdminJwtToken } = require('@mocks/jwtTokenMocks')
-const { jwtDecode } = require('jwt-decode')
-const jwt = require('jsonwebtoken')
 const {
     checkRouteWithInvalidInfo, checkRouteWithInvalidToken,
     checkRouteWithoutAdminRights, checkRouteWithNonexistentData,
@@ -106,11 +104,15 @@ describe('adminRouter unit tests', () => {
             }
         }
 
-        createdMockData = jwt.sign({
+        createdMockData = {
             id: 23,
             email: 'admin1@example.com',
-            role: 'ADMIN'
-        }, process.env.SECRET_KEY)
+            password: 'hashedAdminPassword123',
+            role: 'ADMIN',
+            img: 'user_default_image.jpg',
+            createdAt: "2025-01-26 13:48:44.315+03",
+            updatedAt: "2025-01-26 13:48:44.315+03",
+        }
 
         updatedRoleMockData = {
             id: 23,
@@ -228,7 +230,7 @@ describe('adminRouter unit tests', () => {
 
     test('Create user with valid data, should return 201', async () => {
         adminController.create.mockImplementation((req, res) =>
-            res.status(201).json({ token: createdMockData })
+            res.status(201).json({ user: createdMockData })
         )
 
         const response = await request(app)
@@ -237,15 +239,16 @@ describe('adminRouter unit tests', () => {
             .send({ email: 'admin1@example.com', password: '12345678', role: 'ADMIN' })
 
         expect(response.status).toBe(201)
-        expect(response.body.token).toEqual(createdMockData)
+        expect(response.body.user).toEqual(createdMockData)
         expect(adminController.create).toHaveBeenCalledTimes(1)
 
-        const decoded = jwtDecode(response.body.token)
-        expect(decoded.email).toBe('admin1@example.com')
-        expect(decoded.role).toBe('ADMIN')
-        expect(decoded).toHaveProperty('id')
+        expect(response.body.user.email).toBe('admin1@example.com')
+        expect(response.body.user.role).toBe('ADMIN')
+        expect(response.body.user).toHaveProperty('id')
+        expect(response.body.user).toHaveProperty('img')
+        expect(response.body.user).toHaveProperty('password')
 
-        mockUserId = decoded.id
+        mockUserId = response.body.user.id
     })
 
     test('Create user with another candidate, should return 400', async () => {

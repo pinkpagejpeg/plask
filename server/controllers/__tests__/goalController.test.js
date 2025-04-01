@@ -219,8 +219,6 @@ describe('goalController unit tests', () => {
         expect(ApiError.internal).not.toHaveBeenCalled()
         expect(next).not.toHaveBeenCalled()
         expect(res.json).toHaveBeenCalledWith({ goal: updatedGoal })
-
-        mockGoal.info = 'Complete the project'
     })
 
     test('Get goal info which does not exist, should return 404', async () => {
@@ -367,12 +365,12 @@ describe('goalController unit tests', () => {
             ...mockGoal,
             destroy: jest.fn().mockResolvedValue({ mockGoal }),
         }
-        const deletedSuboals = mockSubgoals.map(item => ({
+        const deletedSubgoals = mockSubgoals.map(item => ({
             ...item,
             destroy: jest.fn().mockResolvedValue(item)
         }))
         Goal.findByPk.mockResolvedValue(deletedGoal)
-        Goal_item.findAll.mockResolvedValue(deletedSuboals)
+        Goal_item.findAll.mockResolvedValue(deletedSubgoals)
 
         await goalController.delete(req, res, next)
 

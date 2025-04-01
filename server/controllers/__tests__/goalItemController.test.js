@@ -210,8 +210,6 @@ describe('goalItemController unit tests', () => {
         expect(ApiError.internal).not.toHaveBeenCalled()
         expect(next).not.toHaveBeenCalled()
         expect(res.json).toHaveBeenCalledWith({ goalItem: updatedGoalItem })
-
-        mockGoalItem.info = 'Add unit test for goals'
     })
 
     test('Update subgoal status with validation error, should return 400', async () => {
@@ -276,8 +274,6 @@ describe('goalItemController unit tests', () => {
         expect(ApiError.internal).not.toHaveBeenCalled()
         expect(next).not.toHaveBeenCalled()
         expect(res.json).toHaveBeenCalledWith({ goalItem: updatedGoalItem })
-
-        mockGoalItem.status = true
     })
 
     test('Get subgoals by user which does not exist, should return 404', async () => {

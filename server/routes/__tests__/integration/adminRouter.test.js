@@ -1,5 +1,5 @@
 const request = require('supertest')
-const { jwtDecode } = require('jwt-decode')
+const jwt = require('jsonwebtoken')
 const { app, start, stop } = require('../../../index')
 const { mockAdminJwtToken, mockUserJwtToken } = require('@mocks/jwtTokenMocks')
 const {
@@ -10,7 +10,7 @@ const {
 } = require('./checkRouter')
 
 describe('adminRouter tests', () => {
-    let mockUserId, mockUserPassword, mockFeedbackId, mockUserToken
+    let mockUserId, mockUserPassword, mockFeedbackId
 
     beforeAll(async () => {
         await start()
@@ -98,22 +98,23 @@ describe('adminRouter tests', () => {
             .set('Authorization', `Bearer ${mockAdminJwtToken}`)
             .send({ email: 'admin1@example.com', password: '12345678', role: 'ADMIN' })
 
-        const decoded = jwtDecode(response.body.token)
-
         expect(response.status).toBe(201)
-        expect(decoded.email).toBe('admin1@example.com')
-        expect(typeof decoded.email).toBe('string')
-        expect(decoded.role).toBe('ADMIN')
-        expect(typeof decoded.role).toBe('string')
-        expect(decoded).toHaveProperty('id')
-        expect(typeof decoded.id).toBe('number')
-        expect(decoded).toHaveProperty('exp')
-        expect(decoded).toHaveProperty('exp')
-        expect(decoded).toHaveProperty('iat')
-        expect(decoded).toHaveProperty('iat')
+        expect(response.body.user.email).toBe('admin1@example.com')
+        expect(typeof response.body.user.email).toBe('string')
+        expect(response.body.user.role).toBe('ADMIN')
+        expect(typeof response.body.user.role).toBe('string')
+        expect(response.body.user).toHaveProperty('id')
+        expect(typeof response.body.user.id).toBe('number')
+        expect(response.body.user).toHaveProperty('password')
+        expect(typeof response.body.user.password).toBe('string')
+        expect(response.body.user).toHaveProperty('img')
+        expect(typeof response.body.user.img).toBe('string')
+        expect(response.body.user).toHaveProperty('createdAt')
+        expect(typeof response.body.user.createdAt).toBe('string')
+        expect(response.body.user).toHaveProperty('updatedAt')
+        expect(typeof response.body.user.updatedAt).toBe('string')
 
-        mockUserId = decoded.id
-        mockUserToken = response.body.token
+        mockUserId = response.body.user.id
     })
 
     test('Create user with another candidate, should return 400', async () => {
@@ -394,6 +395,12 @@ describe('adminRouter tests', () => {
     })
 
     test('Delete user by admin with valid data, should return 200', async () => {
+        const mockUserToken = jwt.sign({
+            id: mockUserId,
+            email: 'admin11@example.com',
+            role: 'USER'
+        }, process.env.SECRET_KEY)
+
         const response = await request(app)
             .delete(`/api/admin/users/${mockUserId}`)
             .set('Authorization', `Bearer ${mockAdminJwtToken}`)

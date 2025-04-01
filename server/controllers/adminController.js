@@ -1,17 +1,8 @@
 const { Feedback, Task, Goal, Goal_item, User } = require('../models/models')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const ApiError = require('../error/ApiError')
 const formatErrorMessages = require('../error/formatErrorMessages')
 const { validationResult } = require('express-validator')
-
-const generateJwt = (id, email, role) => {
-    return jwt.sign(
-        { id, email, role },
-        process.env.SECRET_KEY,
-        { expiresIn: '24h' }
-    )
-}
 
 class AdminController {
     // Users
@@ -33,11 +24,9 @@ class AdminController {
 
             const hashPassword = await bcrypt.hash(password, 5)
             const user = await User.create({ email, role, password: hashPassword })
-            const token = generateJwt(user.id, user.email, user.role)
-            return res.status(201).json({ token })
-        }
-        catch (e) {
-            return next(ApiError.badRequest(e.message))
+            return res.status(201).json({ user })
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -79,8 +68,8 @@ class AdminController {
             }
 
             return res.json({ user })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -115,8 +104,8 @@ class AdminController {
 
             await user.destroy()
             return res.json({ deletedUserId: user.id })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -126,8 +115,8 @@ class AdminController {
                 order: [['createdAt', 'DESC']]
             })
             return res.json({ users, count: users.length })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -152,8 +141,8 @@ class AdminController {
 
             await feedback.update({ status })
             return res.json({ feedback })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -164,8 +153,8 @@ class AdminController {
                 order: [['createdAt', 'DESC']]
             })
             return res.json({ feedbacks, count: feedbacks.length })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 }
