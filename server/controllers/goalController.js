@@ -23,8 +23,8 @@ class GoalController {
 
             const goal = await Goal.create({ userId: id, info })
             return res.status(201).json({ goal })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -47,8 +47,8 @@ class GoalController {
 
             await goal.update({ info })
             return res.json({ goal })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -70,8 +70,8 @@ class GoalController {
             await goal.destroy()
 
             return res.json({ deletedGoalId: goal.id })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -86,8 +86,8 @@ class GoalController {
 
             const goals = await Goal.findAll({ where: { userId: id }, order: [['createdAt', 'DESC']] })
             return res.json({ goals, count: goals.length })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -101,8 +101,8 @@ class GoalController {
             }
 
             return res.json({ goal })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -126,8 +126,8 @@ class GoalController {
             const progress = Math.round((completedItems / totalItems) * 100)
 
             return res.json({ progress })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 }
