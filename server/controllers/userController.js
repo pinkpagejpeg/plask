@@ -2,19 +2,11 @@ const ApiError = require('../error/ApiError')
 const formatErrorMessages = require('../error/formatErrorMessages')
 const { User, Feedback, Task, Goal, Goal_item } = require('../models/models')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+const generateJwt = require('../utils/generateJwt')
 const { validationResult } = require('express-validator')
 const { v4: uuidv4 } = require('uuid')
 const path = require('path')
 const fs = require('mz/fs')
-
-const generateJwt = (id, email, role) => {
-    return jwt.sign(
-        { id, email, role },
-        process.env.SECRET_KEY,
-        { expiresIn: '24h' }
-    )
-}
 
 class UserController {
     async registration(req, res, next) {
@@ -37,9 +29,8 @@ class UserController {
             const user = await User.create({ email, role, password: hashPassword })
             const token = generateJwt(user.id, user.email, user.role)
             return res.status(201).json({ token })
-        }
-        catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -68,15 +59,18 @@ class UserController {
 
             const token = generateJwt(user.id, user.email, user.role)
             return res.json({ token })
-        }
-        catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
-    async check(req, res) {
-        const token = generateJwt(req.user.id, req.user.email, req.user.role)
-        return res.json({ token })
+    async check(req, res, next) {
+        try {
+            const token = generateJwt(req.user.id, req.user.email, req.user.role)
+            return res.json({ token })
+        } catch (error) {
+            return next(ApiError.internal(error.message))
+        }
     }
 
     async updateInfo(req, res, next) {
@@ -114,8 +108,8 @@ class UserController {
 
             const token = generateJwt(user.id, user.email, user.role)
             return res.json({ token })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -135,8 +129,8 @@ class UserController {
 
             await user.update({ img: imageName })
             return res.json({ user })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -159,8 +153,8 @@ class UserController {
 
             await user.update({ img: 'user_default_image.jpg' })
             return res.json({ user })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -174,8 +168,8 @@ class UserController {
             }
 
             return res.json({ user })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 
@@ -210,8 +204,8 @@ class UserController {
 
             await user.destroy()
             return res.json({ deletedUserId: user.id })
-        } catch (e) {
-            return next(ApiError.badRequest(e.message))
+        } catch (error) {
+            return next(ApiError.internal(error.message))
         }
     }
 }
