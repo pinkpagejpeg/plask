@@ -167,7 +167,6 @@ const checkRouteWithAnotherCandidate = async (
     expect(response.status).toBe(400)
     expect(handler).toHaveBeenCalledTimes(1)
     expect(response.body.message).toBe(errorMessage)
-
 }
 
 const checkRouteWithEmptyCaptcha = async (
@@ -199,7 +198,6 @@ const checkRouteWithEmptyCaptcha = async (
     expect(response.status).toBe(400)
     expect(handler).not.toHaveBeenCalled()
     expect(response.body.message).toBe('Капча не пройдена')
-
 }
 
 module.exports = {

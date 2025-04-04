@@ -63,9 +63,10 @@ describe('userRouter tests', () => {
                 hcaptchaToken: '123'
             })
 
+        expect(response.status).toBe(201)
+
         const decoded = jwtDecode(response.body.token)
 
-        expect(response.status).toBe(201)
         expect(decoded.email).toBe('user1@example.com')
         expect(typeof decoded.email).toBe('string')
         expect(decoded.role).toBe('USER')
@@ -150,9 +151,10 @@ describe('userRouter tests', () => {
             .post('/api/user/login')
             .send({ email: 'user1@example.com', password: '12345678', hcaptchaToken: '123' })
 
+        expect(response.status).toBe(200)
+
         const decoded = jwtDecode(response.body.token)
 
-        expect(response.status).toBe(200)
         expect(decoded.email).toBe('user1@example.com')
         expect(typeof decoded.email).toBe('string')
         expect(decoded.role).toBe('USER')
@@ -190,6 +192,7 @@ describe('userRouter tests', () => {
         expect(response.status).toBe(200)
 
         const decoded = jwtDecode(response.body.token)
+        
         expect(decoded.id).toBe(mockUserId)
         expect(decoded.email).toBe('user1@example.com')
         expect(decoded.role).toBe('USER')
@@ -307,9 +310,9 @@ describe('userRouter tests', () => {
             .set('Authorization', `Bearer ${mockUserToken}`)
             .send({ email: 'user11@example.com', password: '' })
 
-        const decoded = jwtDecode(response.body.token)
-
         expect(response.status).toBe(200)
+
+        const decoded = jwtDecode(response.body.token)
 
         expect(decoded.id).toEqual(mockUserId)
         expect(typeof decoded.id).toBe('number')
@@ -337,9 +340,9 @@ describe('userRouter tests', () => {
             .set('Authorization', `Bearer ${mockUserToken}`)
             .send({ email: 'user11@example.com', password: '123456789' })
 
-        const decoded = jwtDecode(response.body.token)
-
         expect(response.status).toBe(200)
+
+        const decoded = jwtDecode(response.body.token)
 
         expect(decoded.id).toEqual(mockUserId)
         expect(typeof decoded.id).toBe('number')
