@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken')
 const {
     checkRouteWithInvalidInfo, checkRouteWithInvalidToken,
     checkRouteWithNonexistentData, checkRouteWithAnotherCandidate,
-    checkRouteWithEmptyCaptcha
+    checkRouteWithEmptyCaptcha, checkRouteWithUnexpectedError
 } = require('./checkRouter')
 
 jest.mock('../../../controllers/userController', () => ({
@@ -42,7 +42,7 @@ jest.mock('../../../middleware/AuthMiddleware', () => {
             if (error instanceof jwt.JsonWebTokenError) {
                 return next(ApiError.unauthorized('Неверный или просроченный токен'))
             }
-    
+
             next(error)
         }
     })
@@ -152,6 +152,21 @@ describe('userRouter unit tests', () => {
         )
     })
 
+    test('User registration with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).post,
+            '/api/user/registration',
+            userController.registration,
+            '',
+            {
+                email: 'user1@example.com',
+                password: '12345678',
+                role: 'USER',
+                hcaptchaToken: '123'
+            }
+        )
+    })
+
     test('User registration with valid data, should return 201', async () => {
         userController.registration.mockImplementation((req, res) =>
             res.status(201).json({ token: mockUserToken })
@@ -257,6 +272,16 @@ describe('userRouter unit tests', () => {
         )
     })
 
+    test('User login with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).post,
+            '/api/user/login',
+            userController.login,
+            '',
+            { email: 'user1@example.com', password: '12345678', hcaptchaToken: '123' }
+        )
+    })
+
     test('User login with valid data, should return 200', async () => {
         userController.login.mockImplementation((req, res) =>
             res.status(200).json({ token: mockUserToken })
@@ -291,6 +316,15 @@ describe('userRouter unit tests', () => {
             '/api/user/auth',
             userController.check,
             'Bearer fakeToken'
+        )
+    })
+
+    test('Check user with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).get,
+            '/api/user/auth',
+            userController.check,
+            mockUserToken,
         )
     })
 
@@ -346,7 +380,16 @@ describe('userRouter unit tests', () => {
         )
     })
 
-    test('Get info with valid data, should return 200', async () => {
+    test('Get user info with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).get,
+            '/api/user/',
+            userController.getInfo,
+            mockUserToken,
+        )
+    })
+
+    test('Get user info with valid data, should return 200', async () => {
         userController.getInfo.mockImplementation((req, res) =>
             res.json({ user: mockUserData })
         )
@@ -417,6 +460,16 @@ describe('userRouter unit tests', () => {
             userController.updateInfo,
             'Пользователь не найден',
             mockFakeUserJwtToken,
+            { email: 'user11@example.com', password: '' }
+        )
+    })
+
+    test('Update user with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).patch,
+            '/api/user/info',
+            userController.updateInfo,
+            mockUserToken,
             { email: 'user11@example.com', password: '' }
         )
     })
@@ -515,6 +568,15 @@ describe('userRouter unit tests', () => {
         )
     })
 
+    test('Update image with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).patch,
+            `/api/user/image`,
+            userController.updateImage,
+            mockUserToken
+        )
+    })
+
     test('Update image with valid data, should return 200', async () => {
         userController.updateImage.mockImplementation((req, res) => {
             const newImage = uuidv4() + '.jpg'
@@ -568,6 +630,15 @@ describe('userRouter unit tests', () => {
         )
     })
 
+    test('Delete image with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).delete,
+            `/api/user/image`,
+            userController.deleteImage,
+            mockUserToken
+        )
+    })
+
     test('Delete image with valid data, should return 200', async () => {
         userController.deleteImage.mockImplementation((req, res) =>
             res.json({
@@ -615,6 +686,15 @@ describe('userRouter unit tests', () => {
             userController.delete,
             'Пользователь не найден',
             mockFakeUserJwtToken,
+        )
+    })
+
+    test('Delete user with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).delete,
+            `/api/user/`,
+            userController.delete,
+            mockUserToken
         )
     })
 

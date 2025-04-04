@@ -112,6 +112,34 @@ const checkRouteWithNonexistentData = async (
     expect(handler).toHaveBeenCalledTimes(1)
 }
 
+const checkRouteWithUnexpectedError = async (
+    method,
+    route,
+    handler,
+    token,
+    responseArgs
+) => {
+    handler.mockImplementationOnce((req, res, next) => {
+        return next(new Error('Unexpected error'))
+    })
+
+    let request = method(route)
+
+    if (token) {
+        request.set('Authorization', `Bearer ${token}`)
+    }
+
+    if (responseArgs) {
+        request.send(responseArgs)
+    }
+
+    const response = await request
+
+    expect(response.status).toBe(500)
+    expect(response.body.message).toBe('Непредвиденная ошибка')
+    expect(handler).toHaveBeenCalledTimes(1)
+}
+
 const checkRouteWithAnotherCandidate = async (
     errorMessage,
     handler,
@@ -180,5 +208,6 @@ module.exports = {
     checkRouteWithNonexistentData,
     checkRouteWithoutAdminRights,
     checkRouteWithAnotherCandidate,
+    checkRouteWithUnexpectedError,
     checkRouteWithEmptyCaptcha
 }

@@ -4,7 +4,10 @@ const taskController = require('../../../controllers/taskController')
 const errorHandler = require('../../../middleware/ErrorHandlingMiddleware')
 const taskRouter = require('../../taskRouter')
 const { mockUserJwtToken, mockFakeUserJwtToken } = require('@mocks/jwtTokenMocks')
-const { checkRouteWithInvalidInfo, checkRouteWithInvalidToken, checkRouteWithNonexistentData } = require('./checkRouter')
+const {
+    checkRouteWithInvalidInfo, checkRouteWithInvalidToken,
+    checkRouteWithNonexistentData, checkRouteWithUnexpectedError
+} = require('./checkRouter')
 
 jest.mock('../../../controllers/taskController', () => ({
     create: jest.fn(),
@@ -31,7 +34,7 @@ jest.mock('../../../middleware/AuthMiddleware', () => {
             if (error instanceof jwt.JsonWebTokenError) {
                 return next(ApiError.unauthorized('Неверный или просроченный токен'))
             }
-    
+
             next(error)
         }
     })
@@ -142,6 +145,16 @@ describe('taskRouter unit tests', () => {
         )
     })
 
+    test('Create task with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).post,
+            '/api/task/',
+            taskController.create,
+            mockUserJwtToken,
+            { info: 'Write documentation' }
+        )
+    })
+
     test('Create task with valid data, should return 201', async () => {
         taskController.create.mockImplementation((req, res) =>
             res.status(201).json({ task: createdMockData })
@@ -196,6 +209,16 @@ describe('taskRouter unit tests', () => {
             `/api/task/0`,
             taskController.update,
             'Задача не найдена',
+            mockUserJwtToken,
+            { info: 'Add ui' }
+        )
+    })
+
+    test('Update task with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).patch,
+            `/api/task/${mockTaskId}`,
+            taskController.update,
             mockUserJwtToken,
             { info: 'Add ui' }
         )
@@ -258,6 +281,16 @@ describe('taskRouter unit tests', () => {
         )
     })
 
+    test('Update task status with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).patch,
+            `/api/task/${mockTaskId}/status`,
+            taskController.changeStatus,
+            mockUserJwtToken,
+            { status: true }
+        )
+    })
+
     test('Update task status with valid data, should return 200', async () => {
         taskController.changeStatus.mockImplementation((req, res) =>
             res.json({ task: updatedStatusMockData })
@@ -301,6 +334,15 @@ describe('taskRouter unit tests', () => {
         )
     })
 
+    test('Get tasks with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).get,
+            `/api/task/user`,
+            taskController.getAll,
+            mockUserJwtToken,
+        )
+    })
+
     test('Get tasks with valid data, should return 200', async () => {
         taskController.getAll.mockImplementation((req, res) =>
             res.json(mockData)
@@ -339,6 +381,15 @@ describe('taskRouter unit tests', () => {
             `/api/task/0`,
             taskController.delete,
             'Задача не найдена',
+            mockUserJwtToken,
+        )
+    })
+
+    test('Delete task with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).delete,
+            `/api/task/${mockTaskId}`,
+            taskController.delete,
             mockUserJwtToken,
         )
     })

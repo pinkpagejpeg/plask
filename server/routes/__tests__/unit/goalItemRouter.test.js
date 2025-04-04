@@ -4,7 +4,10 @@ const goalItemController = require('../../../controllers/goalItemController')
 const errorHandler = require('../../../middleware/ErrorHandlingMiddleware')
 const goalItemRouter = require('../../goalItemRouter')
 const { mockUserJwtToken } = require('@mocks/jwtTokenMocks')
-const { checkRouteWithInvalidInfo, checkRouteWithInvalidToken, checkRouteWithNonexistentData } = require('./checkRouter')
+const {
+    checkRouteWithInvalidInfo, checkRouteWithInvalidToken,
+    checkRouteWithNonexistentData, checkRouteWithUnexpectedError
+} = require('./checkRouter')
 
 jest.mock('../../../controllers/goalItemController', () => ({
     createItem: jest.fn(),
@@ -22,7 +25,7 @@ jest.mock('../../../middleware/AuthMiddleware', () => {
         if (!token) {
             throw ApiError.unauthorized('Пользователь не авторизован')
         }
-        
+
         try {
             const decoded = jwt.verify(token, process.env.SECRET_KEY)
             req.user = decoded
@@ -31,7 +34,7 @@ jest.mock('../../../middleware/AuthMiddleware', () => {
             if (error instanceof jwt.JsonWebTokenError) {
                 return next(ApiError.unauthorized('Неверный или просроченный токен'))
             }
-    
+
             next(error)
         }
     })
@@ -144,6 +147,16 @@ describe('goalItemRouter unit tests', () => {
         )
     })
 
+    test('Create subgoal with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).post,
+            '/api/goal/1/items',
+            goalItemController.createItem,
+            mockUserJwtToken,
+            { info: 'Add unit test' }
+        )
+    })
+
     test('Create subgoal with valid data, should return 201', async () => {
         goalItemController.createItem.mockImplementation((req, res) =>
             res.status(201).json({ goalItem: createdMockData })
@@ -195,9 +208,19 @@ describe('goalItemRouter unit tests', () => {
     test('Update subgoal which does not exist, should return 404', async () => {
         await checkRouteWithNonexistentData(
             request(app).patch,
-            `/api/goal/0/items/${mockGoalItemId}`,
+            `/api/goal/1/items/0`,
             goalItemController.updateItem,
             'Задача не найдена',
+            mockUserJwtToken,
+            { info: 'Add unit and screenshot tests' }
+        )
+    })
+
+    test('Update subgoal with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).patch,
+            `/api/goal/1/items/${mockGoalItemId}`,
+            goalItemController.updateItem,
             mockUserJwtToken,
             { info: 'Add unit and screenshot tests' }
         )
@@ -252,9 +275,19 @@ describe('goalItemRouter unit tests', () => {
     test('Update subgoal status which does not exist, should return 404', async () => {
         await checkRouteWithNonexistentData(
             request(app).patch,
-            `/api/goal/0/items/${mockGoalItemId}/status`,
+            `/api/goal/1/items/0/status`,
             goalItemController.changeItemStatus,
             'Подцель не найдена',
+            mockUserJwtToken,
+            { status: true }
+        )
+    })
+
+    test('Update subgoal status with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).patch,
+            `/api/goal/1/items/${mockGoalItemId}/status`,
+            goalItemController.changeItemStatus,
             mockUserJwtToken,
             { status: true }
         )
@@ -303,6 +336,15 @@ describe('goalItemRouter unit tests', () => {
         )
     })
 
+    test('Get list of subgoals with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).get,
+            `/api/goal/1/items`,
+            goalItemController.getAllItems,
+            mockUserJwtToken,
+        )
+    })
+
     test('Get list of subgoals with valid data, should return 200', async () => {
         goalItemController.getAllItems.mockImplementation((req, res) =>
             res.json(mockData)
@@ -341,6 +383,15 @@ describe('goalItemRouter unit tests', () => {
             `/api/goal/0/items/${mockGoalItemId}`,
             goalItemController.deleteItem,
             'Подцель не найдена',
+            mockUserJwtToken,
+        )
+    })
+
+    test('Delete subgoal with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).delete,
+            `/api/goal/1/items/${mockGoalItemId}`,
+            goalItemController.deleteItem,
             mockUserJwtToken,
         )
     })

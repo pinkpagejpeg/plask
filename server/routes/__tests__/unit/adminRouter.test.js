@@ -8,7 +8,7 @@ const { mockAdminJwtToken } = require('@mocks/jwtTokenMocks')
 const {
     checkRouteWithInvalidInfo, checkRouteWithInvalidToken,
     checkRouteWithoutAdminRights, checkRouteWithNonexistentData,
-    checkRouteWithAnotherCandidate
+    checkRouteWithAnotherCandidate, checkRouteWithUnexpectedError
 } = require('./checkRouter')
 
 jest.mock('../../../controllers/adminController', () => ({
@@ -43,7 +43,7 @@ jest.mock('../../../middleware/CheckRoleMiddleware', () => {
                 if (error instanceof jwt.JsonWebTokenError) {
                     return next(ApiError.unauthorized('Неверный или просроченный токен'))
                 }
-        
+
                 next(error)
             }
         })
@@ -228,6 +228,16 @@ describe('adminRouter unit tests', () => {
         )
     })
 
+    test('Create user with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).post,
+            '/api/admin/users',
+            adminController.create,
+            mockAdminJwtToken,
+            { email: 'admin1@example.com', password: '12345678', role: 'ADMIN' }
+        )
+    })
+
     test('Create user with valid data, should return 201', async () => {
         adminController.create.mockImplementation((req, res) =>
             res.status(201).json({ user: createdMockData })
@@ -285,6 +295,15 @@ describe('adminRouter unit tests', () => {
             request(app).get,
             '/api/admin/users',
             adminController.getAllUsers,
+        )
+    })
+
+    test('Get users with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).get,
+            '/api/admin/users',
+            adminController.getAllUsers,
+            mockAdminJwtToken
         )
     })
 
@@ -394,6 +413,16 @@ describe('adminRouter unit tests', () => {
         )
     })
 
+    test('Update user with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).patch,
+            `/api/admin/users/${mockUserId}`,
+            adminController.update,
+            mockAdminJwtToken,
+            { email: 'admin1@example.com', password: '123456789', role: 'ADMIN' }
+        )
+    })
+
     test('Update user role with valid data, should return 200', async () => {
         adminController.update.mockImplementation((req, res) =>
             res.json({ user: updatedRoleMockData })
@@ -489,6 +518,15 @@ describe('adminRouter unit tests', () => {
         )
     })
 
+    test('Delete user with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).delete,
+            `/api/admin/users/${mockUserId}`,
+            adminController.delete,
+            mockAdminJwtToken
+        )
+    })
+
     test('Delete user by admin with valid data, should return 200', async () => {
         adminController.delete.mockImplementation((req, res) =>
             res.json({ deletedUserId: mockUserId })
@@ -526,6 +564,15 @@ describe('adminRouter unit tests', () => {
             request(app).get,
             '/api/admin/feedbacks',
             adminController.getAllFeedbacks,
+        )
+    })
+
+    test('Get feedbacks with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).get,
+            '/api/admin/feedbacks',
+            adminController.getAllFeedbacks,
+            mockAdminJwtToken
         )
     })
 
@@ -589,6 +636,16 @@ describe('adminRouter unit tests', () => {
             `/api/admin/feedbacks/0`,
             adminController.changeStatus,
             'Обращение не найдено',
+            mockAdminJwtToken,
+            { status: true }
+        )
+    })
+
+    test('Update feedback status with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).patch,
+            `/api/admin/feedbacks/1`,
+            adminController.changeStatus,
             mockAdminJwtToken,
             { status: true }
         )

@@ -4,7 +4,10 @@ const goalController = require('../../../controllers/goalController')
 const errorHandler = require('../../../middleware/ErrorHandlingMiddleware')
 const goalRouter = require('../../goalRouter')
 const { mockUserJwtToken, mockFakeUserJwtToken } = require('@mocks/jwtTokenMocks')
-const { checkRouteWithInvalidInfo, checkRouteWithInvalidToken, checkRouteWithNonexistentData } = require('./checkRouter')
+const {
+    checkRouteWithInvalidInfo, checkRouteWithInvalidToken,
+    checkRouteWithNonexistentData, checkRouteWithUnexpectedError
+} = require('./checkRouter')
 
 jest.mock('../../../controllers/goalController', () => ({
     create: jest.fn(),
@@ -32,7 +35,7 @@ jest.mock('../../../middleware/AuthMiddleware', () => {
             if (error instanceof jwt.JsonWebTokenError) {
                 return next(ApiError.unauthorized('Неверный или просроченный токен'))
             }
-    
+
             next(error)
         }
     })
@@ -141,6 +144,16 @@ describe('goalRouter unit tests', () => {
         )
     })
 
+    test('Create goal with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).post,
+            '/api/goal/',
+            goalController.create,
+            mockUserJwtToken,
+            { info: 'Add tests' }
+        )
+    })
+
     test('Create goal with valid data, should return 201', async () => {
         goalController.create.mockImplementation((req, res) =>
             res.status(201).json({ goal: createdMockData })
@@ -182,6 +195,15 @@ describe('goalRouter unit tests', () => {
             `/api/goal/0/progress`,
             goalController.getProgress,
             'Цель не найдена',
+            mockUserJwtToken,
+        )
+    })
+
+    test('Get goal progress with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).get,
+            `/api/goal/${mockGoalId}/progress`,
+            goalController.getProgress,
             mockUserJwtToken,
         )
     })
@@ -242,6 +264,16 @@ describe('goalRouter unit tests', () => {
         )
     })
 
+    test('Update goal with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).patch,
+            `/api/goal/${mockGoalId}`,
+            goalController.update,
+            mockUserJwtToken,
+            { info: 'Add ui' }
+        )
+    })
+
     test('Update goal with valid data, should return 200', async () => {
         goalController.update.mockImplementation((req, res) =>
             res.json({ goal: updatedMockData })
@@ -285,9 +317,18 @@ describe('goalRouter unit tests', () => {
         )
     })
 
+    test('Get goal with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).get,
+            `/api/goal/${mockGoalId}`,
+            goalController.getOne,
+            mockUserJwtToken,
+        )
+    })
+
     test('Get goal with valid data, should return 200', async () => {
         goalController.getOne.mockImplementation((req, res) =>
-            res.json({goal: updatedMockData})
+            res.json({ goal: updatedMockData })
         )
 
         const response = await request(app)
@@ -324,6 +365,15 @@ describe('goalRouter unit tests', () => {
             goalController.getAll,
             'Пользователь не найден',
             mockFakeUserJwtToken,
+        )
+    })
+
+    test('Get list of goals with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).get,
+            `/api/goal/user`,
+            goalController.getAll,
+            mockUserJwtToken,
         )
     })
 
@@ -365,6 +415,15 @@ describe('goalRouter unit tests', () => {
             `/api/goal/0`,
             goalController.delete,
             'Цель не найдена',
+            mockUserJwtToken,
+        )
+    })
+
+    test('Delete goal with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).delete,
+            `/api/goal/${mockGoalId}`,
+            goalController.delete,
             mockUserJwtToken,
         )
     })

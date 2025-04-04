@@ -4,7 +4,10 @@ const feedbackController = require('../../../controllers/feedbackController')
 const errorHandler = require('../../../middleware/ErrorHandlingMiddleware')
 const feedbackRouter = require('../../feedbackRouter')
 const { mockUserJwtToken, mockFakeUserJwtToken } = require('@mocks/jwtTokenMocks')
-const { checkRouteWithInvalidInfo, checkRouteWithInvalidToken, checkRouteWithNonexistentData } = require('./checkRouter')
+const {
+    checkRouteWithInvalidInfo, checkRouteWithInvalidToken,
+    checkRouteWithNonexistentData, checkRouteWithUnexpectedError
+} = require('./checkRouter')
 
 jest.mock('../../../controllers/feedbackController', () => ({
     create: jest.fn(),
@@ -27,7 +30,7 @@ jest.mock('../../../middleware/AuthMiddleware', () => {
             if (error instanceof jwt.JsonWebTokenError) {
                 return next(ApiError.unauthorized('Неверный или просроченный токен'))
             }
-    
+
             next(error)
         }
     })
@@ -109,6 +112,16 @@ describe('feedbackRouter unit tests', () => {
             feedbackController.create,
             'Пользователь не найден',
             mockFakeUserJwtToken,
+            { info: 'Great app!' }
+        )
+    })
+
+    test('Create feedback with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).post,
+            '/api/feedback/',
+            feedbackController.create,
+            mockUserJwtToken,
             { info: 'Great app!' }
         )
     })
