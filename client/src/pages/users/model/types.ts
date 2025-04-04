@@ -21,3 +21,13 @@ export interface IUserItem {
     },
     onUserChange: () => Promise<void>
 }
+
+export interface IMockUser {
+    id: number,
+    email: string,
+    password: string,
+    role: string,
+    img: string,
+    createdAt: string,
+    updatedAt: string
+}

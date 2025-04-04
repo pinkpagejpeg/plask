@@ -1,1 +1,1 @@
-export { IAddUser, IChangeUser, IUserItem } from "./types"
+export { IAddUser, IChangeUser, IUserItem, IMockUser } from "./types"

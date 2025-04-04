@@ -1,1 +1,1 @@
-export { IAppealItem, IAppealItemComponent } from "./types"
+export { IAppealItem, IAppealItemComponent, IMockAppeal } from "./types"

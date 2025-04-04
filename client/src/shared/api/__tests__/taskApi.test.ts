@@ -3,10 +3,8 @@ import { createTask, deleteTask, getTasks, updateTask, updateTaskStatus } from "
 import { checkApi, checkApiError } from "./checkApi"
 
 interface IMockTaskData {
-    data: {
-        tasks: IMockTask[],
-        count: number
-    }
+    tasks: IMockTask[],
+    count: number
 }
 
 interface IMockTask {
@@ -29,47 +27,47 @@ jest.mock('../http', () => ({
 
 describe('taskApi tests', () => {
     let mockData: IMockTaskData,
-        createdMockData: IMockTask,
-        updatedMockData: IMockTask,
-        updatedStatusMockData: IMockTask
+        createdMockData: { task: IMockTask },
+        updatedMockData: { task: IMockTask },
+        updatedStatusMockData: { task: IMockTask }
 
     beforeAll(() => {
         mockData = {
-            data: {
-                tasks: [
-                    {
-                        id: 28,
-                        info: "Set up the project structure",
-                        status: true,
-                        userId: 19,
-                        createdAt: "2025-01-26 13:48:44.315+03",
-                        updatedAt: "2025-01-26 13:48:44.315+03",
-                    },
-                    {
-                        id: 29,
-                        info: 'Write the first chapter of documentation',
-                        status: false,
-                        userId: 19,
-                        createdAt: "2025-01-26 13:48:44.315+03",
-                        updatedAt: "2025-01-26 13:48:44.315+03",
-                    }
-                ],
-                count: 2
-            }
+            tasks: [
+                {
+                    id: 28,
+                    info: "Set up the project structure",
+                    status: true,
+                    userId: 19,
+                    createdAt: "2025-01-26 13:48:44.315+03",
+                    updatedAt: "2025-01-26 13:48:44.315+03",
+                },
+                {
+                    id: 29,
+                    info: 'Write the first chapter of documentation',
+                    status: false,
+                    userId: 19,
+                    createdAt: "2025-01-26 13:48:44.315+03",
+                    updatedAt: "2025-01-26 13:48:44.315+03",
+                }
+            ],
+            count: 2
         }
 
         createdMockData = {
-            id: 30,
-            info: 'Add tests',
-            status: false,
-            userId: 19,
-            createdAt: "2025-01-26 13:48:44.315+03",
-            updatedAt: "2025-01-26 13:48:44.315+03",
+            task: {
+                id: 30,
+                info: 'Add tests',
+                status: false,
+                userId: 19,
+                createdAt: "2025-01-26 13:48:44.315+03",
+                updatedAt: "2025-01-26 13:48:44.315+03",
+            }
         }
 
-        updatedMockData = { ...createdMockData, info: 'Add ui' }
+        updatedMockData = { task: { ...createdMockData.task, info: 'Add ui' } }
 
-        updatedStatusMockData = { ...updatedMockData, status: true }
+        updatedStatusMockData = { task: { ...updatedMockData.task, status: true } }
     })
 
     test('Create task api', async () => {

@@ -1,12 +1,16 @@
-import { createGoalItem, deleteGoalItem, getGoalItems, updateGoalItem, updateGoalItemStatus } from "../goalItemApi"
+import {
+    createGoalItem,
+    deleteGoalItem,
+    getGoalItems,
+    updateGoalItem,
+    updateGoalItemStatus
+} from "../goalItemApi"
 import { $authHost } from "../http"
 import { checkApi, checkApiError } from "./checkApi"
 
 interface IMockSubgoalData {
-    data: {
-        goalItems: IMockSubgoal[],
-        count: number
-    }
+    goalItems: IMockSubgoal[],
+    count: number
 }
 
 interface IMockSubgoal {
@@ -29,47 +33,55 @@ jest.mock('../http', () => ({
 
 describe('goalItemApi tests', () => {
     let mockData: IMockSubgoalData,
-        createdMockData: IMockSubgoal,
-        updatedMockData: IMockSubgoal,
-        updatedStatusMockData: IMockSubgoal
+        createdMockData: { goalItem: IMockSubgoal },
+        updatedMockData: { goalItem: IMockSubgoal },
+        updatedStatusMockData: { goalItem: IMockSubgoal }
 
     beforeAll(() => {
         mockData = {
-            data: {
-                goalItems: [
-                    {
-                        id: 14,
-                        info: 'Complete the project setup',
-                        status: true,
-                        goalId: 18,
-                        createdAt: "2025-01-26 13:48:44.315+03",
-                        updatedAt: "2025-01-26 13:48:44.315+03",
-                    },
-                    {
-                        id: 15,
-                        info: 'Write the initial draft of documentation',
-                        status: false,
-                        goalId: 19,
-                        createdAt: "2025-01-26 13:48:44.315+03",
-                        updatedAt: "2025-01-26 13:48:44.315+03",
-                    }
-                ],
-                count: 2
-            }
+            goalItems: [
+                {
+                    id: 14,
+                    info: 'Complete the project setup',
+                    status: true,
+                    goalId: 18,
+                    createdAt: "2025-01-26 13:48:44.315+03",
+                    updatedAt: "2025-01-26 13:48:44.315+03",
+                },
+                {
+                    id: 15,
+                    info: 'Write the initial draft of documentation',
+                    status: false,
+                    goalId: 19,
+                    createdAt: "2025-01-26 13:48:44.315+03",
+                    updatedAt: "2025-01-26 13:48:44.315+03",
+                }
+            ],
+            count: 2
         }
 
         createdMockData = {
-            id: 16,
-            info: 'Add unit test',
-            status: false,
-            goalId: 19,
-            createdAt: "2025-01-26 13:48:44.315+03",
-            updatedAt: "2025-01-26 13:48:44.315+03",
+            goalItem: {
+                id: 16,
+                info: 'Add unit test',
+                status: false,
+                goalId: 19,
+                createdAt: "2025-01-26 13:48:44.315+03",
+                updatedAt: "2025-01-26 13:48:44.315+03",
+            }
         }
 
-        updatedMockData = { ...createdMockData, info: 'Add unit and screenshot tests' }
-
-        updatedStatusMockData = { ...updatedMockData, status: true }
+        updatedMockData = {
+            goalItem: {
+                ...createdMockData.goalItem, info: 'Add unit and screenshot tests'
+            }
+        }
+        
+        updatedStatusMockData = {
+            goalItem: {
+                ...updatedMockData.goalItem, status: true
+            }
+        }
     })
 
     test('Create subgoal goal api', async () => {

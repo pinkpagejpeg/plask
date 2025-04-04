@@ -1,1 +1,1 @@
-export { IAddFeedback } from "./types"
+export { IAddFeedback, IMockFeedback } from "./types"

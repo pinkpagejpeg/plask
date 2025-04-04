@@ -3,13 +3,15 @@ import { $authHost } from "../http"
 import { checkApi, checkApiError } from "./checkApi"
 
 interface IMockFeedback {
-    id: number,
-    info: string,
-    date: string,
-    status: boolean,
-    userId: number,
-    createdAt: string,
-    updatedAt: string,
+    feedback: {
+        id: number,
+        info: string,
+        date: string,
+        status: boolean,
+        userId: number,
+        createdAt: string,
+        updatedAt: string,
+    }
 }
 
 jest.mock('../http', () => ({
@@ -23,13 +25,15 @@ describe('feedbackApi tests', () => {
 
     beforeAll(() => {
         createdMockData = {
-            id: 4,
-            info: "Thank you for fixing my problem!",
-            date: "2025-01-28",
-            status: true,
-            userId: 18,
-            createdAt: "2025-01-26 13:48:44.241+03",
-            updatedAt: "2025-01-26 13:48:44.241+03",
+            feedback: {
+                id: 4,
+                info: "Thank you for fixing my problem!",
+                date: "2025-01-28",
+                status: true,
+                userId: 18,
+                createdAt: "2025-01-26 13:48:44.241+03",
+                updatedAt: "2025-01-26 13:48:44.241+03",
+            }
         }
     })
 

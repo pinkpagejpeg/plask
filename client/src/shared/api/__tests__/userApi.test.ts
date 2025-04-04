@@ -3,13 +3,15 @@ import { check, CustomJwtPayload, deleteAccount, deleteImage, getInfo, login, re
 import { checkApi, checkApiError, checkApiWithJwt } from "./checkApi"
 
 interface IUserMockData {
-    id: number,
-    email: string,
-    password: string,
-    role: string,
-    img: string,
-    createdAt: string,
-    updatedAt: string
+    user: {
+        id: number,
+        email: string,
+        password: string,
+        role: string,
+        img: string,
+        createdAt: string,
+        updatedAt: string
+    }
 }
 
 jest.mock('../http', () => ({
@@ -37,16 +39,22 @@ describe('userApi tests', () => {
         }
 
         userMockData = {
-            id: 22,
-            email: 'user@example.com',
-            password: 'hashedPassword123',
-            role: 'USER',
-            img: 'user_default_image.jpg',
-            createdAt: "2025-01-26 13:48:44.315+03",
-            updatedAt: "2025-01-26 13:48:44.315+03",
+            user: {
+                id: 22,
+                email: 'user@example.com',
+                password: 'hashedPassword123',
+                role: 'USER',
+                img: 'user_default_image.jpg',
+                createdAt: "2025-01-26 13:48:44.315+03",
+                updatedAt: "2025-01-26 13:48:44.315+03",
+            }
         }
 
-        updatedUserMockData = { ...userMockData, img: 'new_profile_image.jpg' }
+        updatedUserMockData = {
+            user: {
+                ...userMockData.user, img: 'new_profile_image.jpg'
+            }
+        }
     })
 
     test('Registration', async () => {

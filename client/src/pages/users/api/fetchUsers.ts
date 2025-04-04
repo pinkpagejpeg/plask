@@ -6,9 +6,9 @@ export const fetchUsers = async () => {
         return data
     } catch (error: unknown) {
         if (error instanceof Error) {
-            alert(`При получении пользователя возникла ошибка: ${error.message}`)
+            alert(`При получении пользователей возникла ошибка: ${error.message}`)
         } else {
-            alert("При получении пользователя возникла неизвестная ошибка")
+            alert("При получении пользователей возникла неизвестная ошибка")
         }
     }
 }

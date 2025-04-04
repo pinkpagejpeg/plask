@@ -1,12 +1,17 @@
-import { createGoal, deleteGoal, getGoal, getGoalProgress, getGoals, updateGoal } from "../goalApi"
+import {
+    createGoal,
+    deleteGoal,
+    getGoal,
+    getGoalProgress,
+    getGoals,
+    updateGoal
+} from "../goalApi"
 import { $authHost } from "../http"
 import { checkApi, checkApiError } from "./checkApi"
 
 interface IMockGoalData {
-    data: {
-        goals: IMockGoal[],
-        count: number
-    }
+    goals: IMockGoal[],
+    count: number
 }
 
 interface IMockGoal {
@@ -28,41 +33,41 @@ jest.mock('../http', () => ({
 
 describe('goalApi tests', () => {
     let mockData: IMockGoalData,
-        createdMockData: IMockGoal,
-        updatedMockData: IMockGoal
+        createdMockData: { goal: IMockGoal },
+        updatedMockData: { goal: IMockGoal }
 
     beforeAll(() => {
         mockData = {
-            data: {
-                goals: [
-                    {
-                        id: 18,
-                        info: 'Complete the project',
-                        userId: 19,
-                        createdAt: "2025-01-26 13:48:44.315+03",
-                        updatedAt: "2025-01-26 13:48:44.315+03",
-                    },
-                    {
-                        id: 19,
-                        info: 'Write documentation',
-                        userId: 19,
-                        createdAt: "2025-01-26 13:48:44.315+03",
-                        updatedAt: "2025-01-26 13:48:44.315+03",
-                    }
-                ],
-                count: 2
-            }
+            goals: [
+                {
+                    id: 18,
+                    info: 'Complete the project',
+                    userId: 19,
+                    createdAt: "2025-01-26 13:48:44.315+03",
+                    updatedAt: "2025-01-26 13:48:44.315+03",
+                },
+                {
+                    id: 19,
+                    info: 'Write documentation',
+                    userId: 19,
+                    createdAt: "2025-01-26 13:48:44.315+03",
+                    updatedAt: "2025-01-26 13:48:44.315+03",
+                }
+            ],
+            count: 2
         }
 
         createdMockData = {
-            id: 20,
-            info: 'Add tests',
-            userId: 19,
-            createdAt: "2025-01-26 13:48:44.315+03",
-            updatedAt: "2025-01-26 13:48:44.315+03",
+            goal: {
+                id: 20,
+                info: 'Add tests',
+                userId: 19,
+                createdAt: "2025-01-26 13:48:44.315+03",
+                updatedAt: "2025-01-26 13:48:44.315+03",
+            }
         }
 
-        updatedMockData = { ...createdMockData, info: 'Add ui' }
+        updatedMockData = { goal: { ...createdMockData.goal, info: 'Add ui' } }
     })
 
     test('Create goal api', async () => {

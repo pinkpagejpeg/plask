@@ -1,12 +1,17 @@
 import { $authHost } from "../http"
-import { createUser, deleteUser, getUsers, updateUser, getFeedbacks, updateFeedbackStatus } from "../adminApi"
+import {
+    createUser,
+    deleteUser,
+    getUsers,
+    updateUser,
+    getFeedbacks,
+    updateFeedbackStatus
+} from "../adminApi"
 import { checkApi, checkApiError } from "./checkApi"
 
 interface IMockFeedbackData {
-    data: {
-        feedbacks: IMockFeedback[],
-        count: number
-    }
+    feedbacks: IMockFeedback[],
+    count: number
 }
 
 interface IMockFeedback {
@@ -20,10 +25,8 @@ interface IMockFeedback {
 }
 
 interface IMockUserData {
-    data: {
-        users: IMockUser[],
-        count: number
-    }
+    users: IMockUser[],
+    count: number
 }
 
 interface IMockUser {
@@ -47,51 +50,65 @@ jest.mock('../http', () => ({
 
 describe('adminApi user tests', () => {
     let mockData: IMockUserData,
-        createdMockData: IMockUser,
-        updatedEmailMockData: IMockUser,
-        updatedPasswordMockData: IMockUser,
-        updatedRoleMockData: IMockUser
+        createdMockData: { user: IMockUser },
+        updatedEmailMockData: { user: IMockUser },
+        updatedPasswordMockData: { user: IMockUser },
+        updatedRoleMockData: { user: IMockUser }
 
     beforeAll(() => {
         mockData = {
-            data: {
-                users: [
-                    {
-                        id: 22,
-                        email: 'user@example.com',
-                        password: 'hashedPassword123',
-                        role: 'USER',
-                        img: 'user_default_image.jpg',
-                        createdAt: "2025-01-26 13:48:44.315+03",
-                        updatedAt: "2025-01-26 13:48:44.315+03",
-                    },
-                    {
-                        id: 23,
-                        email: 'admin@example.com',
-                        password: 'hashedAdminPassword123',
-                        role: 'ADMIN',
-                        img: 'user_default_image.jpg',
-                        createdAt: "2025-01-26 13:48:44.315+03",
-                        updatedAt: "2025-01-26 13:48:44.315+03",
-                    }
-                ],
-                count: 2
-            }
+            users: [
+                {
+                    id: 22,
+                    email: 'user@example.com',
+                    password: 'hashedPassword123',
+                    role: 'USER',
+                    img: 'user_default_image.jpg',
+                    createdAt: "2025-01-26 13:48:44.315+03",
+                    updatedAt: "2025-01-26 13:48:44.315+03",
+                },
+                {
+                    id: 23,
+                    email: 'admin@example.com',
+                    password: 'hashedAdminPassword123',
+                    role: 'ADMIN',
+                    img: 'user_default_image.jpg',
+                    createdAt: "2025-01-26 13:48:44.315+03",
+                    updatedAt: "2025-01-26 13:48:44.315+03",
+                }
+            ],
+            count: 2
         }
 
         createdMockData = {
-            id: 24,
-            email: 'newUser@example.com',
-            password: 'hashedPassword123',
-            role: 'USER',
-            img: 'user_default_image.jpg',
-            createdAt: "2025-01-26 13:48:44.315+03",
-            updatedAt: "2025-01-26 13:48:44.315+03",
+            user: {
+                id: 24,
+                email: 'newUser@example.com',
+                password: 'hashedPassword123',
+                role: 'USER',
+                img: 'user_default_image.jpg',
+                createdAt: "2025-01-26 13:48:44.315+03",
+                updatedAt: "2025-01-26 13:48:44.315+03",
+            }
         }
 
-        updatedEmailMockData = { ...createdMockData, email: 'updateUser@example.com' }
-        updatedPasswordMockData = { ...updatedEmailMockData, password: 'updateHashedPassword123' }
-        updatedRoleMockData = { ...updatedPasswordMockData, role: 'ADMIN' }
+        updatedEmailMockData = {
+            user: {
+                ...createdMockData.user, email: 'updateUser@example.com'
+            }
+        }
+
+        updatedPasswordMockData = {
+            user: {
+                ...updatedEmailMockData.user, password: 'updateHashedPassword123'
+            }
+        }
+        
+        updatedRoleMockData = {
+            user: {
+                ...updatedPasswordMockData.user, role: 'ADMIN'
+            }
+        }
     })
 
     test('Get users', async () => {
@@ -109,7 +126,7 @@ describe('adminApi user tests', () => {
             getUsers,
             ['api/admin/users']
         )
-    })  
+    })
 
     test('Create user', async () => {
         await checkApi(
@@ -136,7 +153,7 @@ describe('adminApi user tests', () => {
             }],
             ['newUser@example.com', 'hashedPassword123', 'USER']
         )
-    })    
+    })
 
     test('Update user', async () => {
         await checkApi(
@@ -189,7 +206,7 @@ describe('adminApi user tests', () => {
             }],
             [24, 'updateUser@example.com', 'hashedPassword123', 'USER']
         )
-    })  
+    })
 
     test('Delete users', async () => {
         await checkApi(
@@ -218,32 +235,31 @@ describe('adminApi feedback tests', () => {
 
     beforeAll(() => {
         mockData = {
-            data: {
-                feedbacks: [
-                    {
-                        id: 2,
-                        info: "Great project, looking forward to the next version!",
-                        date: "2025-01-26",
-                        status: true,
-                        userId: 18,
-                        createdAt: "2025-01-26 13:48:44.241+03",
-                        updatedAt: "2025-01-26 13:48:44.241+03",
-                    },
-                    {
-                        id: 3,
-                        info: "The documentation is a bit lacking, could use more detail.",
-                        date: "2025-01-26",
-                        status: false,
-                        userId: 18,
-                        createdAt: "2025-01-26 13:48:44.241+03",
-                        updatedAt: "2025-01-26 13:48:44.241+03",
-                    }
-                ],
-                count: 2
-            }
+            feedbacks: [
+                {
+                    id: 2,
+                    info: "Great project, looking forward to the next version!",
+                    date: "2025-01-26",
+                    status: true,
+                    userId: 18,
+                    createdAt: "2025-01-26 13:48:44.241+03",
+                    updatedAt: "2025-01-26 13:48:44.241+03",
+                },
+                {
+                    id: 3,
+                    info: "The documentation is a bit lacking, could use more detail.",
+                    date: "2025-01-26",
+                    status: false,
+                    userId: 18,
+                    createdAt: "2025-01-26 13:48:44.241+03",
+                    updatedAt: "2025-01-26 13:48:44.241+03",
+                }
+            ],
+            count: 2
+
         }
 
-        updatedMockData = { ...mockData.data.feedbacks[1], status: true }
+        updatedMockData = { ...mockData.feedbacks[1], status: true }
     })
 
     test('Update feedback api', async () => {
