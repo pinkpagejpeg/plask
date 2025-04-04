@@ -1,6 +1,6 @@
 import { $authHost, $host } from "../http"
 import { check, CustomJwtPayload, deleteAccount, deleteImage, getInfo, login, registration, updateImage, updateInfo } from "../userApi"
-import { checkApi, checkApiWithJwt } from "./checkApi"
+import { checkApi, checkApiError, checkApiWithJwt } from "./checkApi"
 
 interface IUserMockData {
     id: number,
@@ -64,11 +64,38 @@ describe('userApi tests', () => {
         )
     })
 
+    test('Registration with error', async () => {
+        await checkApiError(
+            $host.post as jest.Mock,
+            registration,
+            ['api/user/registration', {
+                email: 'user@example.com',
+                password: '12345678',
+                role: 'USER',
+                hcaptchaToken: '123'
+            }],
+            ['user@example.com', '12345678', '123']
+        )
+    })
+
     test('Login', async () => {
         await checkApiWithJwt(
             $host.post as jest.Mock,
             login,
             jwtDecodedMockData,
+            ['api/user/login', {
+                email: 'user@example.com',
+                password: '12345678',
+                hcaptchaToken: '123'
+            }],
+            ['user@example.com', '12345678', '123']
+        )
+    })
+
+    test('Login with error', async () => {
+        await checkApiError(
+            $host.post as jest.Mock,
+            login,
             ['api/user/login', {
                 email: 'user@example.com',
                 password: '12345678',
@@ -87,11 +114,27 @@ describe('userApi tests', () => {
         )
     })
 
+    test('Check with error', async () => {
+        await checkApiError(
+            $authHost.get as jest.Mock,
+            check,
+            ['api/user/auth']
+        )
+    })
+
     test('Get user info', async () => {
         await checkApi(
             $authHost.get as jest.Mock,
             getInfo,
             userMockData,
+            [`api/user/`],
+        )
+    })
+
+    test('Get user info with error', async () => {
+        await checkApiError(
+            $authHost.get as jest.Mock,
+            getInfo,
             [`api/user/`],
         )
     })
@@ -121,6 +164,18 @@ describe('userApi tests', () => {
         )
     })
 
+    test('Update user info with error', async () => {
+        await checkApiError(
+            $authHost.patch as jest.Mock,
+            updateInfo,
+            ['api/user/info', {
+                email: 'updateUser@example.com',
+                password: '12345678',
+            }],
+            ['updateUser@example.com', '12345678']
+        )
+    })
+
     test('Update user image', async () => {
         const formData = new FormData()
         formData.append('image', 'new_profile_image.jpg')
@@ -129,6 +184,18 @@ describe('userApi tests', () => {
             $authHost.patch as jest.Mock,
             updateImage,
             updatedUserMockData,
+            [`api/user/image`, formData],
+            [formData]
+        )
+    })
+
+    test('Update user image with error', async () => {
+        const formData = new FormData()
+        formData.append('image', 'new_profile_image.jpg')
+
+        await checkApiError(
+            $authHost.patch as jest.Mock,
+            updateImage,
             [`api/user/image`, formData],
             [formData]
         )
@@ -143,14 +210,30 @@ describe('userApi tests', () => {
         )
     })
 
+    test('Delete user image with error', async () => {
+        await checkApiError(
+            $authHost.delete as jest.Mock,
+            deleteImage,
+            [`api/user/image`],
+        )
+    })
+
     test('Delete account', async () => {
-            await checkApi(
-                $authHost.delete as jest.Mock,
-                deleteAccount,
-                { deletedUserId: 24 },
-                [`api/user/`],
-            )
-        })
+        await checkApi(
+            $authHost.delete as jest.Mock,
+            deleteAccount,
+            { deletedUserId: 24 },
+            [`api/user/`],
+        )
+    })
+
+    test('Delete account with error', async () => {
+        await checkApiError(
+            $authHost.delete as jest.Mock,
+            deleteAccount,
+            [`api/user/`],
+        )
+    })
 
     afterEach(() => jest.clearAllMocks())
 })

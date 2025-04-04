@@ -16,6 +16,19 @@ export const checkApi = async (
     expect(mockMethod).toHaveBeenCalledWith(...expectedArgs)
 }
 
+export const checkApiError = async (
+    mockMethod: jest.Mock,
+    apiFunction,
+    expectedArgs,
+    responseArgs: any = [],
+    calledTimes: number = 1
+) => {
+    mockMethod.mockRejectedValue(new Error('Internal Server Error'))
+    await expect(apiFunction(...responseArgs)).rejects.toThrow('Internal Server Error')
+    expect(mockMethod).toHaveBeenCalledTimes(calledTimes)
+    expect(mockMethod).toHaveBeenCalledWith(...expectedArgs)
+}
+
 export const checkApiWithJwt = async (
     mockMethod: jest.Mock,
     apiFunction,

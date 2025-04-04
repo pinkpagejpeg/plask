@@ -1,6 +1,6 @@
 import { createFeedback } from "../feedbackApi"
 import { $authHost } from "../http"
-import { checkApi } from "./checkApi"
+import { checkApi, checkApiError } from "./checkApi"
 
 interface IMockFeedback {
     id: number,
@@ -38,6 +38,15 @@ describe('feedbackApi tests', () => {
             $authHost.post as jest.Mock,
             createFeedback,
             createdMockData,
+            [`api/feedback/`, { info: 'Thank you for fixing my problem!' }],
+            ['Thank you for fixing my problem!'],
+        )
+    })
+
+    test('Update feedback with error', async () => {
+        await checkApiError(
+            $authHost.post as jest.Mock,
+            createFeedback,
             [`api/feedback/`, { info: 'Thank you for fixing my problem!' }],
             ['Thank you for fixing my problem!'],
         )

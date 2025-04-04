@@ -1,6 +1,6 @@
 import { $authHost } from "../http"
 import { createTask, deleteTask, getTasks, updateTask, updateTaskStatus } from "../taskApi"
-import { checkApi } from "./checkApi"
+import { checkApi, checkApiError } from "./checkApi"
 
 interface IMockTaskData {
     data: {
@@ -82,11 +82,29 @@ describe('taskApi tests', () => {
         )
     })
 
+    test('Create task with error', async () => {
+        await checkApiError(
+            $authHost.post as jest.Mock,
+            createTask,
+            [`api/task/`, { info: 'Add tests' }],
+            ['Add tests']
+        )
+    })
+
     test('Update task api', async () => {
         await checkApi(
             $authHost.patch as jest.Mock,
             updateTask,
             updatedMockData,
+            [`api/task/30`, { info: 'Add ui' }],
+            [30, 'Add ui']
+        )
+    })
+
+    test('Update task with error', async () => {
+        await checkApiError(
+            $authHost.patch as jest.Mock,
+            updateTask,
             [`api/task/30`, { info: 'Add ui' }],
             [30, 'Add ui']
         )
@@ -111,6 +129,15 @@ describe('taskApi tests', () => {
         )
     })
 
+    test('Update task status with error', async () => {
+        await checkApiError(
+            $authHost.patch as jest.Mock,
+            updateTaskStatus,
+            [`api/task/30/status`, { status: true }],
+            [30, true]
+        )
+    })
+
     test('Delete task api', async () => {
         await checkApi(
             $authHost.delete as jest.Mock,
@@ -121,11 +148,28 @@ describe('taskApi tests', () => {
         )
     })
 
+    test('Delete task with error', async () => {
+        await checkApiError(
+            $authHost.delete as jest.Mock,
+            deleteTask,
+            [`api/task/30`],
+            [30]
+        )
+    })
+
     test('Get tasks api', async () => {
         await checkApi(
             $authHost.get as jest.Mock,
             getTasks,
             mockData,
+            [`api/task/user`],
+        )
+    })
+
+    test('Get tasks with error', async () => {
+        await checkApiError(
+            $authHost.get as jest.Mock,
+            getTasks,
             [`api/task/user`],
         )
     })

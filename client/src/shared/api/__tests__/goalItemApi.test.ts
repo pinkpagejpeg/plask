@@ -1,6 +1,6 @@
 import { createGoalItem, deleteGoalItem, getGoalItems, updateGoalItem, updateGoalItemStatus } from "../goalItemApi"
 import { $authHost } from "../http"
-import { checkApi } from "./checkApi"
+import { checkApi, checkApiError } from "./checkApi"
 
 interface IMockSubgoalData {
     data: {
@@ -82,11 +82,29 @@ describe('goalItemApi tests', () => {
         )
     })
 
+    test('Create subgoal with error', async () => {
+        await checkApiError(
+            $authHost.post as jest.Mock,
+            createGoalItem,
+            [`api/goal/19/items`, { info: 'Add unit test' }],
+            [19, 'Add unit test']
+        )
+    })
+
     test('Update subgoal goal api', async () => {
         await checkApi(
             $authHost.patch as jest.Mock,
             updateGoalItem,
             updatedMockData,
+            [`api/goal/19/items/16`, { info: 'Add unit and screenshot tests' }],
+            [19, 16, 'Add unit and screenshot tests']
+        )
+    })
+
+    test('Update subgoal with error', async () => {
+        await checkApiError(
+            $authHost.patch as jest.Mock,
+            updateGoalItem,
             [`api/goal/19/items/16`, { info: 'Add unit and screenshot tests' }],
             [19, 16, 'Add unit and screenshot tests']
         )
@@ -111,6 +129,15 @@ describe('goalItemApi tests', () => {
         )
     })
 
+    test('Update subgoal status with error', async () => {
+        await checkApiError(
+            $authHost.patch as jest.Mock,
+            updateGoalItemStatus,
+            [`api/goal/19/items/16/status`, { status: true }],
+            [19, 16, true]
+        )
+    })
+
     test('Delete subgoal goal api', async () => {
         await checkApi(
             $authHost.delete as jest.Mock,
@@ -121,11 +148,29 @@ describe('goalItemApi tests', () => {
         )
     })
 
+    test('Delete subgoal with error', async () => {
+        await checkApiError(
+            $authHost.delete as jest.Mock,
+            deleteGoalItem,
+            [`api/goal/19/items/16`],
+            [19, 16]
+        )
+    })
+
     test('Get subgoals goal api', async () => {
         await checkApi(
             $authHost.get as jest.Mock,
             getGoalItems,
             mockData,
+            [`api/goal/19/items`],
+            [19]
+        )
+    })
+
+    test('Get subgoals with error', async () => {
+        await checkApiError(
+            $authHost.get as jest.Mock,
+            getGoalItems,
             [`api/goal/19/items`],
             [19]
         )

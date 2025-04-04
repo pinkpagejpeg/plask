@@ -1,6 +1,6 @@
 import { $authHost } from "../http"
 import { createUser, deleteUser, getUsers, updateUser, getFeedbacks, updateFeedbackStatus } from "../adminApi"
-import { checkApi } from "./checkApi"
+import { checkApi, checkApiError } from "./checkApi"
 
 interface IMockFeedbackData {
     data: {
@@ -103,6 +103,14 @@ describe('adminApi user tests', () => {
         )
     })
 
+    test('Get users with error', async () => {
+        await checkApiError(
+            $authHost.get as jest.Mock,
+            getUsers,
+            ['api/admin/users']
+        )
+    })  
+
     test('Create user', async () => {
         await checkApi(
             $authHost.post as jest.Mock,
@@ -116,6 +124,19 @@ describe('adminApi user tests', () => {
             ['newUser@example.com', 'hashedPassword123', 'USER']
         )
     })
+
+    test('Create user with error', async () => {
+        await checkApiError(
+            $authHost.post as jest.Mock,
+            createUser,
+            ['api/admin/users', {
+                email: 'newUser@example.com',
+                password: 'hashedPassword123',
+                role: 'USER'
+            }],
+            ['newUser@example.com', 'hashedPassword123', 'USER']
+        )
+    })    
 
     test('Update user', async () => {
         await checkApi(
@@ -157,11 +178,33 @@ describe('adminApi user tests', () => {
         )
     })
 
+    test('Update user with error', async () => {
+        await checkApiError(
+            $authHost.patch as jest.Mock,
+            updateUser,
+            [`api/admin/users/24`, {
+                email: 'updateUser@example.com',
+                password: 'hashedPassword123',
+                role: 'USER'
+            }],
+            [24, 'updateUser@example.com', 'hashedPassword123', 'USER']
+        )
+    })  
+
     test('Delete users', async () => {
         await checkApi(
             $authHost.delete as jest.Mock,
             deleteUser,
             { deletedUserId: 24 },
+            [`api/admin/users/24`],
+            [24]
+        )
+    })
+
+    test('Delete user with error', async () => {
+        await checkApiError(
+            $authHost.delete as jest.Mock,
+            deleteUser,
             [`api/admin/users/24`],
             [24]
         )
@@ -213,11 +256,28 @@ describe('adminApi feedback tests', () => {
         )
     })
 
-    test('Get feedback api', async () => {
+    test('Update feedback with error', async () => {
+        await checkApiError(
+            $authHost.patch as jest.Mock,
+            updateFeedbackStatus,
+            [`api/admin/feedbacks/3`, { status: true }],
+            [3, true],
+        )
+    })
+
+    test('Get feedbacks api', async () => {
         await checkApi(
             $authHost.get as jest.Mock,
             getFeedbacks,
             mockData,
+            [`api/admin/feedbacks`],
+        )
+    })
+
+    test('Get feedbacks with error', async () => {
+        await checkApiError(
+            $authHost.get as jest.Mock,
+            getFeedbacks,
             [`api/admin/feedbacks`],
         )
     })
