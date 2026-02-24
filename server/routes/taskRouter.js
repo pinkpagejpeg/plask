@@ -33,6 +33,12 @@ router.delete(
     taskController.delete
 )
 
+// Get tasks by searchQuery (authorized users)
+router.get(
+    '/search',
+    taskController.getSearch
+)
+
 // Get tasks by user (authorized users)
 router.get(
     '/user',

@@ -24,3 +24,9 @@ export const getTasks = async () => {
     const { data } = await $authHost.get(`api/task/user`)
     return data
 }
+
+export const searchTasks = async (searchQuery: string) => {
+    const { data } = await $authHost.get(`api/task/search`,
+        { params: { searchQuery } })
+    return data
+}

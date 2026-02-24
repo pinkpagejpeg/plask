@@ -2,7 +2,14 @@ import { FC, SetStateAction, useEffect, useState } from 'react'
 import classes from './Tasks.module.scss'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
 import { useAppDispatch, useTypedSelector } from 'shared/store'
-import { fetchTasksByUserId, addTask, changeTask, changeTaskStatus, destroyTask } from '../../../entities/tasks'
+import {
+    fetchTasksByUserId,
+    addTask,
+    changeTask,
+    changeTaskStatus,
+    destroyTask,
+    fetchTasksBySearchQuery
+} from '@/entities/tasks/api'
 import { searchIcon } from '../../../shared/assets'
 
 export const Tasks: FC = () => {
@@ -11,6 +18,7 @@ export const Tasks: FC = () => {
     const { tasks } = useTypedSelector(state => state.task)
     const [info, setInfo] = useState('')
     const [search, setSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
 
     // if (!user) {
     //     return <Navigate to={LOGIN_ROUTE} />
@@ -21,6 +29,21 @@ export const Tasks: FC = () => {
             dispatch(fetchTasksByUserId())
         }
     }, [dispatch, user])
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(search);
+        }, 400);
+
+        return () => clearTimeout(timer);
+    }, [search]);
+
+    useEffect(() => {
+        if (!debouncedSearch) return;
+
+        dispatch(fetchTasksBySearchQuery({ searchQuery: debouncedSearch }))
+    }, [debouncedSearch]);
+
 
     const createTask = async (event: { preventDefault: () => void }) => {
         event.preventDefault()

@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { Task, User } = require('../models/models')
 const ApiError = require('../error/ApiError')
 const formatErrorMessages = require('../error/formatErrorMessages')
@@ -102,6 +103,32 @@ class TaskController {
             }
 
             const tasks = await Task.findAll({ where: { userId: id }, order: [['createdAt', 'DESC']] })
+            return res.json({ tasks, count: tasks.length })
+        } catch (error) {
+            return next(ApiError.internal(error.message))
+        }
+    }
+
+    async getSearch(req, res, next) {
+        try {
+            const { id } = req.user
+            const { searchQuery } = req.query;
+            const user = await User.findByPk(id)
+
+            if (!user) {
+                return next(ApiError.notFound('Пользователь не найден'))
+            }
+
+            const tasks = await Task.findAll({
+                where: {
+                    userId: id,
+                    info: {
+                        [Op.iLike]: `%${searchQuery}%`
+                    }
+                },
+                order: [['createdAt', 'DESC']]
+            });
+
             return res.json({ tasks, count: tasks.length })
         } catch (error) {
             return next(ApiError.internal(error.message))
