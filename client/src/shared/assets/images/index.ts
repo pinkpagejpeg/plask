@@ -24,6 +24,7 @@ import twitterLogo from "./twitter_logo.svg"
 import uploadIcon from "./upload_icon.png"
 import usersIcon from "./users_icon.png"
 import welcomeArrow from  "./welcome_arrow.svg"
+import searchIcon from  "./search.png"
 
 export { 
     addIcon, 
@@ -51,5 +52,6 @@ export {
     twitterLogo,
     uploadIcon,
     usersIcon,
-    welcomeArrow
+    welcomeArrow,
+    searchIcon
 }

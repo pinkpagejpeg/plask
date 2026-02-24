@@ -24,5 +24,6 @@ export {
     twitterLogo,
     uploadIcon,
     usersIcon,
-    welcomeArrow
+    welcomeArrow,
+    searchIcon
 } from "./images"

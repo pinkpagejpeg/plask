@@ -3,12 +3,14 @@ import classes from './Tasks.module.scss'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
 import { useAppDispatch, useTypedSelector } from 'shared/store'
 import { fetchTasksByUserId, addTask, changeTask, changeTaskStatus, destroyTask } from '../../../entities/tasks'
+import { searchIcon } from '../../../shared/assets'
 
 export const Tasks: FC = () => {
     const dispatch = useAppDispatch()
     const { user } = useTypedSelector(state => state.user)
     const { tasks } = useTypedSelector(state => state.task)
     const [info, setInfo] = useState('')
+    const [search, setSearch] = useState('')
 
     // if (!user) {
     //     return <Navigate to={LOGIN_ROUTE} />
@@ -50,12 +52,31 @@ export const Tasks: FC = () => {
         setInfo(event.target.value)
     }
 
+    const searchChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
+        setSearch(event.target.value)
+    }
+
     return (
         <>
             <Navbar />
             <div className={classes.container}>
                 <div className={classes.task__wrapper}>
                     <h3 className={classes.title}>Задачи</h3>
+
+                    <div className={classes.task__tools}>
+                        <div className={classes.task__search}>
+                            <img className={classes.task__searchIcon}
+                                src={searchIcon}
+                                alt='Иконка для поиска задач' />
+
+                            <input className={classes.input}
+                                type="text"
+                                placeholder="Поиск"
+                                value={search}
+                                onChange={searchChangeHandler} />
+                        </div>
+                    </div>
+
                     <div className={classes.task__listbox}>
                         {tasks && tasks.length > 0 ? (
                             <div className={classes.task__list}>
@@ -76,6 +97,7 @@ export const Tasks: FC = () => {
                             <h4 className={classes.title}>Задачи не обнаружены</h4>
                         )}
                     </div>
+
                     <form className={classes.task__form}>
                         <input className={classes.input}
                             type="text" placeholder="Название"
