@@ -96,38 +96,25 @@ class TaskController {
     async getAll(req, res, next) {
         try {
             const { id } = req.user
+            const { search } = req.query;
             const user = await User.findByPk(id)
 
             if (!user) {
                 return next(ApiError.notFound('Пользователь не найден'))
             }
 
-            const tasks = await Task.findAll({ where: { userId: id }, order: [['createdAt', 'DESC']] })
-            return res.json({ tasks, count: tasks.length })
-        } catch (error) {
-            return next(ApiError.internal(error.message))
-        }
-    }
+            const whereParams = { userId: id }
 
-    async getSearch(req, res, next) {
-        try {
-            const { id } = req.user
-            const { searchQuery } = req.query;
-            const user = await User.findByPk(id)
-
-            if (!user) {
-                return next(ApiError.notFound('Пользователь не найден'))
+            if (search) {
+                whereParams.info = {
+                    [Op.iLike]: `%${search}%`
+                }
             }
 
             const tasks = await Task.findAll({
-                where: {
-                    userId: id,
-                    info: {
-                        [Op.iLike]: `%${searchQuery}%`
-                    }
-                },
+                where: whereParams,
                 order: [['createdAt', 'DESC']]
-            });
+            })
 
             return res.json({ tasks, count: tasks.length })
         } catch (error) {

@@ -7,8 +7,7 @@ import {
     addTask,
     changeTask,
     changeTaskStatus,
-    destroyTask,
-    fetchTasksBySearchQuery
+    destroyTask
 } from '@/entities/tasks/api'
 import { searchIcon } from '../../../shared/assets'
 
@@ -26,9 +25,9 @@ export const Tasks: FC = () => {
 
     useEffect(() => {
         if (user) {
-            dispatch(fetchTasksByUserId())
+            dispatch(fetchTasksByUserId((debouncedSearch) ? { search: debouncedSearch } : undefined))
         }
-    }, [dispatch, user])
+    }, [dispatch, user, debouncedSearch])
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -37,13 +36,6 @@ export const Tasks: FC = () => {
 
         return () => clearTimeout(timer);
     }, [search]);
-
-    useEffect(() => {
-        if (!debouncedSearch) return;
-
-        dispatch(fetchTasksBySearchQuery({ searchQuery: debouncedSearch }))
-    }, [debouncedSearch]);
-
 
     const createTask = async (event: { preventDefault: () => void }) => {
         event.preventDefault()

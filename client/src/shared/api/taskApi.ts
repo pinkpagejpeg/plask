@@ -20,13 +20,9 @@ export const deleteTask = async (taskId: number) => {
     return data
 }
 
-export const getTasks = async () => {
-    const { data } = await $authHost.get(`api/task/user`)
-    return data
-}
-
-export const searchTasks = async (searchQuery: string) => {
-    const { data } = await $authHost.get(`api/task/search`,
-        { params: { searchQuery } })
+export const getTasks = async (search?: string) => {
+    const { data } = await $authHost.get(`api/task/user`,
+        { params: { search } }
+    )
     return data
 }
