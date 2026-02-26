@@ -8,7 +8,7 @@ import {
     changeTask,
     changeTaskStatus,
     destroyTask
-} from '@/entities/tasks/api'
+} from '../../../entities/tasks'
 import { searchIcon } from '../../../shared/assets'
 
 export const Tasks: FC = () => {
