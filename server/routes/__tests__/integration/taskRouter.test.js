@@ -17,7 +17,7 @@ describe('taskRouter tests', () => {
             request(app).post,
             '/api/task/',
             'Введены некорректные данные: задача не введена',
-            { info: ''},
+            { info: '' },
             mockUserJwtToken
         )
     })
@@ -54,7 +54,7 @@ describe('taskRouter tests', () => {
         const response = await request(app)
             .post('/api/task/')
             .set('Authorization', `Bearer ${mockUserJwtToken}`)
-            .send({ info: 'Write documentation'})
+            .send({ info: 'Write documentation' })
 
         expect(response.status).toBe(201)
         expect(response.body.task).toEqual(expect.objectContaining({
@@ -291,6 +291,40 @@ describe('taskRouter tests', () => {
         expect(typeof response.body.count).toBe('number')
 
         const ids = response.body.tasks.map((f) => f.id)
+        expect(new Set(ids).size).toBe(ids.length)
+    })
+
+    test('Search tasks by query, should return filtered tasks and 200', async () => {
+        const searchValue = 'Write tests'
+
+        const response = await request(app)
+            .get('/api/task/user')
+            .query({ search: searchValue })
+            .set('Authorization', `Bearer ${mockUserJwtToken}`)
+
+        expect(response.status).toBe(200)
+
+        expect(response.body.tasks).toBeInstanceOf(Array)
+        expect(response.body.count).toBe(response.body.tasks.length)
+        expect(typeof response.body.count).toBe('number')
+
+        response.body.tasks.forEach((task) => {
+            expect(task).toHaveProperty('id')
+            expect(typeof task.id).toBe('number')
+            expect(task).toHaveProperty('info')
+            expect(typeof task.info).toBe('string')
+            expect(task.info.toLowerCase()).toContain(searchValue.toLowerCase())
+            expect(task).toHaveProperty('status')
+            expect(typeof task.status).toBe('boolean')
+            expect(task).toHaveProperty('createdAt')
+            expect(typeof task.createdAt).toBe('string')
+            expect(task).toHaveProperty('updatedAt')
+            expect(typeof task.updatedAt).toBe('string')
+            expect(task).toHaveProperty('userId')
+            expect(typeof task.userId).toBe('number')
+        })
+
+        const ids = response.body.tasks.map((t) => t.id)
         expect(new Set(ids).size).toBe(ids.length)
     })
 

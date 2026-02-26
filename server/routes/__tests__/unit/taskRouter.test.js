@@ -357,6 +357,26 @@ describe('taskRouter unit tests', () => {
         expect(taskController.getAll).toHaveBeenCalledTimes(1)
     })
 
+    test('Search tasks by query, should call controller and return 200', async () => {
+        const filteredMockData = {
+            tasks: [mockData.tasks[0]],
+            count: 1
+        }
+
+        taskController.getAll.mockImplementation((req, res) =>
+            res.json(filteredMockData)
+        )
+
+        const response = await request(app)
+            .get('/api/task/user')
+            .query({ search: 'documentation' })
+            .set('Authorization', `Bearer ${mockUserJwtToken}`)
+
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual(filteredMockData)
+        expect(taskController.getAll).toHaveBeenCalledTimes(1)
+    })
+
     test('Delete task by user which is not authorized, should return 401', async () => {
         await checkRouteWithInvalidToken(
             request(app).delete,

@@ -96,7 +96,7 @@ class TaskController {
     async getAll(req, res, next) {
         try {
             const { id } = req.user
-            const { search } = req.query;
+            const search = req.query?.search;
             const user = await User.findByPk(id)
 
             if (!user) {
