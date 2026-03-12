@@ -4,10 +4,13 @@ import { Navbar } from '../../../shared/ui'
 import { GoalListItem } from './goalListItem'
 import { useAppDispatch, useTypedSelector } from 'shared/store'
 import { addGoal, fetchGoalsByUserId } from '../../../entities/goals'
+import { searchIcon } from '../../../shared/assets'
 
 export const Goals: FC = () => {
     const { user } = useTypedSelector(state => state.user)
     const { goals } = useTypedSelector(state => state.goal)
+    const [search, setSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
     const [info, setInfo] = useState('')
     const dispatch = useAppDispatch()
 
@@ -17,10 +20,18 @@ export const Goals: FC = () => {
 
     useEffect(() => {
         if (user) {
-            dispatch(fetchGoalsByUserId())
+            dispatch(fetchGoalsByUserId((debouncedSearch) ? { search: debouncedSearch } : undefined))
         }
 
-    }, [dispatch, user])
+    }, [dispatch, user, debouncedSearch])
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(search);
+        }, 400);
+
+        return () => clearTimeout(timer);
+    }, [search]);
 
     const createButtonHandler = async (event: { preventDefault: () => void }) => {
         event.preventDefault()
@@ -42,12 +53,31 @@ export const Goals: FC = () => {
         setInfo(event.target.value)
     }
 
+    const searchChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
+        setSearch(event.target.value)
+    }
+
     return (
         <>
             <Navbar />
             <div className={classes.container}>
                 <div className={classes.goal__wrapper}>
                     <h3 className={classes.title}>Цели</h3>
+
+                    <div className={classes.goal__tools}>
+                        <div className={classes.goal__search}>
+                            <img className={classes.goal__searchIcon}
+                                src={searchIcon}
+                                alt='Иконка для поиска задач' />
+
+                            <input className={classes.input}
+                                type="text"
+                                placeholder="Поиск"
+                                value={search}
+                                onChange={searchChangeHandler} />
+                        </div>
+                    </div>
+
                     <div className={classes.goal__listbox}>
                         {goals && goals.length > 0 ? (
                             <div className={classes.goal__list}>

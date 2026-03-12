@@ -20,7 +20,9 @@ export const deleteGoalItem = async (goalId: number, goalItemId: number) => {
     return data
 }
 
-export const getGoalItems = async (goalId: number) => {
-    const { data } = await $authHost.get(`api/goal/${goalId}/items`)
+export const getGoalItems = async (goalId: number, search?: string) => {
+    const { data } = await $authHost.get(`api/goal/${goalId}/items`,
+        { params: { search } }
+    )
     return data
 }

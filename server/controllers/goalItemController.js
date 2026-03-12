@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const { Goal_item, Goal } = require('../models/models')
 const ApiError = require('../error/ApiError')
 const formatErrorMessages = require('../error/formatErrorMessages')
@@ -79,13 +80,26 @@ class GoalController {
     async getAllItems(req, res, next) {
         try {
             const { goalId } = req.params
+            const search = req.query?.search
             const goal = await Goal.findByPk(goalId)
 
             if (!goal) {
                 return next(ApiError.notFound('Цель не найдена'))
             }
 
-            const goalItems = await Goal_item.findAll({ where: { goalId }, order: [['createdAt', 'DESC']] })
+            const whereParams = { goalId: goalId }
+
+            if (search) {
+                whereParams.info = {
+                    [Op.iLike]: `%${search}%`
+                }
+            }
+
+            const goalItems = await Goal_item.findAll({
+                where: whereParams,
+                order: [['createdAt', 'DESC']]
+            })
+
             return res.json({ goalItems, count: goalItems.length })
         } catch (error) {
             return next(ApiError.internal(error.message))

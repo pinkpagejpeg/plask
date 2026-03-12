@@ -15,7 +15,7 @@
     }
 
     &__wrapper > h3 {
-        margin: 0 0 28px 0;
+        margin: 0 0 10px 0;
     }
 
     &__listbox {
@@ -48,5 +48,29 @@
 
     &__form > input[type="submit"] {
         padding: 11px 66px;
+    }
+
+    &__tools {
+        display: flex;
+        justify-content: end;
+        align-items: end;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    &__search {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 224px;
+    }
+
+    &__search input[type="text"]{
+        margin-top: 0;
+    }
+
+    &__searchIcon {
+        width: 20px;
+        margin-right: 4px;
     }
 }

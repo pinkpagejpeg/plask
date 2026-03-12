@@ -17,7 +17,7 @@ $red: #D83A3A;
     }
 
     &__wrapper > h3 {
-        margin: 0 0 28px 0;
+        margin: 0 0 10px 0;
     }
 
     &__wrapper > .input {
@@ -90,5 +90,29 @@ $red: #D83A3A;
     &__button_delete > img {
         width: 20px;
         margin: 0 10px -4px 0;
+    }
+
+    &__tools {
+        display: flex;
+        justify-content: end;
+        align-items: end;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    &__search {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 224px;
+    }
+
+    &__search input[type="text"]{
+        margin-top: 0;
+    }
+
+    &__searchIcon {
+        width: 20px;
+        margin-right: 4px;
     }
 }

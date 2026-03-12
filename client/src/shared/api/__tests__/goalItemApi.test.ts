@@ -76,7 +76,7 @@ describe('goalItemApi tests', () => {
                 ...createdMockData.goalItem, info: 'Add unit and screenshot tests'
             }
         }
-        
+
         updatedStatusMockData = {
             goalItem: {
                 ...updatedMockData.goalItem, status: true
@@ -174,7 +174,7 @@ describe('goalItemApi tests', () => {
             $authHost.get as jest.Mock,
             getGoalItems,
             mockData,
-            [`api/goal/19/items`],
+            [`api/goal/19/items`, { "params": { "search": undefined } }],
             [19]
         )
     })
@@ -183,7 +183,7 @@ describe('goalItemApi tests', () => {
         await checkApiError(
             $authHost.get as jest.Mock,
             getGoalItems,
-            [`api/goal/19/items`],
+            [`api/goal/19/items`, { "params": { "search": undefined } }],
             [19]
         )
     })

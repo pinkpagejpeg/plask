@@ -334,6 +334,19 @@ describe('goalController unit tests', () => {
         expect(res.json).toHaveBeenCalledWith({ goals: mockGoals, count: mockGoals.length })
     })
 
+    test('Get goals with search data, should return 200', async () => {
+        User.findByPk.mockResolvedValue(mockUser)
+        Goal.findAll.mockResolvedValue([mockGoals[0]])
+
+        const req = { search: 'project', user: { id: 1 } }
+
+        await goalController.getAll(req, res, next)
+
+        expect(ApiError.internal).not.toHaveBeenCalled()
+        expect(next).not.toHaveBeenCalled()
+        expect(res.json).toHaveBeenCalledWith({ goals: [mockGoals[0]], count: 1 })
+    })
+
     test('Delete goal which does not exist, should return 404', async () => {
         Goal.findByPk.mockResolvedValue(null)
         Goal_item.findAll.mockResolvedValue(mockSubgoals)

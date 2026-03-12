@@ -132,7 +132,7 @@ describe('goalApi tests', () => {
             $authHost.get as jest.Mock,
             getGoals,
             mockData,
-            [`api/goal/user`],
+            [`api/goal/user`, { "params": { "search": undefined }}],
         )
     })
 
@@ -140,7 +140,7 @@ describe('goalApi tests', () => {
         await checkApiError(
             $authHost.get as jest.Mock,
             getGoals,
-            [`api/goal/user`],
+            [`api/goal/user`, { "params": { "search": undefined }}],
         )
     })
 

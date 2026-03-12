@@ -314,6 +314,22 @@ describe('goalItemController unit tests', () => {
         })
     })
 
+    test('Get subgoals with search data, should return 200', async () => {
+        Goal.findByPk.mockResolvedValue(mockGoal)
+        Goal_item.findAll.mockResolvedValue([mockGoalItems[0]])
+
+        const req = { search: 'unit', params: { goalId: 1 } }
+
+        await goalItemController.getAllItems(req, res, next)
+
+        expect(ApiError.internal).not.toHaveBeenCalled()
+        expect(next).not.toHaveBeenCalled()
+        expect(res.json).toHaveBeenCalledWith({
+            goalItems: [mockGoalItems[0]],
+            count: 1
+        })
+    })
+
     test('Delete subgoal which does not exist, should return 404', async () => {
         Goal_item.findByPk.mockResolvedValue(null)
 

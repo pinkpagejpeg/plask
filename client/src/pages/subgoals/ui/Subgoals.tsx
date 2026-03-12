@@ -7,6 +7,7 @@ import { addIcon, deleteIcon } from '../../../shared/assets'
 import { useAppDispatch, useTypedSelector } from 'shared/store'
 import { changeGoal, destroyGoal, fetchGoalsByUserId, IGoalItem } from '../../../entities/goals'
 import { GOALS_ROUTE } from '../../../shared/config'
+import { searchIcon } from '../../../shared/assets'
 
 export const Subgoals: FC = () => {
     const { id } = useParams()
@@ -21,6 +22,8 @@ export const Subgoals: FC = () => {
     const [isEditing, setIsEditing] = useState(false)
     const [goalInfo, setGoalInfo] = useState('')
     const [goalPrevInfo, setGoalPrevInfo] = useState('')
+    const [search, setSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
 
     // if (!user) {
     //     return <Navigate to={LOGIN_ROUTE} />;
@@ -32,10 +35,10 @@ export const Subgoals: FC = () => {
     }, [goalId])
 
     const fetchSubgoals = useCallback(async () => {
-        const { goalItems } = await getGoalItems(goalId)
+        const { goalItems } = await getGoalItems(goalId, (debouncedSearch) ? debouncedSearch : undefined)
         setSubgoals(goalItems)
         fetchProgress()
-    }, [goalId, fetchProgress])
+    }, [goalId, fetchProgress, debouncedSearch])
 
     useEffect(() => {
         if (user) {
@@ -63,6 +66,14 @@ export const Subgoals: FC = () => {
 
         fetchGoal()
     }, [dispatch, goalId, id, user, fetchSubgoals])
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(search);
+        }, 400);
+
+        return () => clearTimeout(timer);
+    }, [search]);
 
     const updateGoal = async () => {
         if (goalId && goalInfo) {
@@ -135,6 +146,10 @@ export const Subgoals: FC = () => {
         setSubgoalInfo(event.target.value)
     }
 
+    const searchChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
+        setSearch(event.target.value)
+    }
+
     return (
         <>
             <Navbar />
@@ -158,6 +173,21 @@ export const Subgoals: FC = () => {
                         <progress className={classes.goal__progressbar} id="progressbar" value={progress} max="100">{progress}%</progress>
                         <label className={classes.title} htmlFor="progressbar">{progress}%</label>
                     </div>
+
+                    <div className={classes.goal__tools}>
+                        <div className={classes.goal__search}>
+                            <img className={classes.goal__searchIcon}
+                                src={searchIcon}
+                                alt='Иконка для поиска задач' />
+
+                            <input className={classes.input}
+                                type="text"
+                                placeholder="Поиск"
+                                value={search}
+                                onChange={searchChangeHandler} />
+                        </div>
+                    </div>
+
                     <div className={classes.goal__listbox}>
                         {subgoals && subgoals.length > 0 ? (
                             <div className={classes.goal__list}>
