@@ -313,6 +313,19 @@ describe('taskController unit tests', () => {
         expect(res.json).toHaveBeenCalledWith({ tasks: [mockTasks[0]], count: 1 })
     })
 
+    test('Get tasks with filter data, should return 200', async () => {
+        User.findByPk.mockResolvedValue(mockUser)
+        Task.findAll.mockResolvedValue([mockTasks[0]])
+
+        const req = { filter: {status: 'true'}, user: { id: 1 } }
+
+        await taskController.getAll(req, res, next)
+
+        expect(ApiError.internal).not.toHaveBeenCalled()
+        expect(next).not.toHaveBeenCalled()
+        expect(res.json).toHaveBeenCalledWith({ tasks: [mockTasks[0]], count: 1 })
+    })
+
     test('Delete task which does not exist, should return 404', async () => {
         Task.findByPk.mockResolvedValue(null)
 

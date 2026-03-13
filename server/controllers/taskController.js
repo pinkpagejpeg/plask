@@ -97,6 +97,7 @@ class TaskController {
         try {
             const { id } = req.user
             const search = req.query?.search
+            const filter = req.query?.filter
             const user = await User.findByPk(id)
 
             if (!user) {
@@ -109,6 +110,10 @@ class TaskController {
                 whereParams.info = {
                     [Op.iLike]: `%${search}%`
                 }
+            }
+
+            if (filter && filter?.status !== undefined) {
+                whereParams.status = filter.status === 'true'
             }
 
             const tasks = await Task.findAll({
