@@ -1,4 +1,4 @@
-import { FC, SetStateAction, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import classes from './Tasks.module.scss'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
 import { useAppDispatch, useTypedSelector } from 'shared/store'
@@ -9,15 +9,16 @@ import {
     changeTaskStatus,
     destroyTask
 } from '../../../entities/tasks'
-import { searchIcon } from '../../../shared/assets'
+import { filterIcon, searchIcon } from '../../../shared/assets'
 
 export const Tasks: FC = () => {
     const dispatch = useAppDispatch()
     const { user } = useTypedSelector(state => state.user)
     const { tasks } = useTypedSelector(state => state.task)
-    const [info, setInfo] = useState('')
-    const [search, setSearch] = useState('')
-    const [debouncedSearch, setDebouncedSearch] = useState('')
+    const [info, setInfo] = useState<string>('')
+    const [search, setSearch] = useState<string>('')
+    const [debouncedSearch, setDebouncedSearch] = useState<string>('')
+    const [filter, setFilter] = useState<string>('default')
 
     // if (!user) {
     //     return <Navigate to={LOGIN_ROUTE} />
@@ -25,9 +26,14 @@ export const Tasks: FC = () => {
 
     useEffect(() => {
         if (user) {
-            dispatch(fetchTasksByUserId((debouncedSearch) ? { search: debouncedSearch } : undefined))
+            const params = {
+                ...(debouncedSearch && { search: debouncedSearch }),
+                ...(filter !== 'default' && { filter: { status: filter === 'completed' } })
+            }
+
+            dispatch(fetchTasksByUserId(params))
         }
-    }, [dispatch, user, debouncedSearch])
+    }, [dispatch, user, debouncedSearch, filter])
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -63,12 +69,16 @@ export const Tasks: FC = () => {
         }
     }
 
-    const taskInfoChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
+    const taskInfoChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInfo(event.target.value)
     }
 
-    const searchChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
+    const searchChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(event.target.value)
+    }
+
+    const filterChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilter(event.target.value)
     }
 
     return (
@@ -79,6 +89,18 @@ export const Tasks: FC = () => {
                     <h3 className={classes.title}>Задачи</h3>
 
                     <div className={classes.task__tools}>
+                        <div className={classes.task__filtration}>
+                            <img className={classes.task__filterIcon}
+                                src={filterIcon}
+                                alt='Иконка для фильтрации задач' />
+
+                            <select name="filtration" className={classes.input} onChange={filterChangeHandler} value={filter}>
+                                <option value='default'>По умолчанию</option>
+                                <option value='completed'>Выполненные</option>
+                                <option value='uncompleted'>Невыполненные</option>
+                            </select>
+                        </div>
+
                         <div className={classes.task__search}>
                             <img className={classes.task__searchIcon}
                                 src={searchIcon}

@@ -52,24 +52,24 @@
 
     &__tools {
         display: flex;
-        justify-content: end;
+        justify-content: space-between;
         align-items: end;
-        max-width: 100%;
+        max-width: 120%;
         margin-bottom: 20px;
     }
 
-    &__search {
+    &__search, &__filtration {
         display: flex;
         justify-content: center;
         align-items: center;
         max-width: 224px;
     }
 
-    &__search input[type="text"]{
+    &__search input[type="text"], &__filtration select{
         margin-top: 0;
     }
 
-    &__searchIcon {
+    &__searchIcon, &__filterIcon {
         width: 20px;
         margin-right: 4px;
     }

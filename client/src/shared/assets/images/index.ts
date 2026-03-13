@@ -23,8 +23,9 @@ import tiktokLogo from "./tiktok_logo.svg"
 import twitterLogo from "./twitter_logo.svg"
 import uploadIcon from "./upload_icon.png"
 import usersIcon from "./users_icon.png"
-import welcomeArrow from  "./welcome_arrow.svg"
-import searchIcon from  "./search.png"
+import welcomeArrow from "./welcome_arrow.svg"
+import searchIcon from "./search.png"
+import filterIcon from "./filter.png"
 
 export { 
     addIcon, 
@@ -53,5 +54,6 @@ export {
     uploadIcon,
     usersIcon,
     welcomeArrow,
-    searchIcon
+    searchIcon,
+    filterIcon
 }

@@ -25,5 +25,6 @@ export {
     uploadIcon,
     usersIcon,
     welcomeArrow,
-    searchIcon
+    searchIcon,
+    filterIcon
 } from "./images"

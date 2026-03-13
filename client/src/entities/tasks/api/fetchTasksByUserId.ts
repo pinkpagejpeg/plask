@@ -2,11 +2,18 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import { getTasks } from "../../../shared/api"
 import { ITasks } from "../model/types"
 
-export const fetchTasksByUserId = createAsyncThunk<ITasks, { search?: string } | void, { rejectValue: string }>(
+type TFetchTasksParams = {
+    search?: string
+    filter?: {
+        status: boolean
+    }
+}
+
+export const fetchTasksByUserId = createAsyncThunk<ITasks, TFetchTasksParams, { rejectValue: string }>(
     "task/fetchTasksByUserId",
-    async (arg, { rejectWithValue }) => {
+    async (params, { rejectWithValue }) => {
         try {
-            const data = await getTasks(arg && arg?.search)
+            const data = await getTasks(params.search, params.filter)
             return data
         } catch (error: unknown) {
             return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
