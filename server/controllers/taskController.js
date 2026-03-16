@@ -112,8 +112,8 @@ class TaskController {
                 }
             }
 
-            if (filter && filter?.status !== undefined) {
-                whereParams.status = filter.status === 'true'
+            if (filter) {
+                whereParams.status = filter === 'completed'
             }
 
             const tasks = await Task.findAll({

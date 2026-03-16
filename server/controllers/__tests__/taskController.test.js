@@ -317,7 +317,7 @@ describe('taskController unit tests', () => {
         User.findByPk.mockResolvedValue(mockUser)
         Task.findAll.mockResolvedValue([mockTasks[0]])
 
-        const req = { filter: {status: 'true'}, user: { id: 1 } }
+        const req = { filter: 'completed', user: { id: 1 } }
 
         await taskController.getAll(req, res, next)
 

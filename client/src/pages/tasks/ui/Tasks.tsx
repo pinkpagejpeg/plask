@@ -28,7 +28,7 @@ export const Tasks: FC = () => {
         if (user) {
             const params = {
                 ...(debouncedSearch && { search: debouncedSearch }),
-                ...(filter !== 'default' && { filter: { status: filter === 'completed' } })
+                ...(filter !== 'default' && { filter: filter })
             }
 
             dispatch(fetchTasksByUserId(params))

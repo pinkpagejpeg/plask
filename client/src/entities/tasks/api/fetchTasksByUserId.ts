@@ -4,9 +4,7 @@ import { ITasks } from "../model/types"
 
 type TFetchTasksParams = {
     search?: string
-    filter?: {
-        status: boolean
-    }
+    filter?: string
 }
 
 export const fetchTasksByUserId = createAsyncThunk<ITasks, TFetchTasksParams, { rejectValue: string }>(
