@@ -160,7 +160,14 @@ describe('taskApi tests', () => {
             $authHost.get as jest.Mock,
             getTasks,
             mockData,
-            [`api/task/user`, { "params": { "search": undefined, "filter": undefined } }],
+            [`api/task/user`, {
+                "params": {
+                    "search": undefined,
+                    "filter": undefined,
+                    "sort": undefined,
+                    "order": undefined
+                }
+            }],
         )
     })
 
@@ -168,7 +175,14 @@ describe('taskApi tests', () => {
         await checkApiError(
             $authHost.get as jest.Mock,
             getTasks,
-            [`api/task/user`, { "params": { "search": undefined } }],
+            [`api/task/user`, {
+                "params": {
+                    "search": undefined,
+                    "filter": undefined,
+                    "sort": undefined,
+                    "order": undefined
+                }
+            }],
         )
     })
 

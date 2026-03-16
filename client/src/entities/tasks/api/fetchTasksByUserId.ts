@@ -4,16 +4,16 @@ import { ITasks } from "../model/types"
 
 type TFetchTasksParams = {
     search?: string
-    filter?: {
-        status: boolean
-    }
+    filter?: string
+    sort?: string
+    order?: string
 }
 
 export const fetchTasksByUserId = createAsyncThunk<ITasks, TFetchTasksParams, { rejectValue: string }>(
     "task/fetchTasksByUserId",
     async (params, { rejectWithValue }) => {
         try {
-            const data = await getTasks(params.search, params.filter)
+            const data = await getTasks(params.search, params.filter, params.sort, params.order)
             return data
         } catch (error: unknown) {
             return rejectWithValue((error instanceof Error) ? error.message : 'Неизвестная ошибка')
