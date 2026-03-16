@@ -96,8 +96,8 @@ class TaskController {
     async getAll(req, res, next) {
         try {
             const { id } = req.user
-            const search = req.query?.search
-            const filter = req.query?.filter
+            const { search, filter, sort, order } = req.query || {}
+
             const user = await User.findByPk(id)
 
             if (!user) {
@@ -118,7 +118,7 @@ class TaskController {
 
             const tasks = await Task.findAll({
                 where: whereParams,
-                order: [['createdAt', 'DESC']]
+                order: [(sort && order) ? [sort, order] : ['createdAt', 'DESC']]
             })
 
             return res.json({ tasks, count: tasks.length })

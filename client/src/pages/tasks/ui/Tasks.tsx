@@ -9,7 +9,7 @@ import {
     changeTaskStatus,
     destroyTask
 } from '../../../entities/tasks'
-import { filterIcon, searchIcon } from '../../../shared/assets'
+import { filterIcon, searchIcon, sortIcon } from '../../../shared/assets'
 
 export const Tasks: FC = () => {
     const dispatch = useAppDispatch()
@@ -19,6 +19,7 @@ export const Tasks: FC = () => {
     const [search, setSearch] = useState<string>('')
     const [debouncedSearch, setDebouncedSearch] = useState<string>('')
     const [filter, setFilter] = useState<string>('default')
+    const [sortType, setSortType] = useState('default')
 
     // if (!user) {
     //     return <Navigate to={LOGIN_ROUTE} />
@@ -26,14 +27,25 @@ export const Tasks: FC = () => {
 
     useEffect(() => {
         if (user) {
+            let sortParams = { sort: 'createdAt', order: 'DESC' }
+
+            if (sortType === 'old') {
+                sortParams = { sort: 'createdAt', order: 'ASC' }
+            }
+
+            if (sortType === 'updated') {
+                sortParams = { sort: 'updatedAt', order: 'DESC' }
+            }
+
             const params = {
                 ...(debouncedSearch && { search: debouncedSearch }),
-                ...(filter !== 'default' && { filter: filter })
+                ...(filter !== 'default' && { filter: filter }),
+                ...sortParams
             }
 
             dispatch(fetchTasksByUserId(params))
         }
-    }, [dispatch, user, debouncedSearch, filter])
+    }, [dispatch, user, debouncedSearch, filter, sortType])
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -81,6 +93,10 @@ export const Tasks: FC = () => {
         setFilter(event.target.value)
     }
 
+    const sortChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSortType(event.target.value)
+    }
+
     return (
         <>
             <Navbar />
@@ -89,16 +105,30 @@ export const Tasks: FC = () => {
                     <h3 className={classes.title}>Задачи</h3>
 
                     <div className={classes.task__tools}>
-                        <div className={classes.task__filtration}>
-                            <img className={classes.task__filterIcon}
-                                src={filterIcon}
-                                alt='Иконка для фильтрации задач' />
+                        <div className={classes.task__leftwrap}>
+                            <div className={classes.task__sort}>
+                                <img className={classes.task__sortIcon}
+                                    src={sortIcon}
+                                    alt='Иконка для сортировки задач' />
 
-                            <select name="filtration" className={classes.input} onChange={filterChangeHandler} value={filter}>
-                                <option value='default'>По умолчанию</option>
-                                <option value='completed'>Выполненные</option>
-                                <option value='uncompleted'>Невыполненные</option>
-                            </select>
+                                <select name='sort' className={classes.input} onChange={sortChangeHandler} value={sortType}>
+                                    <option value='default'>Сначала новые</option>
+                                    <option value='old'>Сначала старые</option>
+                                    <option value='updated'>Недавно обновленные</option>
+                                </select>
+                            </div>
+
+                            <div className={classes.task__filtration}>
+                                <img className={classes.task__filterIcon}
+                                    src={filterIcon}
+                                    alt='Иконка для фильтрации задач' />
+
+                                <select name="filtration" className={classes.input} onChange={filterChangeHandler} value={filter}>
+                                    <option value='default'>По умолчанию</option>
+                                    <option value='completed'>Выполненные</option>
+                                    <option value='uncompleted'>Невыполненные</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div className={classes.task__search}>

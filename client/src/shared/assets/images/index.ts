@@ -26,6 +26,7 @@ import usersIcon from "./users_icon.png"
 import welcomeArrow from "./welcome_arrow.svg"
 import searchIcon from "./search.png"
 import filterIcon from "./filter.png"
+import sortIcon from "./sort.png"
 
 export { 
     addIcon, 
@@ -55,5 +56,6 @@ export {
     usersIcon,
     welcomeArrow,
     searchIcon,
-    filterIcon
+    filterIcon,
+    sortIcon
 }
