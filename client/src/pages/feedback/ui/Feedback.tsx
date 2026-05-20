@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 import classes from './Feedback.module.scss'
 import { Navbar } from '../../../shared/ui'
-import { useTypedSelector } from 'shared/store'
+import { useTypedSelector } from '@redux'
 import { addFeedback } from '../api'
 
 export const Feedback: FC = () => {

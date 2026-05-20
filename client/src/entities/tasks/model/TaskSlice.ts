@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { ITask, ITasks, ITaskState } from "./types"
 import { addTask, changeTask, changeTaskStatus, destroyTask, fetchTasksByUserId } from "../api"
-import { createPendingHandler, createRejectedHandler } from "shared/store"
+import { createPendingHandler, createRejectedHandler } from "@redux"
 
 const initialState: ITaskState = {
     tasks: null,

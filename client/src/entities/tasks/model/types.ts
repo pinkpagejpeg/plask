@@ -1,4 +1,4 @@
-import { ICommonState } from "shared/store"
+import { ICommonState } from "@redux"
 
 export interface ITaskState extends ICommonState {
     tasks: ITask[] | null,

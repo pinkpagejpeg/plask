@@ -1,6 +1,6 @@
 import { FC, SetStateAction, useEffect, useState } from 'react'
 import classes from './ProfileInfo.module.scss'
-import { useAppDispatch, useTypedSelector } from 'shared/store'
+import { useAppDispatch, useTypedSelector } from '@redux'
 import { changeUserInfo } from '../../../../entities/users'
 
 export const ProfileInfo: FC = () => {

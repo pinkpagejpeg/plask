@@ -5,7 +5,7 @@ import { Navbar } from '../../../shared/ui'
 import { deleteIcon, uploadIcon } from '../../../shared/assets'
 import { REGISTRATION_ROUTE } from '../../../shared/config'
 import { ProfileInfo } from './profileInfo'
-import { useAppDispatch, useTypedSelector } from 'shared/store'
+import { useAppDispatch, useTypedSelector } from '@redux'
 import { changeUserImage, destroyUser, destroyUserImage } from '../../../entities/users'
 
 export const Profile: FC = () => {

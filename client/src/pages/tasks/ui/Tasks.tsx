@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import classes from './Tasks.module.scss'
 import { Navbar, TaskCheckbox } from '../../../shared/ui'
-import { useAppDispatch, useTypedSelector } from 'shared/store'
+import { useAppDispatch, useTypedSelector } from '@redux'
 import {
     fetchTasksByUserId,
     addTask,

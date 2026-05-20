@@ -2,7 +2,7 @@ import { FC, SetStateAction, useEffect, useState } from 'react'
 import classes from './Goals.module.scss'
 import { Navbar } from '../../../shared/ui'
 import { GoalListItem } from './goalListItem'
-import { useAppDispatch, useTypedSelector } from 'shared/store'
+import { useAppDispatch, useTypedSelector } from '@redux'
 import { addGoal, fetchGoalsByUserId } from '../../../entities/goals'
 import { searchIcon } from '../../../shared/assets'
 

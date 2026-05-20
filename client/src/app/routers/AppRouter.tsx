@@ -1,6 +1,6 @@
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router'
-import { useAppDispatch, useTypedSelector } from 'shared/store'
+import { useAppDispatch, useTypedSelector } from '@redux'
 import { useEffect, useMemo } from 'react'
 import { fetchUserById } from '../../entities/users'
 import { check } from '../../shared/api'
@@ -16,7 +16,7 @@ export const AppRouter = () => {
     }, [dispatch])
 
     const currentRouter = useMemo(() => {
-        if (loading) return null
+        if (loading || !user) return null
 
         return router(user, isAuth, loading)
     }, [user, isAuth, loading])

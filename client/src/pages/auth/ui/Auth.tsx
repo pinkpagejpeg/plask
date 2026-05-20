@@ -4,7 +4,7 @@ import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { ADMIN_ROUTE, INFO_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, WELCOME_ROUTE } from '../../../shared/config'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { registration, login } from '../../../shared/api'
-import { useAppDispatch } from 'shared/store'
+import { useAppDispatch } from '@redux'
 import { fetchUserById } from '../../../entities/users'
 
 export const Auth: FC = () => {
