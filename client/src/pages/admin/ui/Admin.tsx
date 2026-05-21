@@ -1,9 +1,8 @@
 import { FC } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
+import { PageLayout } from '@/shared/ui'
+import { ADMIN_FEEDBACK_ROUTE, ADMIN_USER_ROUTE } from '@/shared/config'
 import classes from './Admin.module.scss'
-import { NavLink } from 'react-router-dom'
-import { ADMIN_FEEDBACK_ROUTE, ADMIN_USER_ROUTE } from '../../../shared/config'
-import { useLocation } from 'react-router-dom'
-import { Navbar } from '../../../shared/ui'
 
 export const Admin: FC = () => {
     const location = useLocation()
@@ -15,8 +14,7 @@ export const Admin: FC = () => {
     // }
 
     return (
-        <>
-            <Navbar />
+        <PageLayout>
             <div className={classes.container}>
                 <div className={classes.admin__wrapper}>
                     <h2 className={classes.plask}>Plask</h2>
@@ -60,6 +58,6 @@ export const Admin: FC = () => {
                     }
                 </div>
             </div>
-        </>
+        </PageLayout>
     )
 }

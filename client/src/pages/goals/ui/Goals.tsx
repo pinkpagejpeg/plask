@@ -1,10 +1,10 @@
 import { FC, SetStateAction, useEffect, useState } from 'react'
-import classes from './Goals.module.scss'
-import { Navbar } from '../../../shared/ui'
 import { GoalListItem } from './goalListItem'
+import { addGoal, fetchGoalsByUserId } from '@/entities/goals'
 import { useAppDispatch, useTypedSelector } from '@redux'
-import { addGoal, fetchGoalsByUserId } from '../../../entities/goals'
-import { searchIcon } from '../../../shared/assets'
+import { searchIcon } from '@/shared/assets'
+import { PageLayout } from '@/shared/ui'
+import classes from './Goals.module.scss'
 
 export const Goals: FC = () => {
     const { user } = useTypedSelector(state => state.user)
@@ -58,8 +58,7 @@ export const Goals: FC = () => {
     }
 
     return (
-        <>
-            <Navbar />
+        <PageLayout>
             <div className={classes.container}>
                 <div className={classes.goal__wrapper}>
                     <h3 className={classes.title}>Цели</h3>
@@ -106,6 +105,6 @@ export const Goals: FC = () => {
                     </form>
                 </div>
             </div>
-        </>
+        </PageLayout>
     )
 }

@@ -1,12 +1,11 @@
 import { FC, useEffect } from 'react'
-import classes from './Welcome.module.scss'
-import { NavLink } from 'react-router-dom'
-import { Navbar, TaskCheckbox } from '../../../shared/ui'
-import { FEEDBACK_ROUTE, GOALS_ITEM_ROUTE, GOALS_ROUTE, TASKS_ROUTE } from '../../../shared/config'
-import { useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
+import { fetchTasksByUserId } from '@/entities/tasks'
+import { fetchGoalsByUserId } from '@/entities/goals'
+import { PageLayout, TaskCheckbox } from '@/shared/ui'
+import { FEEDBACK_ROUTE, GOALS_ITEM_ROUTE, GOALS_ROUTE, TASKS_ROUTE } from '@/shared/config'
 import { useAppDispatch, useTypedSelector } from '@redux'
-import { fetchTasksByUserId } from '../../../entities/tasks'
-import { fetchGoalsByUserId } from '../../../entities/goals'
+import classes from './Welcome.module.scss'
 
 export const Welcome: FC = () => {
     const location = useLocation()
@@ -29,8 +28,7 @@ export const Welcome: FC = () => {
     }, [dispatch, user])
 
     return (
-        <>
-            <Navbar />
+        <PageLayout>
             <div className={classes.container}>
                 <div className={classes.welcome__wrapper}>
                     <h2 className={classes.plask}>Plask</h2>
@@ -169,6 +167,6 @@ export const Welcome: FC = () => {
                     }
                 </div>
             </div>
-        </>
+        </PageLayout>
     )
 }

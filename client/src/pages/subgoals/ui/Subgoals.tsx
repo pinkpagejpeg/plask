@@ -1,13 +1,12 @@
 import { useState, useEffect, FC, useCallback, SetStateAction } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import classes from './Subgoals.module.scss'
-import { Navbar, GoalCheckbox } from '../../../shared/ui'
-import { getGoal, getGoalProgress, getGoalItems, createGoalItem, updateGoalItem, updateGoalItemStatus, deleteGoalItem } from '../../../shared/api'
-import { addIcon, deleteIcon } from '../../../shared/assets'
+import { changeGoal, destroyGoal, fetchGoalsByUserId, IGoalItem } from '@/entities/goals'
+import { GOALS_ROUTE } from '@/shared/config'
+import { GoalCheckbox, PageLayout } from '@/shared/ui'
+import { searchIcon, addIcon, deleteIcon } from '@/shared/assets'
+import { getGoal, getGoalProgress, getGoalItems, createGoalItem, updateGoalItem, updateGoalItemStatus, deleteGoalItem } from '@/shared/api'
 import { useAppDispatch, useTypedSelector } from '@redux'
-import { changeGoal, destroyGoal, fetchGoalsByUserId, IGoalItem } from '../../../entities/goals'
-import { GOALS_ROUTE } from '../../../shared/config'
-import { searchIcon } from '../../../shared/assets'
+import classes from './Subgoals.module.scss'
 
 export const Subgoals: FC = () => {
     const { id } = useParams()
@@ -151,8 +150,7 @@ export const Subgoals: FC = () => {
     }
 
     return (
-        <>
-            <Navbar />
+        <PageLayout>
             <div className={classes.container}>
                 <div className={classes.goal__wrapper}>
                     {isEditing ? (
@@ -225,6 +223,6 @@ export const Subgoals: FC = () => {
                     </button>
                 </div>
             </div>
-        </>
+        </PageLayout>
     )
 }

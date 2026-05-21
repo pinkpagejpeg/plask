@@ -81,7 +81,7 @@ export const Auth: FC = () => {
                         onChange={passwordChangeHandler}
                         required />
                     <HCaptcha
-                        sitekey='6fd23c34-4ef8-4d2e-90d2-f444b6acaed4'
+                        sitekey='10000000-ffff-ffff-ffff-000000000001'
                         theme="dark"
                         onVerify={verifyCaptchaHandler}
                     />

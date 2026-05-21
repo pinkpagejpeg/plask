@@ -12,7 +12,7 @@ export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   resolve: {
     alias: {
-      '@redux': path.resolve(__dirname, 'src/shared/lib/redux'),
+      '@redux': path.resolve(__dirname, './src/shared/store')
     },
   },
 })

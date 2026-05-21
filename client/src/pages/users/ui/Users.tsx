@@ -1,9 +1,9 @@
-import { useEffect, useState, FC } from 'react'
-import classes from './Users.module.scss'
-import { Navbar } from '../../../shared/ui'
+import { useEffect, useState, FC, SetStateAction } from 'react'
 import { UserItem } from './userItem'
 import { fetchUsers, addUser } from '../api'
 import { IUser } from '@/entities/users'
+import { PageLayout } from '@/shared/ui'
+import classes from './Users.module.scss'
 
 export const Users: FC = () => {
     const [email, setEmail] = useState('')
@@ -32,7 +32,7 @@ export const Users: FC = () => {
         }
     }
 
-    const addButtonHandler = async (event) => {
+    const addButtonHandler = async (event: { preventDefault: () => void }) => {
         event.preventDefault()
         try {
             await addUser({ email, password, role })
@@ -49,21 +49,20 @@ export const Users: FC = () => {
         }
     }
 
-    const emailChangeHandler = (event) => {
+    const emailChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
         setEmail(event.target.value)
     }
 
-    const passwordChangeHandler = (event) => {
+    const passwordChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
         setPassword(event.target.value)
     }
 
-    const roleChangeHandler = (event) => {
+    const roleChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
         setRole(event.target.value)
     }
 
     return (
-        <>
-            <Navbar />
+        <PageLayout>
             <div className={classes.container}>
                 <div className={classes.user__wrapper}>
                     <h3 className={classes.title}>Пользователи</h3>
@@ -112,6 +111,6 @@ export const Users: FC = () => {
                     </table>
                 </div>
             </div>
-        </>
+        </PageLayout>
     )
 }

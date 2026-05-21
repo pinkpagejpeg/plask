@@ -1,6 +1,4 @@
 import { FC, useEffect, useState } from 'react'
-import classes from './Tasks.module.scss'
-import { Navbar, TaskCheckbox } from '../../../shared/ui'
 import { useAppDispatch, useTypedSelector } from '@redux'
 import {
     fetchTasksByUserId,
@@ -8,8 +6,10 @@ import {
     changeTask,
     changeTaskStatus,
     destroyTask
-} from '../../../entities/tasks'
-import { filterIcon, searchIcon, sortIcon } from '../../../shared/assets'
+} from '@/entities/tasks'
+import { filterIcon, searchIcon, sortIcon } from '@/shared/assets'
+import { PageLayout, TaskCheckbox } from '@/shared/ui'
+import classes from './Tasks.module.scss'
 
 export const Tasks: FC = () => {
     const dispatch = useAppDispatch()
@@ -98,8 +98,7 @@ export const Tasks: FC = () => {
     }
 
     return (
-        <>
-            <Navbar />
+        <PageLayout>
             <div className={classes.container}>
                 <div className={classes.task__wrapper}>
                     <h3 className={classes.title}>Задачи</h3>
@@ -177,6 +176,6 @@ export const Tasks: FC = () => {
                     </form>
                 </div>
             </div>
-        </>
+        </PageLayout>
     )
 }
