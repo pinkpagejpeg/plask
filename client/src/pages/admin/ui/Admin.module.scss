@@ -1,41 +1,30 @@
 @use '../../../shared/ui/index.scss';
-@include index.container();
-@include index.plask();
 @include index.title();
 @include index.main_text();
 @include index.button_light();
 
 .admin {
     &__wrapper {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
         width: 66%;
-        text-align: center;
-        margin: 138px auto 0 auto;
-    }
-
-    &__wrapper > h3 {
-        margin: 28px 0 20px 0;
     }
 
     &__mainbox {
         display: flex;
         justify-content: space-between;
-        margin-top: 80px;
     }
 
     &__regbox {
         display: flex;
         justify-content: space-between;
+        margin-top: 80px;
     }
 
     &__itembox {
-        width: 45%;
+        width: 40%;
     }
 
     &__itembox > p {
-        margin: 20px 0 43px 0;
+        margin: 20px 0 53px 0;
     }
 
     &__itembox > a {
@@ -46,15 +35,15 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin: 0 auto;
+        margin: 52px auto 0 auto;
     }
 
     &__link {
         text-decoration: none;
         color: index.$light_gray;
         font-family: 'Ubuntu', sans-serif;
-        font-size: 24px;
-        margin-bottom: 24px;
+        font-size: 28px;
+        margin-bottom: 30px;
         font-weight: 500;
         letter-spacing: 5%;
     }
@@ -62,9 +51,9 @@
     &__bottom {
         color: index.$middle_gray;
         font-family: 'Ubuntu', sans-serif;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 300;
         letter-spacing: 5%;
-        margin: 20vh 0 60px 0;
+        margin: calc(50vh - 138px) 0 60px 0;
     }
 }

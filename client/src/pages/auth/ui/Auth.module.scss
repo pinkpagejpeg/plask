@@ -38,6 +38,7 @@
     &__form > input[type="email"],
     &__form > input[type="password"] {
         background-color: index.$dark_gray;
+        margin-top: 28px;
     }
 
     &__form > input[type="password"] {

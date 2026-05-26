@@ -14,49 +14,43 @@ export const Admin: FC = () => {
     // }
 
     return (
-        <PageLayout>
-            <div className={classes.container}>
-                <div className={classes.admin__wrapper}>
-                    <h2 className={classes.plask}>Plask</h2>
-                    {((from === 'login') || (from === 'registration')) &&
-                        <h3 className={classes.title}>Добро пожаловать!</h3>
-                    }
-                    {from === 'registration' &&
-                        <p className={classes.main_text}>Мы ценим вашу роль в поддержании и оптимизации работы нашего
-                            приложения. Мы уверены, что ваш вклад поможет улучшить пользовательский опыт. При появлении
-                            вопросов или предложений, можете обратиться на корпоративную линию +7-999-999-9999 или
-                            на почту plask_stuff@gmail.com. Мы готовы сотрудничать с вами для достижения общей цели -
-                            сделать наше приложение лучше для пользователей.</p>
+        <PageLayout title={((from === 'login') || (from === 'registration')) ? 'Добро пожаловать!' : ''} withLogo>
+            <div className={classes.admin__wrapper}>
+                {((from === 'login') || (from === 'registration')) &&
+                    <p className={classes.main_text}>Мы ценим вашу роль в поддержании и оптимизации работы нашего
+                        приложения. Мы уверены, что ваш вклад поможет улучшить пользовательский опыт. При появлении
+                        вопросов или предложений, можете обратиться на корпоративную линию +7-999-999-9999 или
+                        на почту plask_stuff@gmail.com. Мы готовы сотрудничать с вами для достижения общей цели -
+                        сделать наше приложение лучше для пользователей.</p>
 
-                    }
-                    <div className={classes.admin__mainbox}>
-                        {from === 'registration' ?
-                            <div className={classes.admin__regbox}>
-                                <div className={classes.admin__itembox}>
-                                    <h3 className={classes.title}>Пользователи</h3>
-                                    <p className={classes.main_text}>Для того чтобы посмотреть информацию о пользователях,
-                                        перейдите в раздел “Пользователи” или нажмите на кнопку ниже</p>
-                                    <NavLink className={classes.button_light} to={ADMIN_USER_ROUTE}>Перейти к пользователям</NavLink>
-                                </div>
-                                <div className={classes.admin__itembox}>
-                                    <h3 className={classes.title}>Обратная связь</h3>
-                                    <p className={classes.main_text}>Для того чтобы посмотреть обратную связь, перейдите
-                                        в раздел “Обратная связь” или нажмите на кнопку ниже</p>
-                                    <NavLink className={classes.button_light} to={ADMIN_FEEDBACK_ROUTE}>Перейти к обратной связи</NavLink>
-                                </div>
+                }
+                <div className={classes.admin__mainbox}>
+                    {((from === 'login') || (from === 'registration')) ?
+                        <div className={classes.admin__regbox}>
+                            <div className={classes.admin__itembox}>
+                                <h3 className={classes.title}>Пользователи</h3>
+                                <p className={classes.main_text}>Для того чтобы посмотреть информацию о пользователях,
+                                    перейдите в раздел “Пользователи” или нажмите на кнопку ниже</p>
+                                <NavLink className={classes.button_light} to={ADMIN_USER_ROUTE}>Перейти к пользователям</NavLink>
                             </div>
-                            :
-                            <div className={classes.admin__logbox}>
-                                <NavLink className={classes.admin__link} to={ADMIN_USER_ROUTE}>Пользователи</NavLink>
-                                <NavLink className={classes.admin__link} to={ADMIN_FEEDBACK_ROUTE}>Обратная связь</NavLink>
+                            <div className={classes.admin__itembox}>
+                                <h3 className={classes.title}>Обратная связь</h3>
+                                <p className={classes.main_text}>Для того чтобы посмотреть обратную связь, перейдите
+                                    в раздел “Обратная связь” или нажмите на кнопку ниже</p>
+                                <NavLink className={classes.button_light} to={ADMIN_FEEDBACK_ROUTE}>Перейти к обратной связи</NavLink>
                             </div>
-                        }
-                    </div>
-                    {!(from === 'registration') &&
-                        <p className={classes.admin__bottom}>При появлении вопросов или предложений, можете обратиться
-                            на корпоративную линию +7-999-999-9999 или на почту plask_stuff@gmail.com.</p>
+                        </div>
+                        :
+                        <div className={classes.admin__logbox}>
+                            <NavLink className={classes.admin__link} to={ADMIN_USER_ROUTE}>Пользователи</NavLink>
+                            <NavLink className={classes.admin__link} to={ADMIN_FEEDBACK_ROUTE}>Обратная связь</NavLink>
+                        </div>
                     }
                 </div>
+                {!((from === 'login') || (from === 'registration')) &&
+                    <p className={classes.admin__bottom}>При появлении вопросов или предложений, можете обратиться
+                        на корпоративную линию +7-999-999-9999 или на почту plask_stuff@gmail.com.</p>
+                }
             </div>
         </PageLayout>
     )

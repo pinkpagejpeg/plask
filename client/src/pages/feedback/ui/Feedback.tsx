@@ -37,21 +37,16 @@ export const Feedback: FC = () => {
     }
 
     return (
-        <PageLayout>
-            <div className={classes.container}>
-                <div className={classes.feedback__wrapper}>
-                    <h2 className={classes.plask}>Plask</h2>
-                    <form className={classes.feedback__form}>
-                        <h3 className={classes.title}>Обратная связь</h3>
-                        <textarea className={classes.input}
-                            placeholder='Сообщение'
-                            value={info}
-                            onChange={infoChangeHandler}
-                            required />
-                        <button className={classes.button_light} type="submit" onClick={buttonHandler}>Отправить</button>
-                    </form>
-                </div>
-            </div>
+        <PageLayout withLogo>
+            <form className={classes.feedback__form}>
+                <h3 className={classes.title}>Обратная связь</h3>
+                <textarea className={classes.input}
+                    placeholder='Сообщение'
+                    value={info}
+                    onChange={infoChangeHandler}
+                    required />
+                <button className={classes.button_light} type="submit" onClick={buttonHandler}>Отправить</button>
+            </form>
         </PageLayout>
     )
 }

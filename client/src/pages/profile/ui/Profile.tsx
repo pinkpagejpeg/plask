@@ -84,35 +84,31 @@ export const Profile: FC = () => {
     }
 
     return (
-        <PageLayout>
-            <div className={classes.profile__wrapper}>
-                <h2 className={classes.plask}>Plask</h2>
-                <h3 className={classes.title}>Профиль</h3>
-                <div className={classes.profile__mainbox}>
-                    <div className={classes.profile__imagebox}>
-                        <img src={import.meta.env.VITE_API_URL + 'static/' + user?.img} />
-                        <div className={classes.profile__image_buttons}>
-                            <label htmlFor="file-upload" className={classes.profile__image_button}>
-                                <img src={uploadIcon} alt="Загрузить фото профиля" />
-                            </label>
-                            <input
-                                id="file-upload"
-                                type="file"
-                                accept="image/*"
-                                style={{ display: 'none' }}
-                                onChange={fileChangeHandler}
-                            />
-                            <button className={classes.profile__image_button} onClick={deleteUserImage}>
-                                <img src={deleteIcon} alt='Удалить фото профиля' />
-                            </button>
-                        </div>
-                    </div>
-                    <div className={classes.profile__infobox}>
-                        <ProfileInfo />
-                        <button className={classes.profile__button_delete} onClick={deleteUser}>
-                            Удалить аккаунт
+        <PageLayout title='Профиль' withLogo>
+            <div className={classes.profile__mainbox}>
+                <div className={classes.profile__imagebox}>
+                    <img src={import.meta.env.VITE_API_URL + 'static/' + user?.img} />
+                    <div className={classes.profile__image_buttons}>
+                        <label htmlFor="file-upload" className={classes.profile__image_button}>
+                            <img src={uploadIcon} alt="Загрузить фото профиля" />
+                        </label>
+                        <input
+                            id="file-upload"
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={fileChangeHandler}
+                        />
+                        <button className={classes.profile__image_button} onClick={deleteUserImage}>
+                            <img src={deleteIcon} alt='Удалить фото профиля' />
                         </button>
                     </div>
+                </div>
+                <div className={classes.profile__infobox}>
+                    <ProfileInfo />
+                    <button className={classes.profile__button_delete} onClick={deleteUser}>
+                        Удалить аккаунт
+                    </button>
                 </div>
             </div>
         </PageLayout>

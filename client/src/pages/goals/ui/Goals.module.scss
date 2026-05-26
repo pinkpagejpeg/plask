@@ -1,32 +1,22 @@
 @use '../../../shared/ui/index.scss';
-@include index.container();
 @include index.title();
 @include index.input();
 @include index.button_light();
 
 .goal {
     &__wrapper {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 66%;
-        text-align: center;
-        margin: 138px auto 0 auto;
-    }
-
-    &__wrapper > h3 {
-        margin: 0 0 10px 0;
+        width: 67%;
     }
 
     &__listbox {
         display: flex;
         justify-content: space-around;
-        margin-bottom: 33px;
+        margin-bottom: 58px;
     }
 
     &__listbox > h4 {
-        font-size: 24px;
-        margin-bottom: 60px;
+        font-size: 20px;
+        margin: 20px 0 42px 0;
         color: index.$middle_gray;
     }
 
@@ -55,7 +45,7 @@
         justify-content: end;
         align-items: end;
         max-width: 100%;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
 
     &__search {
