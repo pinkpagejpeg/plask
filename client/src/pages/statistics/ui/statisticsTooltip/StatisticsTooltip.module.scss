@@ -1,0 +1,14 @@
+@use '../../../../shared/ui/index.scss';
+@include index.main_text();
+
+.statistics {
+    &__wrapper {
+        background-color: #36383A;
+        border-radius: 6px;
+        padding: 6px 10px
+    }
+
+    &__wrapper > p {
+        font-size: 12px;
+    }
+}

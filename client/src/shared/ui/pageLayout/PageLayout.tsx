@@ -6,8 +6,6 @@ interface PageLayoutProps {
     children: ReactNode
     withLogo?: boolean
     title?: string
-    // className?: string
-    // withContainer?: boolean
 }
 
 export const PageLayout: FC<PageLayoutProps> = ({

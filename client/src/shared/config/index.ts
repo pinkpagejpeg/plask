@@ -10,5 +10,6 @@ export {
     PROFILE_ROUTE,
     REGISTRATION_ROUTE,
     TASKS_ROUTE,
-    WELCOME_ROUTE
+    WELCOME_ROUTE,
+    STATISTICS_ROUTE
 } from './consts'

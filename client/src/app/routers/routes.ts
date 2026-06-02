@@ -1,17 +1,32 @@
-import { Info } from '../../pages/info'
-import { Admin } from '../../pages/admin'
-import { Welcome } from '../../pages/welcome'
-import { Auth } from '../../pages/auth'
-import { Feedback } from '../../pages/feedback'
-import { Goals } from '../../pages/goals'
-import { Tasks } from '../../pages/tasks'
-import { Profile } from '../../pages/profile'
-import { Users } from '../../pages/users'
-import { Appeals } from '../../pages/appeals'
-import { Subgoals } from '../../pages/subgoals'
-import { ADMIN_FEEDBACK_ROUTE, ADMIN_ROUTE, ADMIN_USER_ROUTE, FEEDBACK_ROUTE, GOALS_ITEM_ROUTE, GOALS_ROUTE, INFO_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, REGISTRATION_ROUTE, TASKS_ROUTE, WELCOME_ROUTE } from '../../shared/config'
 import { RouteObject } from 'react-router-dom'
-import { NotFound } from '../../pages/notFound'
+import { Info } from '@/pages/info'
+import { Admin } from '@/pages/admin'
+import { Welcome } from '@/pages/welcome'
+import { Auth } from '@/pages/auth'
+import { Feedback } from '@/pages/feedback'
+import { Goals } from '@/pages/goals'
+import { Tasks } from '@/pages/tasks'
+import { Profile } from '@/pages/profile'
+import { Users } from '@/pages/users'
+import { Appeals } from '@/pages/appeals'
+import { Subgoals } from '@/pages/subgoals'
+import { NotFound } from '@/pages/notFound'
+import { Statistics } from '@/pages/statistics'
+import {
+    ADMIN_FEEDBACK_ROUTE,
+    ADMIN_ROUTE,
+    ADMIN_USER_ROUTE,
+    FEEDBACK_ROUTE,
+    GOALS_ITEM_ROUTE,
+    GOALS_ROUTE,
+    INFO_ROUTE,
+    LOGIN_ROUTE,
+    PROFILE_ROUTE,
+    REGISTRATION_ROUTE,
+    TASKS_ROUTE,
+    WELCOME_ROUTE,
+    STATISTICS_ROUTE
+} from '@/shared/config'
 
 export const authRoutes: RouteObject[] = [
     {
@@ -37,6 +52,9 @@ export const authRoutes: RouteObject[] = [
     {
         path: TASKS_ROUTE,
         Component: Tasks
+    }, {
+        path: STATISTICS_ROUTE,
+        Component: Statistics
     }
 ]
 

@@ -1,11 +1,11 @@
 import { FC } from 'react'
-import classes from './NavbarMenu.module.scss'
-import { menuClose, profileIcon, usersIcon, feedbackIcon, logoutIcon, mainIcon, goalsIcon, tasksIcon } from '../../../assets'
-import { ADMIN_FEEDBACK_ROUTE, ADMIN_ROUTE, ADMIN_USER_ROUTE, FEEDBACK_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, TASKS_ROUTE, WELCOME_ROUTE } from '../../../config'
 import { NavLink, useNavigate } from 'react-router-dom'
+import { menuClose, profileIcon, usersIcon, feedbackIcon, logoutIcon, mainIcon, goalsIcon, tasksIcon, statisticsIcon } from '../../../assets'
+import { ADMIN_FEEDBACK_ROUTE, ADMIN_ROUTE, ADMIN_USER_ROUTE, FEEDBACK_ROUTE, GOALS_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, STATISTICS_ROUTE, TASKS_ROUTE, WELCOME_ROUTE } from '../../../config'
 import { useTypedSelector } from '@redux'
 // import { setAuthFalse } from '../../../../entities/users'
 import { INavbarMenu } from './types'
+import classes from './NavbarMenu.module.scss'
 
 export const NavbarMenu: FC<INavbarMenu> = ({ show, setShow }) => {
     const { user } = useTypedSelector(state => state.user)
@@ -80,6 +80,10 @@ export const NavbarMenu: FC<INavbarMenu> = ({ show, setShow }) => {
                                 <li className={classes.menu__item}>
                                     <img src={mainIcon} />
                                     <NavLink to={WELCOME_ROUTE}>Главная</NavLink>
+                                </li>
+                                <li className={classes.menu__item}>
+                                    <img src={statisticsIcon} />
+                                    <NavLink to={STATISTICS_ROUTE}>Статистика</NavLink>
                                 </li>
                                 <li className={classes.menu__item}>
                                     <img src={goalsIcon} />
