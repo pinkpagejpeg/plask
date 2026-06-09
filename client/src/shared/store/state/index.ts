@@ -1,1 +1,4 @@
-export type { ICommonState } from "./types"
+export interface ICommonState {
+    loading: boolean,
+    error: string | null,
+}

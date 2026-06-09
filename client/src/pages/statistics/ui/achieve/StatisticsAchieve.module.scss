@@ -1,0 +1,32 @@
+@use '../../../../shared/ui/index.scss';
+@include index.title();
+@include index.main_text();
+
+.statistics {
+    &__achieve {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin: 30px 0 80px 0;
+    }
+
+    &__achieve_divider {
+        width: 1px;
+        height: 62px;
+        background-color: #6D6D6D;
+        margin: 0 10px;
+    }
+
+    &__achieve_item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 80px;
+    }
+
+    &__achieve_item>.title {
+        font-size: 20px;
+        margin-bottom: 4px;
+    }
+}

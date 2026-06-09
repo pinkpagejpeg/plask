@@ -12,4 +12,4 @@ export {
     TASKS_ROUTE,
     WELCOME_ROUTE,
     STATISTICS_ROUTE
-} from './consts'
+} from './consts/routes'
