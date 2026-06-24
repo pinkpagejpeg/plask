@@ -33,6 +33,12 @@ router.delete(
     taskController.delete
 )
 
+// Get tasks ststistics for week
+router.get(
+    '/statistics/week',
+    taskController.getWeekStatistics
+)
+
 // Get tasks by user (authorized users)
 router.get(
     '/user',

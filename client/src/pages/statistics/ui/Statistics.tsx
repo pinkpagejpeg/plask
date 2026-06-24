@@ -1,10 +1,23 @@
-import { FC } from "react"
+import { FC, useEffect, useState } from "react"
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts'
 import { StatisticsTooltip } from "./tooltip/StatisticsTooltip"
 import { StatisticsAchieve } from "./achieve/StatisticsAchieve"
 import { StatisticsSwitcher } from "./switcher/StatisticsSwitcher"
 import { PageLayout } from "@/shared/ui"
+import { getWeekStatistics } from "@/shared/api"
+import { getWeekRange } from "@/shared/lib"
 import classes from "./Statistics.module.scss"
+
+interface IDayData {
+    date: string,
+    day: string,
+    count: number
+}
+
+interface IWeekParams {
+    from: string,
+    to: string,
+}
 
 const tickStyles = {
     fill: '#E6E6E6',
@@ -14,17 +27,13 @@ const tickStyles = {
     letterSpacing: '5%'
 }
 
-const weeklyData = [
-    { day: 'Пн', date: '23.03', tasks: 2 },
-    { day: 'Вт', date: '24.03', tasks: 12 },
-    { day: 'Ср', date: '25.03', tasks: 5 },
-    { day: 'Чт', date: '26.03', tasks: 21 },
-    { day: 'Пт', date: '27.03', tasks: 11 },
-    { day: 'Сб', date: '28.03', tasks: 8 },
-    { day: 'Вс', date: '29.03', tasks: 15 },
-]
-
 export const Statistics: FC = () => {
+    const [weeklyData, setWeeklyData] = useState<IDayData[]>([])
+    const [weekParams, setWeekParams] = useState<IWeekParams>(() => getWeekRange(new Date()))
+    const [tasksDone, setTasksDone] = useState(0)
+    const [daysBest, setDaysBest] = useState(0)
+    const [daysActive, setDaysActive] = useState(0)
+
     const calculateYAxisTicks = (values: number[]) => {
         const maxValue = Math.max(...values)
 
@@ -62,15 +71,42 @@ export const Statistics: FC = () => {
         return { ticks, domainMax, step }
     }
 
-    const tasks = weeklyData.map(el => el.tasks)
+    useEffect(() => {
+        const fetchWeekStatistic = async () => {
+            try {
+                const { weeklyData, tasksDone, daysBest, daysActive } = await getWeekStatistics(weekParams.from, weekParams.to)
+                setWeeklyData(weeklyData)
+                setTasksDone(tasksDone)
+                setDaysBest(daysBest)
+                setDaysActive(daysActive)
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    alert(`При получении недельной статистики возникла ошибка: ${error.message}`)
+                } else {
+                    alert("При получении недельной статистики возникла неизвестная ошибка")
+                }
+            }
+        }
+
+        fetchWeekStatistic()
+    }, [weekParams.from, weekParams.to])
+
+
+    const tasks = weeklyData.map(el => el.count)
     const { ticks, domainMax, step } = calculateYAxisTicks(tasks)
+    const hasData = weeklyData.some(item => item.count > 0)
 
     return (
         <PageLayout title="Статистика по задачам">
             <div className={classes.statistics__wrapper}>
                 <h4 className={classes.title}>Статистика за неделю</h4>
 
-                <StatisticsSwitcher text={`${weeklyData[0].date} - ${weeklyData[6].date}`}/>
+                <StatisticsSwitcher text={`${weekParams.from} - ${weekParams.to}`} onSwitch={setWeekParams} />
+                {!hasData &&
+                    <div className={classes.statistics__emptyData}>
+                        <p className={classes.title}>Нет выполненных задач за эту неделю</p>
+                    </div>
+                }
 
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={weeklyData}>
@@ -91,18 +127,20 @@ export const Statistics: FC = () => {
                             padding={{ top: 20, bottom: 10 }}
                         />
                         <Tooltip content={<StatisticsTooltip />} />
-                        <Line
-                            type="monotone"
-                            dataKey="tasks"
-                            stroke="#E6E6E6"
-                            strokeWidth={3}
-                            dot={{ fill: '#E6E6E6', strokeWidth: 2, r: 2 }}
-                            activeDot={{ r: 4, fill: '#E6E6E6' }}
-                        />
+                        {hasData &&
+                            <Line
+                                type="monotone"
+                                dataKey="count"
+                                stroke="#E6E6E6"
+                                strokeWidth={3}
+                                dot={{ fill: '#E6E6E6', strokeWidth: 2, r: 2 }}
+                                activeDot={{ r: 4, fill: '#E6E6E6' }}
+                            />
+                        }
                     </LineChart>
                 </ResponsiveContainer>
 
-                <StatisticsAchieve  tasksDone={16} daysBest={2} daysActive={7} />
+                <StatisticsAchieve tasksDone={tasksDone} daysBest={daysBest} daysActive={daysActive} />
             </div>
         </PageLayout>
     )

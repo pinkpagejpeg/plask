@@ -13,6 +13,9 @@ const Task = sequelize.define('task', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     info: { type: DataTypes.STRING(255) },
     status: { type: DataTypes.BOOLEAN, defaultValue: false, allowNull: false },
+    completedAt: { type: DataTypes.DATEONLY },
+},  {
+    underscored: true
 })
 
 const Goal = sequelize.define('goal', {
@@ -46,6 +49,7 @@ Goal.hasMany(Goal_item)
 Goal_item.belongsTo(Goal)
 
 module.exports = {
+    sequelize,
     User,
     Task,
     Goal,
