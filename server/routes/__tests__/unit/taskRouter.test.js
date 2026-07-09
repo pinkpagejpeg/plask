@@ -15,6 +15,7 @@ jest.mock('../../../controllers/taskController', () => ({
     changeStatus: jest.fn(),
     delete: jest.fn(),
     getAll: jest.fn(),
+    getWeekStatistics: jest.fn(),
 }))
 
 jest.mock('../../../middleware/AuthMiddleware', () => {
@@ -59,7 +60,7 @@ jest.mock('express-validator', () => {
 
 describe('taskRouter unit tests', () => {
     let app, server, mockTaskId,
-        createdMockData, updatedMockData, updatedStatusMockData, mockData
+        createdMockData, statisticsMockData, updatedMockData, updatedStatusMockData, mockData
 
     beforeAll(async () => {
         app = express()
@@ -97,6 +98,49 @@ describe('taskRouter unit tests', () => {
             userId: 19,
             createdAt: "2025-01-26 13:48:44.315+03",
             updatedAt: "2025-01-26 13:48:44.315+03",
+        }
+
+        statisticsMockData = {
+            weeklyData: [
+                {
+                    date: "2026-06-22",
+                    day: "Пн",
+                    count: 2
+                },
+                {
+                    date: "2026-06-23",
+                    day: "Вт",
+                    count: 0
+                },
+                {
+                    date: "2026-06-24",
+                    day: "Ср",
+                    count: 0
+                },
+                {
+                    date: "2026-06-25",
+                    day: "Чт",
+                    count: 0
+                },
+                {
+                    date: "2026-06-26",
+                    day: "Пт",
+                    count: 0
+                },
+                {
+                    date: "2026-06-27",
+                    day: "Сб",
+                    count: 0
+                },
+                {
+                    date: "2026-06-28",
+                    day: "Вс",
+                    count: 0
+                }
+            ],
+            tasksDone: 2,
+            daysBest: 1,
+            daysActive: 1
         }
 
         updatedMockData = { ...createdMockData, info: 'Add ui' }
@@ -375,6 +419,57 @@ describe('taskRouter unit tests', () => {
         expect(response.status).toBe(200)
         expect(response.body).toEqual(filteredMockData)
         expect(taskController.getAll).toHaveBeenCalledTimes(1)
+    })
+
+    test('Get tasks statistics by user which is not authorized, should return 401', async () => {
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            `/api/task/statistics/week`,
+            taskController.getWeekStatistics,
+            ''
+        )
+    })
+
+    test('Get tasks statistics by user with fake token, should return 401', async () => {
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            `/api/task/statistics/week`,
+            taskController.getWeekStatistics,
+            'Bearer fakeToken',
+        )
+    })
+
+    test('Get tasks statistics by user which does not exist, should return 404', async () => {
+        await checkRouteWithNonexistentData(
+            request(app).get,
+            `/api/task/statistics/week`,
+            taskController.getWeekStatistics,
+            'Пользователь не найден',
+            mockFakeUserJwtToken,
+        )
+    })
+
+    test('Get tasks statistics with unexpected error, should return 500', async () => {
+        await checkRouteWithUnexpectedError(
+            request(app).get,
+            `/api/task/statistics/week`,
+            taskController.getWeekStatistics,
+            mockUserJwtToken,
+        )
+    })
+
+    test('Get tasks statistics with valid data, should return 200', async () => {
+        taskController.getWeekStatistics.mockImplementation((req, res) =>
+            res.json(statisticsMockData)
+        )
+
+        const response = await request(app)
+            .get(`/api/task/statistics/week`)
+            .set('Authorization', `Bearer ${mockUserJwtToken}`)
+
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual(statisticsMockData)
+        expect(taskController.getWeekStatistics).toHaveBeenCalledTimes(1)
     })
 
     test('Delete task by user which is not authorized, should return 401', async () => {

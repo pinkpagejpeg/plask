@@ -328,6 +328,58 @@ describe('taskRouter tests', () => {
         expect(new Set(ids).size).toBe(ids.length)
     })
 
+    test('Get tasks statistics by user which is not authorized, should return 401', async () => {
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            '/api/task/statistics/week',
+            ''
+        )
+    })
+
+    test('Get tasks statistics by user with fake token, should return 401', async () => {
+        await checkRouteWithInvalidToken(
+            request(app).get,
+            '/api/task/statistics/week',
+            'Bearer fakeToken'
+        )
+    })
+
+    test('Get tasks statistics by user which does not exist, should return 404', async () => {
+        await checkRouteWithNonexistentData(
+            request(app).get,
+            '/api/task/statistics/week',
+            'Пользователь не найден',
+            mockFakeUserJwtToken
+        )
+    })
+
+    test('Get tasks statistics with valid data, should return 200', async () => {
+        const response = await request(app)
+            .get('/api/task/statistics/week')
+            .query({ from: "2026-07-06", to: "2026-07-12" })
+            .set('Authorization', `Bearer ${mockUserJwtToken}`)
+
+        expect(response.status).toBe(200)
+
+        expect(response.body.weeklyData).toBeInstanceOf(Array)
+        expect(response.body.weeklyData.length).toBeGreaterThan(0)
+        response.body.weeklyData.forEach((stat) => {
+            expect(stat).toHaveProperty('date')
+            expect(typeof stat.date).toBe('string')
+            expect(stat).toHaveProperty('day')
+            expect(typeof stat.day).toBe('string')
+            expect(stat).toHaveProperty('count')
+            expect(typeof stat.count).toBe('number')
+        })
+
+        expect(response.body).toHaveProperty('tasksDone')
+        expect(typeof response.body.tasksDone).toBe('number')
+        expect(response.body).toHaveProperty('daysBest')
+        expect(typeof response.body.daysBest).toBe('number')
+        expect(response.body).toHaveProperty('daysActive')
+        expect(typeof response.body.daysActive).toBe('number')
+    })
+
     test('Delete task by user which is not authorized, should return 401', async () => {
         await checkRouteWithInvalidToken(
             request(app).delete,

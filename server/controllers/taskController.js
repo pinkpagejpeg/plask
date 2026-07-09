@@ -143,14 +143,14 @@ class TaskController {
             const { id } = req.user
             const { from, to } = req.query
 
-            if (!from || !to) {
-                return next(ApiError.badRequest('Не указаны from и to'))
-            }
-
             const user = await User.findByPk(id)
 
             if (!user) {
                 return next(ApiError.notFound('Пользователь не найден'))
+            }
+
+            if (!from || !to) {
+                return next(ApiError.badRequest('Не указаны from и to'))
             }
 
             const weeklyData = await sequelize.query(`

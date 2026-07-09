@@ -33,7 +33,7 @@ router.delete(
     taskController.delete
 )
 
-// Get tasks ststistics for week
+// Get tasks statistics for week
 router.get(
     '/statistics/week',
     taskController.getWeekStatistics
