@@ -1,0 +1,23 @@
+@use '../../../shared/ui/index.scss';
+@include index.title();
+@include index.main_text();
+
+.statistics {
+    &__wrapper {
+        width: 67%;
+    }
+
+    &__wrapper>h4 {
+        margin-bottom: 20px;
+        font-size: 20px;
+    }
+
+    &__emptyData {
+        transform: translateY(100px);
+    }
+
+     &__emptyData>p {
+        font-size: 20px;
+        color: index.$middle_gray;
+    }
+}

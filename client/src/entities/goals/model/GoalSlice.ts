@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IGoal, IGoals, IGoalState } from "./types"
 import { addGoal, changeGoal, destroyGoal, fetchGoalsByUserId } from "../api"
-import { createPendingHandler, createRejectedHandler } from "shared/store"
+import { createPendingHandler, createRejectedHandler } from "@redux"
 
 const initialState: IGoalState = {
     goals: null,

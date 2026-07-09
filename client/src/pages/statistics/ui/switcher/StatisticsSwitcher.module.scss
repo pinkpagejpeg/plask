@@ -1,0 +1,42 @@
+@use '../../../../shared/ui/index.scss';
+@include index.main_text();
+
+.statistics {
+    &__switcher {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__switcher>p {
+        margin: 0 6px;
+    }
+
+    &__switcher_button {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #191919;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        svg {
+            width: 20px;
+            height: 14px;
+            color: #36383A;
+            transition: color 0.2s ease;
+        }
+
+        &:hover {
+            background-color: #191919;
+
+            svg {
+                color: #F4F4F4;
+            }
+        }
+    }
+}

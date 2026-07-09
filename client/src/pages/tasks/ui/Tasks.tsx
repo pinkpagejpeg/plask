@@ -1,15 +1,15 @@
 import { FC, useEffect, useState } from 'react'
-import classes from './Tasks.module.scss'
-import { Navbar, TaskCheckbox } from '../../../shared/ui'
-import { useAppDispatch, useTypedSelector } from 'shared/store'
+import { useAppDispatch, useTypedSelector } from '@redux'
 import {
     fetchTasksByUserId,
     addTask,
     changeTask,
     changeTaskStatus,
     destroyTask
-} from '../../../entities/tasks'
-import { filterIcon, searchIcon, sortIcon } from '../../../shared/assets'
+} from '@/entities/tasks'
+import { filterIcon, searchIcon, sortIcon } from '@/shared/assets'
+import { PageLayout, TaskCheckbox } from '@/shared/ui'
+import classes from './Tasks.module.scss'
 
 export const Tasks: FC = () => {
     const dispatch = useAppDispatch()
@@ -97,86 +97,81 @@ export const Tasks: FC = () => {
         setSortType(event.target.value)
     }
 
-    return (
-        <>
-            <Navbar />
-            <div className={classes.container}>
-                <div className={classes.task__wrapper}>
-                    <h3 className={classes.title}>Задачи</h3>
+    return (  
+        <PageLayout title='Задачи'>
+            <div className={classes.task__wrapper}>
+                <div className={classes.task__tools}>
+                    <div className={classes.task__leftwrap}>
+                        <div className={classes.task__sort}>
+                            <img className={classes.task__sortIcon}
+                                src={sortIcon}
+                                alt='Иконка для сортировки задач' />
 
-                    <div className={classes.task__tools}>
-                        <div className={classes.task__leftwrap}>
-                            <div className={classes.task__sort}>
-                                <img className={classes.task__sortIcon}
-                                    src={sortIcon}
-                                    alt='Иконка для сортировки задач' />
-
-                                <select name='sort' className={classes.input} onChange={sortChangeHandler} value={sortType}>
-                                    <option value='default'>Сначала новые</option>
-                                    <option value='old'>Сначала старые</option>
-                                    <option value='updated'>Недавно обновленные</option>
-                                </select>
-                            </div>
-
-                            <div className={classes.task__filtration}>
-                                <img className={classes.task__filterIcon}
-                                    src={filterIcon}
-                                    alt='Иконка для фильтрации задач' />
-
-                                <select name="filtration" className={classes.input} onChange={filterChangeHandler} value={filter}>
-                                    <option value='default'>По умолчанию</option>
-                                    <option value='completed'>Выполненные</option>
-                                    <option value='uncompleted'>Невыполненные</option>
-                                </select>
-                            </div>
+                            <select name='sort' className={classes.input} onChange={sortChangeHandler} value={sortType}>
+                                <option value='default'>Сначала новые</option>
+                                <option value='old'>Сначала старые</option>
+                                <option value='updated'>Недавно обновленные</option>
+                            </select>
                         </div>
 
-                        <div className={classes.task__search}>
-                            <img className={classes.task__searchIcon}
-                                src={searchIcon}
-                                alt='Иконка для поиска задач' />
+                        <div className={classes.task__filtration}>
+                            <img className={classes.task__filterIcon}
+                                src={filterIcon}
+                                alt='Иконка для фильтрации задач' />
 
-                            <input className={classes.input}
-                                type="text"
-                                placeholder="Поиск"
-                                value={search}
-                                onChange={searchChangeHandler} />
+                            <select name="filtration" className={classes.input} onChange={filterChangeHandler} value={filter}>
+                                <option value='default'>По умолчанию</option>
+                                <option value='completed'>Выполненные</option>
+                                <option value='uncompleted'>Невыполненные</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div className={classes.task__listbox}>
-                        {tasks && tasks.length > 0 ? (
-                            <div className={classes.task__list}>
-                                {tasks.map((taskItem) => (
-                                    <TaskCheckbox
-                                        key={taskItem.id}
-                                        label={taskItem.info}
-                                        checked={taskItem.status}
-                                        taskId={taskItem.id}
-                                        allowEdit={true}
-                                        updateTask={updateTask}
-                                        updateTaskStatus={updateTaskStatus}
-                                        deleteTask={deleteTask}
-                                    />
-                                ))}
-                            </div>
-                        ) : (
-                            <h4 className={classes.title}>Задачи не обнаружены</h4>
-                        )}
-                    </div>
+                    <div className={classes.task__search}>
+                        <img className={classes.task__searchIcon}
+                            src={searchIcon}
+                            alt='Иконка для поиска задач' />
 
-                    <form className={classes.task__form}>
                         <input className={classes.input}
-                            type="text" placeholder="Название"
-                            value={info}
-                            onChange={taskInfoChangeHandler}
-                            required />
-                        <input className={classes.button_light}
-                            type="submit" value="Добавить задачу"
-                            onClick={createTask} />
-                    </form>
+                            type="text"
+                            placeholder="Поиск"
+                            value={search}
+                            onChange={searchChangeHandler} />
+                    </div>
                 </div>
-            </div>
-        </>
+
+                <div className={classes.task__listbox}>
+                    {tasks && tasks.length > 0 ? (
+                        <div className={classes.task__list}>
+                            {tasks.map((taskItem) => (
+                                <TaskCheckbox
+                                    key={taskItem.id}
+                                    label={taskItem.info}
+                                    checked={taskItem.status}
+                                    taskId={taskItem.id}
+                                    allowEdit={true}
+                                    updateTask={updateTask}
+                                    updateTaskStatus={updateTaskStatus}
+                                    deleteTask={deleteTask}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <h4 className={classes.title}>Задачи не обнаружены</h4>
+                    )}
+                </div>
+
+                <form className={classes.task__form}>
+                    <input className={classes.input}
+                        type="text" placeholder="Название"
+                        value={info}
+                        onChange={taskInfoChangeHandler}
+                        required />
+                    <input className={classes.button_light}
+                        type="submit" value="Добавить задачу"
+                        onClick={createTask} />
+                </form>
+            </div >
+        </PageLayout >
     )
 }

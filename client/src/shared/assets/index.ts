@@ -27,5 +27,6 @@ export {
     welcomeArrow,
     searchIcon,
     filterIcon,
-    sortIcon
+    sortIcon,
+    statisticsIcon
 } from "./images"

@@ -1,1 +1,0 @@
-export type { ICommonState } from "./types"

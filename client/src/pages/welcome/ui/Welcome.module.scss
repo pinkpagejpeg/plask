@@ -1,22 +1,11 @@
 @use '../../../shared/ui/index.scss';
-@include index.container();
-@include index.plask();
 @include index.title();
 @include index.main_text();
 @include index.button_light();
 
 .welcome {
     &__wrapper {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 66%;
-        text-align: center;
-        margin: 138px auto 0 auto;
-    }
-
-    &__wrapper > h3 {
-        margin: 28px 0 20px 0;
+        max-width: 67%;
     }
 
     &__link {
@@ -27,17 +16,18 @@
         display: flex;
         justify-content: space-between;
         margin-top: 80px;
+        flex: 1;
     }
 
     &__itembox {
-        width: 45%;
+        width: 36%;
     }
 
-    &__itembox > h3 {
+    &__itembox>h3 {
         margin: 0 0 20px 0;
     }
 
-    &__itembox > a {
+    &__itembox>a {
         padding: 11px 57px;
     }
 
@@ -45,8 +35,8 @@
     &__goals {
         display: flex;
         flex-direction: column;
-        padding: 0 97px;
-        margin-bottom: 43px;
+        padding: 0 67px;
+        margin-bottom: 53px;
     }
 
     &__tasks::after {
@@ -55,7 +45,7 @@
         content: url('../assets/images/welcome_arrow.svg');
     }
 
-    &__tasks > div > button {
+    &__tasks>div>button {
         display: none;
     }
 
@@ -77,21 +67,21 @@
         align-items: start;
     }
 
-    &__goal_list > a {
+    &__goal_list>a {
         color: index.$light_gray;
         font-weight: 500;
         text-decoration: none;
         margin-bottom: 12px;
     }
 
-    &__task_listbox > h4,
-    &__goal_listbox > h4 {
-        font-size: 24px;
+    &__task_listbox>h4,
+    &__goal_listbox>h4 {
+        font-size: 14px;
         margin-bottom: 28px;
         color: index.$middle_gray;
     }
 
-    &__itembox > h5 {
+    &__itembox>h5 {
         margin: 28px 0 16px 0;
         font-weight: 500;
     }
@@ -99,10 +89,10 @@
     &__bottom {
         color: index.$middle_gray;
         font-family: 'Ubuntu', sans-serif;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 300;
         letter-spacing: 5%;
-        margin: 20vh 0 60px 0;
+        margin: calc(50vh - 138px) 0 60px 0;
     }
 
     &__bottom_link {

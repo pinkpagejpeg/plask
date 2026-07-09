@@ -4,19 +4,18 @@
     "module": "ESNext",
     "jsx": "react-jsx",
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "skipLibCheck": true,
     "types": [
       "vite/client",
       "vitest/globals"
     ],
-    "baseUrl": "./src",
     "paths": {
-      "@redux": [
-        "shared/lib/redux"
-      ],
       "@/*": [
-        "./*"
+        "./src/*"
+      ],
+      "@redux": [
+        "./src/shared/store"
       ]
     },
     // "strict": true,

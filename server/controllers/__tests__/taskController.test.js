@@ -1,4 +1,4 @@
-const { User, Task } = require("../../models/models")
+const { User, Task, sequelize } = require("../../models/models")
 const ApiError = require('../../error/ApiError')
 const { validationResult } = require('express-validator')
 const taskController = require('../taskController')
@@ -7,6 +7,10 @@ jest.mock('../../error/ApiError', () => ({
     badRequest: jest.fn((msg) => new Error(msg)),
     notFound: jest.fn((msg) => new Error(msg)),
     internal: jest.fn((msg) => new Error(msg)),
+}))
+
+jest.mock('express-validator', () => ({
+    validationResult: jest.fn()
 }))
 
 jest.mock('express-validator', () => ({
@@ -26,11 +30,17 @@ jest.mock('../../models/models', () => ({
         create: jest.fn(),
         findAll: jest.fn(),
         findByPk: jest.fn()
+    },
+    sequelize: {
+        query: jest.fn(),
+        QueryTypes: {
+            SELECT: 'SELECT'
+        }
     }
 }))
 
 describe('taskController unit tests', () => {
-    let req, res, next, mockUser, mockTask, mockTasks
+    let req, res, next, mockUser, mockTask, mockTasks, statisticsMockData
 
     beforeEach(() => {
         req = {
@@ -78,6 +88,49 @@ describe('taskController unit tests', () => {
                 updatedAt: "2025-01-27 13:48:44.315+03",
             }
         ]
+
+        statisticsMockData = {
+            weeklyData: [
+                {
+                    date: "2026-06-22",
+                    day: "Пн",
+                    count: 2
+                },
+                {
+                    date: "2026-06-23",
+                    day: "Вт",
+                    count: 0
+                },
+                {
+                    date: "2026-06-24",
+                    day: "Ср",
+                    count: 0
+                },
+                {
+                    date: "2026-06-25",
+                    day: "Чт",
+                    count: 0
+                },
+                {
+                    date: "2026-06-26",
+                    day: "Пт",
+                    count: 0
+                },
+                {
+                    date: "2026-06-27",
+                    day: "Сб",
+                    count: 0
+                },
+                {
+                    date: "2026-06-28",
+                    day: "Вс",
+                    count: 0
+                }
+            ],
+            tasksDone: 2,
+            daysBest: 1,
+            daysActive: 1
+        }
     })
 
     test('Create task with validation error, should return 400', async () => {
@@ -304,7 +357,7 @@ describe('taskController unit tests', () => {
         User.findByPk.mockResolvedValue(mockUser)
         Task.findAll.mockResolvedValue([mockTasks[0]])
 
-        const req = { search: 'info', user: { id: 1 } }
+        const req = { query: { search: 'info' }, user: { id: 1 } }
 
         await taskController.getAll(req, res, next)
 
@@ -317,7 +370,7 @@ describe('taskController unit tests', () => {
         User.findByPk.mockResolvedValue(mockUser)
         Task.findAll.mockResolvedValue([mockTasks[0]])
 
-        const req = { filter: 'completed', user: { id: 1 } }
+        const req = { query: { filter: 'completed' }, user: { id: 1 } }
 
         await taskController.getAll(req, res, next)
 
@@ -330,13 +383,62 @@ describe('taskController unit tests', () => {
         User.findByPk.mockResolvedValue(mockUser)
         Task.findAll.mockResolvedValue(mockTasks)
 
-        const req = { sort: 'createdAt', order: 'DESC', user: { id: 1 } }
+        const req = { query: { sort: 'createdAt', order: 'DESC' }, user: { id: 1 } }
 
         await taskController.getAll(req, res, next)
 
         expect(ApiError.internal).not.toHaveBeenCalled()
         expect(next).not.toHaveBeenCalled()
         expect(res.json).toHaveBeenCalledWith({ tasks: mockTasks, count: mockTasks.length })
+    })
+
+    test('Get tasks statistics by user which does not exist, should return 404', async () => {
+        User.findByPk.mockResolvedValue(null)
+
+        const req = { query: { from: '2026-06-22', to: '2026-06-28' }, user: { id: 1 } }
+
+        await taskController.getWeekStatistics(req, res, next)
+
+        expect(ApiError.notFound).toHaveBeenCalledWith('Пользователь не найден')
+        expect(next).toHaveBeenCalledWith(expect.objectContaining({
+            message: 'Пользователь не найден'
+        }))
+        expect(res.json).not.toHaveBeenCalled()
+    })
+
+    test('Get tasks statistics with unexpected error, should return 500', async () => {
+        User.findByPk.mockRejectedValue(new Error('Unexpected error'))
+
+        const req = { query: { from: '2026-06-22', to: '2026-06-28' }, user: { id: 1 } }
+
+        await taskController.getWeekStatistics(req, res, next)
+
+        expect(ApiError.internal).toHaveBeenCalledWith('Unexpected error')
+        expect(next).toHaveBeenCalledWith(expect.objectContaining({
+            message: 'Unexpected error'
+        }))
+        expect(res.json).not.toHaveBeenCalled()
+    })
+
+    test('Get tasks statistics with valid data, should return 200', async () => {
+        sequelize.query.mockResolvedValue([
+            { date: '2026-06-22', count: 2 },
+            { date: '2026-06-23', count: 0 },
+            { date: '2026-06-24', count: 0 },
+            { date: '2026-06-25', count: 0 },
+            { date: '2026-06-26', count: 0 },
+            { date: '2026-06-27', count: 0 },
+            { date: '2026-06-28', count: 0 }
+        ])
+        User.findByPk.mockResolvedValue(mockUser)
+
+        const req = { query: { from: '2026-06-22', to: '2026-06-28' }, user: { id: 1 } }
+
+        await taskController.getWeekStatistics(req, res, next)
+
+        expect(ApiError.internal).not.toHaveBeenCalled()
+        expect(next).not.toHaveBeenCalled()
+        expect(res.json).toHaveBeenCalledWith(statisticsMockData)
     })
 
     test('Delete task which does not exist, should return 404', async () => {

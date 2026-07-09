@@ -1,8 +1,10 @@
-import { ICommonState } from "shared/store"
+import { ICommonState } from "@redux"
 
 export interface IUserState extends ICommonState {
     user: IUser | null,
     isAuth: boolean,
+    loading: boolean,
+    error: string | null
 }
 
 export interface IUser {

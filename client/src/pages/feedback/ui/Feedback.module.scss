@@ -1,19 +1,9 @@
 @use '../../../shared/ui/index.scss';
-@include index.container();
-@include index.plask();
 @include index.title();
 @include index.input();
 @include index.button_light();
 
 .feedback {
-    &__wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin: 138px auto 0 auto;
-    }
-
     &__form {
         display: flex;
         flex-direction: column;
@@ -21,12 +11,9 @@
         justify-content: center;
         background-color: index.$dark_gray;
         border-radius: 20px;
-        margin: 40px 0 24px;
-        padding: 32px 48px 48px 48px;
-    }
-
-    &__form > h3 {
-        margin-bottom: 3px;
+        margin: 0 auto;
+        padding: 32px 48px 48px 48px;   
+        max-width: 500px; 
     }
 
     &__form > button {
@@ -36,6 +23,7 @@
     }
     &__form > textarea {
         resize: none;
+        margin-top: 25px;
         background-color: index.$dark_gray;
     }
 

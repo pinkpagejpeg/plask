@@ -1,12 +1,12 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
-import classes from './Profile.module.scss'
-import { Navbar } from '../../../shared/ui'
-import { deleteIcon, uploadIcon } from '../../../shared/assets'
-import { REGISTRATION_ROUTE } from '../../../shared/config'
 import { ProfileInfo } from './profileInfo'
-import { useAppDispatch, useTypedSelector } from 'shared/store'
-import { changeUserImage, destroyUser, destroyUserImage } from '../../../entities/users'
+import { changeUserImage, destroyUser, destroyUserImage } from '@/entities/users'
+import { useAppDispatch, useTypedSelector } from '@redux'
+import { PageLayout } from '@/shared/ui'
+import { deleteIcon, uploadIcon } from '@/shared/assets'
+import { REGISTRATION_ROUTE } from '@/shared/config'
+import classes from './Profile.module.scss'
 
 export const Profile: FC = () => {
     const { user } = useTypedSelector(state => state.user)
@@ -17,21 +17,22 @@ export const Profile: FC = () => {
     //     return <Navigate to={LOGIN_ROUTE} />
     // }
 
-    const fileChangeHandler = (event) => {
+    const fileChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         selectFile(event)
     }
 
-    const selectFile = (event) => {
-        const file = event.target.files[0]
+    const selectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0]
 
         if (!file) {
             alert('Файл не загружен')
+            return
         }
 
         updateUserImage(file)
     }
 
-    const updateUserImage = async (file: string | Blob) => {
+    const updateUserImage = async (file: File | Blob) => {
         try {
             if (user) {
                 const formData = new FormData()
@@ -83,38 +84,33 @@ export const Profile: FC = () => {
     }
 
     return (
-        <>
-            <Navbar />
-            <div className={classes.profile__wrapper}>
-                <h2 className={classes.plask}>Plask</h2>
-                <h3 className={classes.title}>Профиль</h3>
-                <div className={classes.profile__mainbox}>
-                    <div className={classes.profile__imagebox}>
-                        <img src={import.meta.env.VITE_API_URL + 'static/' + user?.img} />
-                        <div className={classes.profile__image_buttons}>
-                            <label htmlFor="file-upload" className={classes.profile__image_button}>
-                                <img src={uploadIcon} alt="Загрузить фото профиля" />
-                            </label>
-                            <input
-                                id="file-upload"
-                                type="file"
-                                accept="image/*"
-                                style={{ display: 'none' }}
-                                onChange={fileChangeHandler}
-                            />
-                            <button className={classes.profile__image_button} onClick={deleteUserImage}>
-                                <img src={deleteIcon} alt='Удалить фото профиля' />
-                            </button>
-                        </div>
-                    </div>
-                    <div className={classes.profile__infobox}>
-                        <ProfileInfo />
-                        <button className={classes.profile__button_delete} onClick={deleteUser}>
-                            Удалить аккаунт
+        <PageLayout title='Профиль' withLogo>
+            <div className={classes.profile__mainbox}>
+                <div className={classes.profile__imagebox}>
+                    <img src={import.meta.env.VITE_API_URL + 'static/' + user?.img} />
+                    <div className={classes.profile__image_buttons}>
+                        <label htmlFor="file-upload" className={classes.profile__image_button}>
+                            <img src={uploadIcon} alt="Загрузить фото профиля" />
+                        </label>
+                        <input
+                            id="file-upload"
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={fileChangeHandler}
+                        />
+                        <button className={classes.profile__image_button} onClick={deleteUserImage}>
+                            <img src={deleteIcon} alt='Удалить фото профиля' />
                         </button>
                     </div>
                 </div>
+                <div className={classes.profile__infobox}>
+                    <ProfileInfo />
+                    <button className={classes.profile__button_delete} onClick={deleteUser}>
+                        Удалить аккаунт
+                    </button>
+                </div>
             </div>
-        </>
+        </PageLayout>
     )
 }

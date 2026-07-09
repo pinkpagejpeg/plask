@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IChangeUserReturnedValue, IUser, IUserState } from "./types"
 import { changeUserImage, changeUserInfo, destroyUser, destroyUserImage, fetchUserById } from "../api"
-import { createPendingHandler, createRejectedHandler } from "shared/store"
+import { createPendingHandler, createRejectedHandler } from "@redux"
 
 const initialState: IUserState = {
     user: null,

@@ -26,3 +26,10 @@ export const getTasks = async (search?: string, filter?: string, sort?: string, 
     )
     return data
 }
+
+export const getWeekStatistics = async (from?: string, to?: string) => {
+    const { data } = await $authHost.get(`api/task/statistics/week`,
+        { params: { from, to } }
+    )
+    return data
+}

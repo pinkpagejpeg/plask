@@ -1,23 +1,16 @@
 @use '../../../shared/ui/index.scss';
-@include index.container();
-@include index.title();
 @include index.main_text();
 
 .feedback {
     &__wrapper {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
         width: 80%;
-        text-align: center;
-        margin: 138px auto 0 auto;
     }
 
     &__table {
         display: flex;
         flex-direction: column;
         text-align: center;
-        margin: 20px 0 34px 0;
+        margin: 5px 0 34px 0;
     }
 
     &__table_topline {
@@ -29,9 +22,7 @@
 
     &__table_topline > th {
         font-weight: 500;
-    }
-
-    &__table_topline > th {
+        font-size: 16px;
         width: 15%;
     }
 

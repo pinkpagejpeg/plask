@@ -1,8 +1,8 @@
-import { FC, useState } from 'react'
-import classes from './Feedback.module.scss'
-import { Navbar } from '../../../shared/ui'
-import { useTypedSelector } from 'shared/store'
+import { FC, SetStateAction, useState } from 'react'
 import { addFeedback } from '../api'
+import { PageLayout } from '@/shared/ui'
+import { useTypedSelector } from '@redux'
+import classes from './Feedback.module.scss'
 
 export const Feedback: FC = () => {
     const { user } = useTypedSelector(state => state.user)
@@ -12,7 +12,7 @@ export const Feedback: FC = () => {
     //     return <Navigate to={LOGIN_ROUTE} />;
     // }
 
-    const buttonHandler = async (event) => {
+    const buttonHandler = async (event: { preventDefault: () => void }) => {
         event.preventDefault()
         try {
             if (user && info) {
@@ -32,27 +32,21 @@ export const Feedback: FC = () => {
         }
     }
 
-    const infoChangeHandler = (event) => {
+    const infoChangeHandler = (event: { target: { value: SetStateAction<string> } }) => {
         setInfo(event.target.value)
     }
 
     return (
-        <>
-            <Navbar />
-            <div className={classes.container}>
-                <div className={classes.feedback__wrapper}>
-                    <h2 className={classes.plask}>Plask</h2>
-                    <form className={classes.feedback__form}>
-                        <h3 className={classes.title}>Обратная связь</h3>
-                        <textarea className={classes.input}
-                            placeholder='Сообщение'
-                            value={info}
-                            onChange={infoChangeHandler}
-                            required />
-                        <button className={classes.button_light} type="submit" onClick={buttonHandler}>Отправить</button>
-                    </form>
-                </div>
-            </div>
-        </>
+        <PageLayout withLogo>
+            <form className={classes.feedback__form}>
+                <h3 className={classes.title}>Обратная связь</h3>
+                <textarea className={classes.input}
+                    placeholder='Сообщение'
+                    value={info}
+                    onChange={infoChangeHandler}
+                    required />
+                <button className={classes.button_light} type="submit" onClick={buttonHandler}>Отправить</button>
+            </form>
+        </PageLayout>
     )
 }
