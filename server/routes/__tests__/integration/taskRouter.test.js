@@ -356,7 +356,7 @@ describe('taskRouter tests', () => {
     test('Get tasks statistics with valid data, should return 200', async () => {
         const response = await request(app)
             .get('/api/task/statistics/week')
-            .query({ from: "2026-07-06", to: "2026-07-12" })
+            .query({ from: "2026-06-22", to: "2026-06-28" })
             .set('Authorization', `Bearer ${mockUserJwtToken}`)
 
         expect(response.status).toBe(200)

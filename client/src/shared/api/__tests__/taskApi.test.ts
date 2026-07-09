@@ -1,10 +1,23 @@
 import { $authHost } from "../http"
-import { createTask, deleteTask, getTasks, updateTask, updateTaskStatus } from "../taskApi"
+import { createTask, deleteTask, getTasks, getWeekStatistics, updateTask, updateTaskStatus } from "../taskApi"
 import { checkApi, checkApiError } from "./checkApi"
 
 interface IMockTaskData {
     tasks: IMockTask[],
     count: number
+}
+
+interface IMockTaskStatisticData {
+    weeklyData: IMockStatistic[],
+    tasksDone: number,
+    daysBest: number,
+    daysActive: number
+}
+
+interface IMockStatistic {
+    date: string,
+    day: string,
+    count: number,
 }
 
 interface IMockTask {
@@ -27,6 +40,7 @@ jest.mock('../http', () => ({
 
 describe('taskApi tests', () => {
     let mockData: IMockTaskData,
+        statisticsMockData: IMockTaskStatisticData,
         createdMockData: { task: IMockTask },
         updatedMockData: { task: IMockTask },
         updatedStatusMockData: { task: IMockTask }
@@ -52,6 +66,49 @@ describe('taskApi tests', () => {
                 }
             ],
             count: 2
+        }
+
+        statisticsMockData = {
+            weeklyData: [
+                {
+                    date: "2026-06-22",
+                    day: "Пн",
+                    count: 2
+                },
+                {
+                    date: "2026-06-23",
+                    day: "Вт",
+                    count: 0
+                },
+                {
+                    date: "2026-06-24",
+                    day: "Ср",
+                    count: 0
+                },
+                {
+                    date: "2026-06-25",
+                    day: "Чт",
+                    count: 0
+                },
+                {
+                    date: "2026-06-26",
+                    day: "Пт",
+                    count: 0
+                },
+                {
+                    date: "2026-06-27",
+                    day: "Сб",
+                    count: 0
+                },
+                {
+                    date: "2026-06-28",
+                    day: "Вс",
+                    count: 0
+                }
+            ],
+            tasksDone: 2,
+            daysBest: 1,
+            daysActive: 1
         }
 
         createdMockData = {
@@ -181,6 +238,33 @@ describe('taskApi tests', () => {
                     "filter": undefined,
                     "sort": undefined,
                     "order": undefined
+                }
+            }],
+        )
+    })
+
+    test('Get tasks statistics api', async () => {
+        await checkApi(
+            $authHost.get as jest.Mock,
+            getWeekStatistics,
+            statisticsMockData,
+            [`api/task/statistics/week`, {
+                "params": {
+                    "from": undefined,
+                    "to": undefined
+                }
+            }],
+        )
+    })
+
+    test('Get tasks statistics with error', async () => {
+        await checkApiError(
+            $authHost.get as jest.Mock,
+            getWeekStatistics,
+            [`api/task/statistics/week`, {
+                "params": {
+                    "from": undefined,
+                    "to": undefined
                 }
             }],
         )
