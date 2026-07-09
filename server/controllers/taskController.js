@@ -1,4 +1,4 @@
-const { Op, Sequelize } = require('sequelize')
+const { Op } = require('sequelize')
 const { sequelize, Task, User } = require('../models/models')
 const ApiError = require('../error/ApiError')
 const formatErrorMessages = require('../error/formatErrorMessages')
@@ -64,7 +64,6 @@ class TaskController {
 
             const { taskId } = req.params
             const { status } = req.body
-            const completedAt = new Date()
 
             const task = await Task.findByPk(taskId)
             if (!task) {
