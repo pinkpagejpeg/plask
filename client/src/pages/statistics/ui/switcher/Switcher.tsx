@@ -1,18 +1,18 @@
 import { FC } from "react"
 import { getWeekRange } from "@/shared/lib"
-import classes from "./StatisticsSwitcher.module.scss"
+import classes from "./Switcher.module.scss"
 
 interface IWeekParams {
     from: string,
     to: string,
 }
 
-interface StatisticsSwitcherProps {
+interface SwitcherProps {
     text: string,
     onSwitch: React.Dispatch<React.SetStateAction<IWeekParams>>
 }
 
-export const StatisticsSwitcher: FC<StatisticsSwitcherProps> = ({ text, onSwitch }) => {
+export const Switcher: FC<SwitcherProps> = ({ text, onSwitch }) => {
     const switchNextWeek = () => {
         const currentWeekMonday = new Date(text.split(' - ')[0])
         currentWeekMonday.setDate(currentWeekMonday.getDate() + 7)

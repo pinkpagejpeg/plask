@@ -1,6 +1,6 @@
 import { FC } from "react"
 import { TooltipProps } from "recharts"
-import classes from "./StatisticsTooltip.module.scss"
+import classes from "./CustomTooltip.module.scss"
 import { wordHelper } from "@/shared/lib"
 
 interface ChartData {
@@ -19,13 +19,13 @@ interface CustomTooltipPayload {
     fill?: string
 }
 
-interface StatisticsTooltipProps extends TooltipProps<number, string> {
+interface CustomTooltipProps extends TooltipProps<number, string> {
     active?: boolean
     payload?: CustomTooltipPayload[]
     label?: string
 }
 
-export const StatisticsTooltip: FC<StatisticsTooltipProps> = ({
+export const CustomTooltip: FC<CustomTooltipProps> = ({
     active,
     payload,
     label
