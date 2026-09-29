@@ -1,14 +1,14 @@
 import { FC } from "react"
-import classes from "./StatisticsAchieve.module.scss"
+import classes from "./Achieve.module.scss"
 import { wordHelper } from "@/shared/lib"
 
-interface StatisticsAchieveProps {
+interface AchieveProps {
     daysBest: number
     tasksDone: number
     daysActive: number
 }
 
-export const StatisticsAchieve: FC<StatisticsAchieveProps> = ({
+export const Achieve: FC<AchieveProps> = ({
     daysBest,
     tasksDone,
     daysActive
