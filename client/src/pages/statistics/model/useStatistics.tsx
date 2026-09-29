@@ -32,7 +32,7 @@ export const useWeekStatistics = (initialDate: Date = new Date()) => {
 
     useEffect(() => {
         fetchWeekStatistics()
-    }, [])
+    }, [fetchWeekStatistics])
 
     return {
         weeklyData,
