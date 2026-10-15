@@ -4,16 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start index.js --name server",
-    "stop": "pm2 stop server",
-    "restart": "pm2 restart server",
-    "logs": "pm2 logs server",
+    "start": "node index.js",
     "dev": "nodemon index.js",
     "lint": "eslint \"**/*.js\"",
     "test": "jest --no-cache --config --detectOpenHandles --runInBand --forceExit",
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
     "clean": "rm -rf node_modules && npm install"
+  },
+  "engines": {
+    "node": "20.x"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +30,7 @@
     "pg-hstore": "^2.3.4",
     "pm2": "^5.4.3",
     "sequelize": "^6.37.1",
+    "sequelize-cli": "^6.6.2",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
@@ -41,7 +42,6 @@
     "jwt-decode": "^4.0.0",
     "mz": "^2.7.0",
     "nodemon": "^3.0.3",
-    "sequelize-cli": "^6.6.2",
     "supertest": "^7.0.0"
   }
 }

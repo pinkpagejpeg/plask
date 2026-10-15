@@ -9,8 +9,24 @@ const errorHandler = require('./middleware/ErrorHandlingMiddleware')
 
 const PORT = process.env.PORT || 7000
 
+const allowedOrigins = [
+    'http://localhost:5173',
+    'https://plask-khaki.vercel.app',
+    /^https:\/\/plask-.*\.vercel\.app$/
+]
+
 const app = express()
-app.use(cors())
+app.use(cors({
+    origin: (origin, cb) => {
+        if (!origin) return cb(null, true)
+        const ok = allowedOrigins.some(o =>
+            typeof o === 'string' ? o === origin : o.test(origin)
+        )
+        cb(ok ? null : new Error('CORS blocked'), ok)
+    },
+    credentials: true
+}))
+
 app.use(express.json())
 app.use(fileUpload({}))
 app.use('/static', express.static(path.resolve(__dirname, 'static')))
@@ -23,33 +39,16 @@ let server
 const start = async () => {
     try {
         await sequelize.authenticate()
-        await sequelize.sync()
-        server = await new Promise((resolve, reject) => {
-            const srv = app.listen(PORT, () => {
-                console.log(`Server started on port ${PORT}`)
-                resolve(srv)
-            })
-            srv.on("error", reject)
+        // await sequelize.sync()
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`Server started on port ${PORT}`)
         })
     } catch (error) {
         console.log(error)
-    }
-}
-
-const stop = async () => {
-    try {
-        await sequelize.close()
-        if (server) {
-            await new Promise((resolve, reject) => server.close(
-                (error) => error ? reject(error) : resolve()
-            ))
-            console.log("Server stopped")
-        }
-    } catch (error) {
-        console.log(error)
+        process.exit(1)
     }
 }
 
 start()
 
-module.exports = { app, start, stop }
+module.exports = { app, start }
