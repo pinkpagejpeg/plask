@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "sequelize-cli db:migrate && node index.js",
     "dev": "nodemon index.js",
     "lint": "eslint \"**/*.js\"",
     "test": "jest --no-cache --config --detectOpenHandles --runInBand --forceExit",
