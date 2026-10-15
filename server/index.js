@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 7000
 
 const allowedOrigins = [
     'http://localhost:5173',
-    'https://plask-khaki.vercel.app',
+    'https://plask-jet.vercel.app',
     /^https:\/\/plask-.*\.vercel\.app$/
 ]
 

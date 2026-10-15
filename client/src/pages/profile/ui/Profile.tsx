@@ -90,7 +90,7 @@ export const Profile: FC = () => {
                 <h3 className={classes.title}>Профиль</h3>
                 <div className={classes.profile__mainbox}>
                     <div className={classes.profile__imagebox}>
-                        <img src={import.meta.env.VITE_API_URL || 'https://plask-server.onrender.com' + 'static/' + user?.img} />
+                        <img src={import.meta.env.VITE_API_URL + 'static/' + user?.img} />
                         <div className={classes.profile__image_buttons}>
                             <label htmlFor="file-upload" className={classes.profile__image_button}>
                                 <img src={uploadIcon} alt="Загрузить фото профиля" />

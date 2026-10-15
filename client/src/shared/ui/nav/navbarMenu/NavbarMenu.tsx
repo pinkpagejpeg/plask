@@ -36,7 +36,7 @@ export const NavbarMenu: FC<INavbarMenu> = ({ show, setShow }) => {
                         <div className={classes.menu__topline_info}>
                             <img
                                 className={classes.menu__userimage}
-                                src={import.meta.env.VITE_API_URL || 'https://plask-server.onrender.com' + 'static/' + user.img}
+                                src={import.meta.env.VITE_API_URL + 'static/' + user.img}
                             />
                             <p className={classes.menu__username}>{user.email}</p>
                         </div>
