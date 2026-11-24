@@ -47,7 +47,7 @@ jest.mock('../../models/models', () => ({
 
 jest.mock('bcryptjs', () => ({
     hash: jest.fn().mockResolvedValue('hashedPassword123'),
-    compareSync: jest.fn()
+    compare: jest.fn()
 }));
 
 jest.mock('uuid', () => ({
@@ -381,7 +381,7 @@ describe('userController unit tests', () => {
 
     test('User login with wrong password, should return 400', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        bcrypt.compareSync.mockImplementation(() => false)
+        bcrypt.compare.mockResolvedValue(false)
         User.findOne.mockResolvedValue(mockUser)
 
         req.body.email = 'user@example.com'
@@ -399,7 +399,7 @@ describe('userController unit tests', () => {
 
     test('User login with valid data, should return 201', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        bcrypt.compareSync.mockImplementation(() => true)
+        bcrypt.compare.mockResolvedValue(true)
         generateJwt.mockImplementation(() => mockJwtToken)
         User.findOne.mockResolvedValue(mockUser)
 

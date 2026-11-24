@@ -1,7 +1,7 @@
 const ApiError = require('../error/ApiError')
 const formatErrorMessages = require('../error/formatErrorMessages')
 const { User, Feedback, Task, Goal, Goal_item } = require('../models/models')
-const bcrypt = require('bcryptjs')
+const { hashPassword, verifyPassword } = require('../utils/password')
 const generateJwt = require('../utils/generateJwt')
 const { validationResult } = require('express-validator')
 const { v4: uuidv4 } = require('uuid')
@@ -25,8 +25,8 @@ class UserController {
                 return next(ApiError.badRequest("Пользователь с таким именем уже существует"))
             }
 
-            const hashPassword = await bcrypt.hash(password, 5)
-            const user = await User.create({ email, role, password: hashPassword })
+            const hashedPassword = await hashPassword(password)
+            const user = await User.create({ email, role, password: hashedPassword })
             const token = generateJwt(user.id, user.email, user.role)
             return res.status(201).json({ token })
         } catch (error) {
@@ -51,9 +51,9 @@ class UserController {
                 return next(ApiError.notFound('Пользователь не найден'))
             }
 
-            let comparePassword = bcrypt.compareSync(password, user.password)
+            const isPasswordValid = await verifyPassword(password, user.password)
 
-            if (!comparePassword) {
+            if (!isPasswordValid) {
                 return next(ApiError.badRequest('Введен неверный пароль'))
             }
 
@@ -95,8 +95,8 @@ class UserController {
                     return next(ApiError.badRequest('Введены некорректные данные: длина пароля должна составлять от 6 до 12 символов'));
                 }
 
-                const hashPassword = await bcrypt.hash(password, 5)
-                await user.update({ password: hashPassword })
+                const hashedPassword = await hashPassword(password)
+                await user.update({ password: hashedPassword })
             } else {
                 const candidate = await User.findOne({ where: { email } })
                 if (candidate) {

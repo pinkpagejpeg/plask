@@ -1,5 +1,5 @@
 const { Feedback, Task, Goal, Goal_item, User } = require('../models/models')
-const bcrypt = require('bcryptjs')
+const { hashPassword } = require('../utils/password')
 const ApiError = require('../error/ApiError')
 const formatErrorMessages = require('../error/formatErrorMessages')
 const { validationResult } = require('express-validator')
@@ -22,8 +22,8 @@ class AdminController {
                 return next(ApiError.badRequest("Пользователь с таким именем уже существует"))
             }
 
-            const hashPassword = await bcrypt.hash(password, 5)
-            const user = await User.create({ email, role, password: hashPassword })
+            const hashedPassword = await hashPassword(password)
+            const user = await User.create({ email, role, password: hashedPassword })
             return res.status(201).json({ user })
         } catch (error) {
             return next(ApiError.internal(error.message))
@@ -53,8 +53,8 @@ class AdminController {
                     return next(ApiError.badRequest('Введены некорректные данные: длина пароля должна составлять от 6 до 12 символов'))
                 }
 
-                const hashPassword = await bcrypt.hash(password, 5)
-                await user.update({ password: hashPassword })
+                const hashedPassword = await hashPassword(password)
+                await user.update({ password: hashedPassword })
             } else {
                 if (role === user.role) {
                     const candidate = await User.findOne({ where: { email } })
