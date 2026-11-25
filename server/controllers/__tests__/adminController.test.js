@@ -500,6 +500,26 @@ describe('adminController unit tests', () => {
         expect(res.json).toHaveBeenCalledWith({ user: updatedUser })
     })
 
+    test('Update user with unchanged email should not report self as existing', async () => {
+        const updatedUser = {
+            ...mockUser,
+            update: jest.fn().mockResolvedValue({ ...mockUser, email: mockUser.email })
+        }
+        validationResult.mockReturnValue({ isEmpty: () => true })
+        User.findByPk.mockResolvedValue(updatedUser)
+        User.findOne.mockResolvedValue(updatedUser)
+
+        req.params.userId = mockUser.id
+        req.body.email = mockUser.email
+        req.body.role = 'USER'
+        req.body.password = ''
+        await adminController.update(req, res, next)
+
+        expect(ApiError.badRequest).not.toHaveBeenCalled()
+        expect(next).not.toHaveBeenCalled()
+        expect(res.json).toHaveBeenCalledWith({ user: updatedUser })
+    })
+
     test('Update user with another candidate, should return 400', async () => {
         const updatedUser = {
             ...mockUser,
@@ -508,7 +528,7 @@ describe('adminController unit tests', () => {
         }
         validationResult.mockReturnValue({ isEmpty: () => true })
         User.findByPk.mockResolvedValue(updatedUser)
-        User.findOne.mockResolvedValue(mockUser)
+        User.findOne.mockResolvedValue({ ...mockUser, id: mockUser.id + 1 })
 
         req.params.userId = mockUser.id
         req.body.email = 'user11@example.com'

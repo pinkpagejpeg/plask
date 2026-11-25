@@ -572,6 +572,24 @@ describe('userController unit tests', () => {
         expect(res.json).toHaveBeenCalledWith({ token: mockJwtToken })
     })
 
+    test('Update user with unchanged email should not report self as existing', async () => {
+        const updatedUser = {
+            ...mockUser,
+            update: jest.fn().mockResolvedValue({ ...mockUser, email: mockUser.email })
+        }
+        validationResult.mockReturnValue({ isEmpty: () => true })
+        User.findByPk.mockResolvedValue(updatedUser)
+        User.findOne.mockResolvedValue(updatedUser)
+
+        req.body.email = mockUser.email
+        req.body.password = ''
+        await userController.updateInfo(req, res, next)
+
+        expect(ApiError.badRequest).not.toHaveBeenCalled()
+        expect(next).not.toHaveBeenCalled()
+        expect(res.json).toHaveBeenCalledWith({ token: mockJwtToken })
+    })
+
     test('Update user with another candidate, should return 400', async () => {
         const updatedUser = {
             ...mockUser,
@@ -580,7 +598,7 @@ describe('userController unit tests', () => {
         }
         validationResult.mockReturnValue({ isEmpty: () => true })
         User.findByPk.mockResolvedValue(updatedUser)
-        User.findOne.mockResolvedValue(mockUser)
+        User.findOne.mockResolvedValue({ ...mockUser, id: mockUser.id + 1 })
 
         req.body.email = 'user11@example.com'
         req.body.password = ''

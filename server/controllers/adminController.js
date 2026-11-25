@@ -58,7 +58,7 @@ class AdminController {
             } else {
                 if (role === user.role) {
                     const candidate = await User.findOne({ where: { email } })
-                    if (candidate) {
+                    if (candidate && candidate.id !== user.id) {
                         return next(ApiError.badRequest("Пользователь с таким именем уже существует"))
                     }
                     await user.update({ email })

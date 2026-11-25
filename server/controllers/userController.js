@@ -99,7 +99,7 @@ class UserController {
                 await user.update({ password: hashedPassword })
             } else {
                 const candidate = await User.findOne({ where: { email } })
-                if (candidate) {
+                if (candidate && candidate.id !== user.id) {
                     return next(ApiError.badRequest("Пользователь с таким именем уже существует"))
                 }
 
