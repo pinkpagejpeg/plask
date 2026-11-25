@@ -3,10 +3,10 @@ import { sign } from "jsonwebtoken"
 
 export const checkApi = async (
     mockMethod: jest.Mock,
-    apiFunction,
-    mockResolvedData,
-    expectedArgs,
-    responseArgs: any = [],
+    apiFunction: (...args: any[]) => Promise<any>,
+    mockResolvedData: any,
+    expectedArgs: any[],
+    responseArgs: any[] = [],
     calledTimes: number = 1
 ) => {
     mockMethod.mockResolvedValue({ data: mockResolvedData })
@@ -18,9 +18,9 @@ export const checkApi = async (
 
 export const checkApiError = async (
     mockMethod: jest.Mock,
-    apiFunction,
-    expectedArgs,
-    responseArgs: any = [],
+    apiFunction: (...args: any[]) => Promise<any>,
+    expectedArgs: any[],
+    responseArgs: any[] = [],
     calledTimes: number = 1
 ) => {
     mockMethod.mockRejectedValue(new Error('Internal Server Error'))
@@ -31,10 +31,10 @@ export const checkApiError = async (
 
 export const checkApiWithJwt = async (
     mockMethod: jest.Mock,
-    apiFunction,
-    mockResolvedData,
-    expectedArgs,
-    responseArgs: any = [],
+    apiFunction: (...args: any[]) => Promise<any>,
+    mockResolvedData: any,
+    expectedArgs: any[],
+    responseArgs: any[] = [],
     calledTimes: number = 1
 ) => {
     const mockToken = sign(mockResolvedData, 'test_secret_key')

@@ -1,37 +1,24 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "ESNext",
+    "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "esModuleInterop": true,
-    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
     "skipLibCheck": true,
-    "types": [
-      "vite/client",
-      "jest"
-    ],
+    "noEmit": true,
+    "baseUrl": ".",
+    "types": ["vite/client", "jest"],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@redux": [
-        "./src/shared/store"
-      ]
-    },
-    // "strict": true,
-    // "noImplicitReturns": true,
-    // "noImplicitAny": false
+      "@/*": ["./src/*"],
+      "@redux": ["./src/shared/store"]
+    }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.d.ts",
-    "./styles.d.ts",
-    "./images.d.ts",
-    "src/features/hooks/useTypedSelector",
-    "src/features/hooks/useAppDispatch",
-    "src/shared/store/handlers/hadleRejected",
-    "./jest.setup.ts",
-    "src/shared/ui/buttons/taskCheckbox/__tests__/TaskCheckbox.test.tsx",
-  ]
+  "include": ["src", "*.d.ts", "jest.setup.ts", "jest.config.ts"]
 }

@@ -1,14 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { getGoalProgress, getGoals } from "../../../shared/api"
-import { IGoals } from "../model/types"
+import { IGoal, IGoals } from "../model/types"
 
 export const fetchGoalsByUserId = createAsyncThunk<IGoals, { search?: string } | void, { rejectValue: string }>(
     "goal/fetchGoalsByUserId",
     async (arg, { rejectWithValue }) => {
         try {
-            const { goals, count } = await getGoals(arg && arg?.search)
+            const search = arg && typeof arg === 'object' ? arg.search : undefined
+            const { goals, count } = await getGoals(search)
             const data = await Promise.all(
-                goals.map(async (goal) => {
+                goals.map(async (goal: IGoal) => {
                     const { progress } = await getGoalProgress(goal.id)
                     return { ...goal, progress }
                 })

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { ChangeEvent, FC, useState } from 'react'
 import classes from './UserItem.module.scss'
 import { deleteIcon } from '../../../../shared/assets'
 import { IUserItem } from '../../model'
@@ -85,15 +85,15 @@ export const UserItem: FC<IUserItem> = ({ user, onUserChange }) => {
         }
     }
 
-    const emailChangeHandler = (event) => {
+    const emailChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value)
     }
 
-    const passwordChangeHandler = (event) => {
+    const passwordChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value)
     }
 
-    const roleChangeHandler = (event) => {
+    const roleChangeHandler = (event: ChangeEvent<HTMLSelectElement>) => {
         setRole(event.target.value)
     }
 

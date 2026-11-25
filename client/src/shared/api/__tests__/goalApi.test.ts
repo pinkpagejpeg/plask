@@ -148,7 +148,7 @@ describe('goalApi tests', () => {
         await checkApi(
             $authHost.get as jest.Mock,
             getGoal,
-            mockData[0],
+            mockData.goals[0],
             [`api/goal/18`],
             [18]
         )

@@ -1,4 +1,4 @@
-import { useState, FC } from 'react'
+import { ChangeEvent, useState, FC } from 'react'
 import classes from './GoalCheckbox.module.scss'
 import { deleteIcon } from '../../../assets'
 import { IGoalCheckbox } from './types'
@@ -22,7 +22,7 @@ export const GoalCheckbox: FC<IGoalCheckbox> = ({ label, checked, goalItemId, ch
         setIsEditing(false)
     }
 
-    const subgoalInfoChangeHandler = (event) => {
+    const subgoalInfoChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setInfo(event.target.value)
     }
 

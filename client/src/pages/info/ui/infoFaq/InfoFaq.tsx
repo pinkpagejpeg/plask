@@ -17,9 +17,9 @@ export const InfoFaq: FC = () => {
         }
     ]
 
-    const [expandedIndex, setExpandedIndex] = useState(null)
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
 
-    const toggleAnswer = (index) => {
+    const toggleAnswer = (index: number) => {
         if (expandedIndex === index) {
             setExpandedIndex(null)
         } else {

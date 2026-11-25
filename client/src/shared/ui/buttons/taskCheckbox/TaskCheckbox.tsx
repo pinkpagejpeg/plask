@@ -1,4 +1,4 @@
-import { useState, FC } from 'react'
+import { ChangeEvent, useState, FC } from 'react'
 import classes from './TaskCheckbox.module.scss'
 import { deleteIcon } from '../../../assets'
 import { ITaskCheckbox } from './types'
@@ -22,7 +22,7 @@ export const TaskCheckbox: FC<ITaskCheckbox> = ({ label, checked, taskId, allowE
         setIsEditing(false)
     }
 
-    const taskInfoChangeHandler = (event) => {
+    const taskInfoChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setInfo(event.target.value)
     }
 

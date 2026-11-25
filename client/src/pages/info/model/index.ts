@@ -1,1 +1,1 @@
-export { IInfoProsCard } from "./types"
+export type { IInfoProsCard } from "./types"

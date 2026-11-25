@@ -1,1 +1,1 @@
-export { IGoalListItem } from "./types"
+export type { IGoalListItem } from "./types"
