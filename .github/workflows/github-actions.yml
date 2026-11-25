@@ -1,4 +1,4 @@
-name: GitHub Actions
+name: CI
 
 on:
   push:
@@ -7,108 +7,137 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
-  init:
+  frontend:
+    name: Frontend
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20.x]
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: client
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 20.x
+          cache: npm
+          cache-dependency-path: client/package-lock.json
 
-      - name: Install dependencies for frontend
-        working-directory: client
-        run: |
-          npm install
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Run lint for frontend
-        working-directory: client
-        run: |
-          npm run lint
+      - name: Lint
+        run: npm run lint
 
-      - name: Run Steiger for frontend
-        working-directory: client
-        run: |
-          npm run lint:steiger
+      - name: Lint architecture (Steiger)
+        run: npm run lint:steiger
 
-      - name: Typecheck for frontend
-        working-directory: client
-        run: |
-          npm run typecheck
+      - name: Typecheck
+        run: npm run typecheck
 
-      - name: Run tests for frontend
-        working-directory: client
-        run: |
-          npm run test
+      - name: Test
+        run: npm run test
 
-      - name: Build frontend
-        working-directory: client
-        run: |
-          npm run build
+      - name: Build
+        run: npm run build
 
-      - name: Install dependencies for backend
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
         working-directory: server
-        run: |
-          npm install
-      
-      - name: Fix permissions
-        working-directory: server
-        run: |
-          chmod +x ./node_modules/.bin/eslint
-          chmod +x ./node_modules/.bin/sequelize
-          chmod +x ./node_modules/.bin/nodemon
-          chmod +x ./node_modules/.bin/pm2
-          chmod +x ./node_modules/.bin/jest
-          
-      - name: Run lint for backend
-        working-directory: server
-        run: |
-          npm run lint
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: ${{ secrets.DB_NAME || 'plask' }}
+          POSTGRES_USER: ${{ secrets.DB_USER || 'postgres' }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD || 'postgres' }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      PORT: 4000
+      DB_NAME: ${{ secrets.DB_NAME || 'plask' }}
+      DB_USER: ${{ secrets.DB_USER || 'postgres' }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD || 'postgres' }}
+      DB_HOST: localhost
+      DB_PORT: 5432
+      SECRET_KEY: ${{ secrets.SECRET_KEY || 'ci_test_secret_key' }}
+      SITE_KEY: ${{ secrets.SITE_KEY || '10000000-ffff-ffff-ffff-000000000001' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set environment variables
-        run: |
-          echo "PORT=${{ secrets.PORT }}" >> $GITHUB_ENV
-          echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
-          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
-          echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
-          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
-          echo "SITE_KEY=${{ secrets.SITE_KEY }}" >> $GITHUB_ENV
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+          cache-dependency-path: server/package-lock.json
 
-      - name: Start PostgreSQL container
-        run: |
-          docker run --name postgres -e POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} -e POSTGRES_USER=${{ secrets.DB_USER }} -e POSTGRES_DB=${{ secrets.DB_NAME }} -p 5432:5432 -d postgres:latest
-          sleep 10
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Run migrations for backend
-        working-directory: server
-        run: |
-          npm run migrate
+      - name: Lint
+        run: npm run lint
 
-      - name: Run seeders for backend
-        working-directory: server
+      - name: Run migrations
+        run: npm run migrate
+
+      - name: Seed database
         run: |
-          npx sequelize db:seed --seed userSeeder.js 
+          npx sequelize db:seed --seed userSeeder.js
           npx sequelize db:seed --seed feedbackSeeder.js
           npx sequelize db:seed --seed taskSeeder.js
           npx sequelize db:seed --seed goalSeeder.js
           npx sequelize db:seed --seed goalItemSeeder.js
 
-      - name: Run tests for backend
-        working-directory: server
-        run: |
-          npm run test
+      - name: Test
+        run: npm test
 
-      - name: Start backend server
-        working-directory: server
+      - name: Smoke test server startup
         run: |
-          npm run start
-          sleep 10
-          npm run stop
+          node index.js &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          SERVER_UP=false
+          for i in $(seq 1 30); do
+            if curl -s -o /dev/null "http://localhost:${PORT}/api/user/auth"; then
+              SERVER_UP=true
+              break
+            fi
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              echo "Server process exited unexpectedly"
+              exit 1
+            fi
+            sleep 1
+          done
+          if [ "$SERVER_UP" != "true" ]; then
+            echo "Server did not start within 30s"
+            exit 1
+          fi
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:${PORT}/api/user/auth")
+          echo "GET /api/user/auth -> $RESPONSE"
+          if [ "$RESPONSE" != "401" ]; then
+            echo "Unexpected response from server"
+            exit 1
+          fi
