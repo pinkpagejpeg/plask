@@ -39,9 +39,10 @@ class GoalController {
             }
 
             const { goalId } = req.params
+            const { id } = req.user
             const { info } = req.body
 
-            const goal = await Goal.findByPk(goalId)
+            const goal = await Goal.findOne({ where: { id: goalId, userId: id } })
             if (!goal) {
                 return next(ApiError.notFound('Цель не найдена'))
             }
@@ -56,7 +57,8 @@ class GoalController {
     async delete(req, res, next) {
         try {
             const { goalId } = req.params
-            const goal = await Goal.findByPk(goalId)
+            const { id } = req.user
+            const goal = await Goal.findOne({ where: { id: goalId, userId: id } })
 
             if (!goal) {
                 return next(ApiError.notFound('Цель не найдена'))
@@ -108,7 +110,8 @@ class GoalController {
     async getOne(req, res, next) {
         try {
             const { goalId } = req.params
-            const goal = await Goal.findByPk(goalId)
+            const { id } = req.user
+            const goal = await Goal.findOne({ where: { id: goalId, userId: id } })
 
             if (!goal) {
                 return next(ApiError.notFound('Цель не найдена'))
@@ -123,7 +126,8 @@ class GoalController {
     async getProgress(req, res, next) {
         try {
             const { goalId } = req.params
-            const goal = await Goal.findByPk(goalId)
+            const { id } = req.user
+            const goal = await Goal.findOne({ where: { id: goalId, userId: id } })
 
             if (!goal) {
                 return next(ApiError.notFound('Цель не найдена'))

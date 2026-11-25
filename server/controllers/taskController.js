@@ -39,9 +39,10 @@ class TaskController {
             }
 
             const { taskId } = req.params
+            const { id } = req.user
             const { info } = req.body
 
-            const task = await Task.findByPk(taskId)
+            const task = await Task.findOne({ where: { id: taskId, userId: id } })
             if (!task) {
                 return next(ApiError.notFound('Задача не найдена'))
             }
@@ -63,9 +64,10 @@ class TaskController {
             }
 
             const { taskId } = req.params
+            const { id } = req.user
             const { status } = req.body
 
-            const task = await Task.findByPk(taskId)
+            const task = await Task.findOne({ where: { id: taskId, userId: id } })
             if (!task) {
                 return next(ApiError.notFound('Задача не найдена'))
             }
@@ -89,7 +91,8 @@ class TaskController {
     async delete(req, res, next) {
         try {
             const { taskId } = req.params
-            const task = await Task.findByPk(taskId)
+            const { id } = req.user
+            const task = await Task.findOne({ where: { id: taskId, userId: id } })
 
             if (!task) {
                 return next(ApiError.notFound('Задача не найдена'))

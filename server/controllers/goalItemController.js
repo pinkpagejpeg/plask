@@ -15,9 +15,10 @@ class GoalController {
             }
 
             const { goalId } = req.params
+            const { id } = req.user
             const { info } = req.body
 
-            const goal = await Goal.findByPk(goalId)
+            const goal = await Goal.findOne({ where: { id: goalId, userId: id } })
             if (!goal) {
                 return next(ApiError.notFound('Цель не найдена'))
             }
@@ -38,10 +39,16 @@ class GoalController {
                 ))
             }
 
-            const { goalItemId } = req.params
+            const { goalId, goalItemId } = req.params
+            const { id } = req.user
             const { info } = req.body
 
-            const goalItem = await Goal_item.findByPk(goalItemId)
+            const goal = await Goal.findOne({ where: { id: goalId, userId: id } })
+            if (!goal) {
+                return next(ApiError.notFound('Цель не найдена'))
+            }
+
+            const goalItem = await Goal_item.findOne({ where: { id: goalItemId, goalId } })
             if (!goalItem) {
                 return next(ApiError.notFound('Подцель не найдена'))
             }
@@ -62,10 +69,16 @@ class GoalController {
                 ))
             }
 
-            const { goalItemId } = req.params
+            const { goalId, goalItemId } = req.params
+            const { id } = req.user
             const { status } = req.body
 
-            const goalItem = await Goal_item.findByPk(goalItemId)
+            const goal = await Goal.findOne({ where: { id: goalId, userId: id } })
+            if (!goal) {
+                return next(ApiError.notFound('Цель не найдена'))
+            }
+
+            const goalItem = await Goal_item.findOne({ where: { id: goalItemId, goalId } })
             if (!goalItem) {
                 return next(ApiError.notFound('Подцель не найдена'))
             }
@@ -80,8 +93,9 @@ class GoalController {
     async getAllItems(req, res, next) {
         try {
             const { goalId } = req.params
+            const { id } = req.user
             const search = req.query?.search
-            const goal = await Goal.findByPk(goalId)
+            const goal = await Goal.findOne({ where: { id: goalId, userId: id } })
 
             if (!goal) {
                 return next(ApiError.notFound('Цель не найдена'))
@@ -108,8 +122,15 @@ class GoalController {
 
     async deleteItem(req, res, next) {
         try {
-            const { goalItemId } = req.params
-            const goalItem = await Goal_item.findByPk(goalItemId)
+            const { goalId, goalItemId } = req.params
+            const { id } = req.user
+
+            const goal = await Goal.findOne({ where: { id: goalId, userId: id } })
+            if (!goal) {
+                return next(ApiError.notFound('Цель не найдена'))
+            }
+
+            const goalItem = await Goal_item.findOne({ where: { id: goalItemId, goalId } })
 
             if (!goalItem) {
                 return next(ApiError.notFound('Подцель не найдена'))

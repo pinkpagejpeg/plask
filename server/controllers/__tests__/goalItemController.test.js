@@ -21,11 +21,11 @@ jest.mock('../../error/formatErrorMessages', () => jest.fn((errorMessages) => {
 }))
 
 jest.mock('../../models/models', () => ({
-    Goal: { findByPk: jest.fn() },
+    Goal: { findOne: jest.fn() },
     Goal_item: {
         create: jest.fn(),
         findAll: jest.fn(),
-        findByPk: jest.fn()
+        findOne: jest.fn()
     }
 }))
 
@@ -98,7 +98,7 @@ describe('goalItemController unit tests', () => {
 
     test('Create subgoal by user which does not exist, should return 404', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Goal.findByPk.mockResolvedValue(null)
+        Goal.findOne.mockResolvedValue(null)
 
         req.body.info = 'Add unit test for subgoals'
         await goalItemController.createItem(req, res, next)
@@ -113,7 +113,7 @@ describe('goalItemController unit tests', () => {
 
     test('Create subgoal with unexpected error, should return 500', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Goal.findByPk.mockRejectedValue(new Error('Unexpected error'))
+        Goal.findOne.mockRejectedValue(new Error('Unexpected error'))
 
         req.body.info = 'Add unit test for subgoals'
         await goalItemController.createItem(req, res, next)
@@ -128,7 +128,7 @@ describe('goalItemController unit tests', () => {
 
     test('Create subgoal with valid data, should return 201', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Goal.findByPk.mockResolvedValue(mockGoal)
+        Goal.findOne.mockResolvedValue(mockGoal)
         Goal_item.create.mockResolvedValue(mockGoalItem)
 
         req.body.info = 'Add unit test for subgoals'
@@ -158,9 +158,27 @@ describe('goalItemController unit tests', () => {
         expect(res.json).not.toHaveBeenCalled()
     })
 
+    test('Update subgoal of another user should return 404', async () => {
+        validationResult.mockReturnValue({ isEmpty: () => true })
+        Goal.findOne.mockResolvedValue(null)
+
+        req.body.info = 'Add unit test for goals'
+        req.params.goalItemId = 1
+        await goalItemController.updateItem(req, res, next)
+
+        expect(Goal.findOne).toHaveBeenCalledWith({ where: { id: 1, userId: 1 } })
+        expect(Goal_item.findOne).not.toHaveBeenCalled()
+        expect(ApiError.notFound).toHaveBeenCalledWith('Цель не найдена')
+        expect(next).toHaveBeenCalledWith(expect.objectContaining({
+            message: 'Цель не найдена'
+        }))
+        expect(res.json).not.toHaveBeenCalled()
+    })
+
     test('Update subgoal by user which does not exist, should return 404', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Goal_item.findByPk.mockResolvedValue(null)
+        Goal.findOne.mockResolvedValue(mockGoal)
+        Goal_item.findOne.mockResolvedValue(null)
 
         req.body.info = 'Add unit test for goals'
         req.params.goalItemId = 1
@@ -175,7 +193,8 @@ describe('goalItemController unit tests', () => {
 
     test('Update subgoal with unexpected error, should return 500', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Goal_item.findByPk.mockRejectedValue(new Error('Unexpected error'))
+        Goal.findOne.mockResolvedValue(mockGoal)
+        Goal_item.findOne.mockRejectedValue(new Error('Unexpected error'))
 
         req.body.info = 'Add unit test for goals'
         req.params.goalItemId = 1
@@ -201,7 +220,8 @@ describe('goalItemController unit tests', () => {
             })
         }
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Goal_item.findByPk.mockResolvedValue(updatedGoalItem)
+        Goal.findOne.mockResolvedValue(mockGoal)
+        Goal_item.findOne.mockResolvedValue(updatedGoalItem)
 
         req.body.info = 'Add unit test for goals'
         req.params.goalItemId = 1
@@ -230,7 +250,8 @@ describe('goalItemController unit tests', () => {
 
     test('Update subgoal status by user which does not exist, should return 404', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Goal_item.findByPk.mockResolvedValue(null)
+        Goal.findOne.mockResolvedValue(mockGoal)
+        Goal_item.findOne.mockResolvedValue(null)
 
         req.body.status = true
         req.params.goalItemId = 1
@@ -245,7 +266,8 @@ describe('goalItemController unit tests', () => {
 
     test('Update subgoal status with unexpected error, should return 500', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Goal_item.findByPk.mockRejectedValue(new Error('Unexpected error'))
+        Goal.findOne.mockResolvedValue(mockGoal)
+        Goal_item.findOne.mockRejectedValue(new Error('Unexpected error'))
 
         req.body.status = true
         req.params.goalItemId = 1
@@ -265,7 +287,8 @@ describe('goalItemController unit tests', () => {
             toJSON: jest.fn().mockReturnValue({ ...mockGoalItem, status: true })
         }
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Goal_item.findByPk.mockResolvedValue(updatedGoalItem)
+        Goal.findOne.mockResolvedValue(mockGoal)
+        Goal_item.findOne.mockResolvedValue(updatedGoalItem)
 
         req.body.status = true
         req.params.goalItemId = 1
@@ -277,7 +300,7 @@ describe('goalItemController unit tests', () => {
     })
 
     test('Get subgoals by user which does not exist, should return 404', async () => {
-        Goal.findByPk.mockResolvedValue(null)
+        Goal.findOne.mockResolvedValue(null)
 
         await goalItemController.getAllItems(req, res, next)
 
@@ -289,7 +312,7 @@ describe('goalItemController unit tests', () => {
     })
 
     test('Get subgoals with unexpected error, should return 500', async () => {
-        Goal.findByPk.mockRejectedValue(new Error('Unexpected error'))
+        Goal.findOne.mockRejectedValue(new Error('Unexpected error'))
 
         await goalItemController.getAllItems(req, res, next)
 
@@ -301,7 +324,7 @@ describe('goalItemController unit tests', () => {
     })
 
     test('Get subgoals with valid data, should return 200', async () => {
-        Goal.findByPk.mockResolvedValue(mockGoal)
+        Goal.findOne.mockResolvedValue(mockGoal)
         Goal_item.findAll.mockResolvedValue(mockGoalItems)
 
         await goalItemController.getAllItems(req, res, next)
@@ -315,10 +338,10 @@ describe('goalItemController unit tests', () => {
     })
 
     test('Get subgoals with search data, should return 200', async () => {
-        Goal.findByPk.mockResolvedValue(mockGoal)
+        Goal.findOne.mockResolvedValue(mockGoal)
         Goal_item.findAll.mockResolvedValue([mockGoalItems[0]])
 
-        const req = { search: 'unit', params: { goalId: 1 } }
+        const req = { query: { search: 'unit' }, params: { goalId: 1 }, user: { id: 1 } }
 
         await goalItemController.getAllItems(req, res, next)
 
@@ -331,7 +354,8 @@ describe('goalItemController unit tests', () => {
     })
 
     test('Delete subgoal which does not exist, should return 404', async () => {
-        Goal_item.findByPk.mockResolvedValue(null)
+        Goal.findOne.mockResolvedValue(mockGoal)
+        Goal_item.findOne.mockResolvedValue(null)
 
         await goalItemController.deleteItem(req, res, next)
 
@@ -343,7 +367,8 @@ describe('goalItemController unit tests', () => {
     })
 
     test('Delete subgoal with unexpected error, should return 500', async () => {
-        Goal_item.findByPk.mockRejectedValue(new Error('Unexpected error'))
+        Goal.findOne.mockResolvedValue(mockGoal)
+        Goal_item.findOne.mockRejectedValue(new Error('Unexpected error'))
 
         await goalItemController.deleteItem(req, res, next)
 
@@ -359,7 +384,8 @@ describe('goalItemController unit tests', () => {
             ...mockGoalItem,
             destroy: jest.fn().mockResolvedValue({ mockGoalItem }),
         }
-        Goal_item.findByPk.mockResolvedValue(deletedGoalItem)
+        Goal.findOne.mockResolvedValue(mockGoal)
+        Goal_item.findOne.mockResolvedValue(deletedGoalItem)
 
         await goalItemController.deleteItem(req, res, next)
 

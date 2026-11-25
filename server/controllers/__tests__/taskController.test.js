@@ -29,7 +29,7 @@ jest.mock('../../models/models', () => ({
     Task: {
         create: jest.fn(),
         findAll: jest.fn(),
-        findByPk: jest.fn()
+        findOne: jest.fn()
     },
     sequelize: {
         query: jest.fn(),
@@ -214,7 +214,7 @@ describe('taskController unit tests', () => {
 
     test('Update task by user which does not exist, should return 404', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Task.findByPk.mockResolvedValue(null)
+        Task.findOne.mockResolvedValue(null)
 
         req.body.info = 'Updated task info'
         await taskController.update(req, res, next)
@@ -228,7 +228,7 @@ describe('taskController unit tests', () => {
 
     test('Update task with unexpected error, should return 500', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Task.findByPk.mockRejectedValue(new Error('Unexpected error'))
+        Task.findOne.mockRejectedValue(new Error('Unexpected error'))
 
         req.body.info = 'Updated task info'
         await taskController.update(req, res, next)
@@ -240,6 +240,19 @@ describe('taskController unit tests', () => {
         expect(res.json).not.toHaveBeenCalled()
     })
 
+    test('Update task should scope the query to the current user', async () => {
+        validationResult.mockReturnValue({ isEmpty: () => true })
+        Task.findOne.mockResolvedValue({
+            ...mockTask,
+            update: jest.fn().mockResolvedValue(mockTask)
+        })
+
+        req.body.info = 'Updated task info'
+        await taskController.update(req, res, next)
+
+        expect(Task.findOne).toHaveBeenCalledWith({ where: { id: 1, userId: 1 } })
+    })
+
     test('Update task with valid data, should return 200', async () => {
         const updatedTask = {
             ...mockTask,
@@ -247,7 +260,7 @@ describe('taskController unit tests', () => {
             toJSON: jest.fn().mockReturnValue({ ...mockTask, info: 'Updated task info' })
         }
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Task.findByPk.mockResolvedValue(updatedTask)
+        Task.findOne.mockResolvedValue(updatedTask)
 
         req.body.info = 'Updated task info'
         await taskController.update(req, res, next)
@@ -275,7 +288,7 @@ describe('taskController unit tests', () => {
 
     test('Update task status by user which does not exist, should return 404', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Task.findByPk.mockResolvedValue(null)
+        Task.findOne.mockResolvedValue(null)
 
         req.body.status = true
         await taskController.changeStatus(req, res, next)
@@ -289,7 +302,7 @@ describe('taskController unit tests', () => {
 
     test('Update task status with unexpected error, should return 500', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Task.findByPk.mockRejectedValue(new Error('Unexpected error'))
+        Task.findOne.mockRejectedValue(new Error('Unexpected error'))
 
         req.body.status = true
         await taskController.changeStatus(req, res, next)
@@ -308,7 +321,7 @@ describe('taskController unit tests', () => {
             toJSON: jest.fn().mockReturnValue({ ...mockTask, status: true })
         }
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Task.findByPk.mockResolvedValue(updatedTask)
+        Task.findOne.mockResolvedValue(updatedTask)
 
         req.body.status = true
         await taskController.changeStatus(req, res, next)
@@ -442,7 +455,7 @@ describe('taskController unit tests', () => {
     })
 
     test('Delete task which does not exist, should return 404', async () => {
-        Task.findByPk.mockResolvedValue(null)
+        Task.findOne.mockResolvedValue(null)
 
         await taskController.delete(req, res, next)
 
@@ -454,7 +467,7 @@ describe('taskController unit tests', () => {
     })
 
     test('Delete task with unexpected error, should return 500', async () => {
-        Task.findByPk.mockRejectedValue(new Error('Unexpected error'))
+        Task.findOne.mockRejectedValue(new Error('Unexpected error'))
 
         await taskController.delete(req, res, next)
 
@@ -470,7 +483,7 @@ describe('taskController unit tests', () => {
             ...mockTask,
             destroy: jest.fn().mockResolvedValue({ mockTask }),
         }
-        Task.findByPk.mockResolvedValue(deletedTask)
+        Task.findOne.mockResolvedValue(deletedTask)
 
         await taskController.delete(req, res, next)
 

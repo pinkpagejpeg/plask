@@ -25,7 +25,7 @@ jest.mock('../../models/models', () => ({
     Goal: {
         create: jest.fn(),
         findAll: jest.fn(),
-        findByPk: jest.fn()
+        findOne: jest.fn()
     },
     Goal_item: { findAll: jest.fn() }
 }))
@@ -178,7 +178,7 @@ describe('goalController unit tests', () => {
 
     test('Update goal by user which does not exist, should return 404', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Goal.findByPk.mockResolvedValue(null)
+        Goal.findOne.mockResolvedValue(null)
 
         req.body.info = 'Complete the project'
         await goalController.update(req, res, next)
@@ -192,7 +192,7 @@ describe('goalController unit tests', () => {
 
     test('Update goal with unexpected error, should return 500', async () => {
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Goal.findByPk.mockRejectedValue(new Error('Unexpected error'))
+        Goal.findOne.mockRejectedValue(new Error('Unexpected error'))
 
         req.body.info = 'Complete the project'
         await goalController.update(req, res, next)
@@ -211,7 +211,7 @@ describe('goalController unit tests', () => {
             toJSON: jest.fn().mockReturnValue({ ...mockGoal, info: 'Complete the project' })
         }
         validationResult.mockReturnValue({ isEmpty: () => true })
-        Goal.findByPk.mockResolvedValue(updatedGoal)
+        Goal.findOne.mockResolvedValue(updatedGoal)
 
         req.body.info = 'Complete the project'
         await goalController.update(req, res, next)
@@ -222,7 +222,7 @@ describe('goalController unit tests', () => {
     })
 
     test('Get goal info which does not exist, should return 404', async () => {
-        Goal.findByPk.mockResolvedValue(null)
+        Goal.findOne.mockResolvedValue(null)
 
         await goalController.getOne(req, res, next)
 
@@ -234,7 +234,7 @@ describe('goalController unit tests', () => {
     })
 
     test('Get goal info with unexpected error, should return 500', async () => {
-        Goal.findByPk.mockRejectedValue(new Error('Unexpected error'))
+        Goal.findOne.mockRejectedValue(new Error('Unexpected error'))
 
         await goalController.getOne(req, res, next)
 
@@ -245,8 +245,16 @@ describe('goalController unit tests', () => {
         expect(res.json).not.toHaveBeenCalled()
     })
 
+    test('Get goal should scope the query to the current user', async () => {
+        Goal.findOne.mockResolvedValue(mockGoal)
+
+        await goalController.getOne(req, res, next)
+
+        expect(Goal.findOne).toHaveBeenCalledWith({ where: { id: 1, userId: 1 } })
+    })
+
     test('Get goal info with valid data, should return 200', async () => {
-        Goal.findByPk.mockResolvedValue(mockGoal)
+        Goal.findOne.mockResolvedValue(mockGoal)
 
         await goalController.getOne(req, res, next)
 
@@ -256,7 +264,7 @@ describe('goalController unit tests', () => {
     })
 
     test('Get goal progress which does not exist, should return 404', async () => {
-        Goal.findByPk.mockResolvedValue(null)
+        Goal.findOne.mockResolvedValue(null)
 
         await goalController.getProgress(req, res, next)
 
@@ -268,7 +276,7 @@ describe('goalController unit tests', () => {
     })
 
     test('Get goal progress with unexpected error, should return 500', async () => {
-        Goal.findByPk.mockRejectedValue(new Error('Unexpected error'))
+        Goal.findOne.mockRejectedValue(new Error('Unexpected error'))
 
         await goalController.getProgress(req, res, next)
 
@@ -280,7 +288,7 @@ describe('goalController unit tests', () => {
     })
 
     test('Get goal progress with valid data, should return 200', async () => {
-        Goal.findByPk.mockResolvedValue(mockGoal)
+        Goal.findOne.mockResolvedValue(mockGoal)
         Goal_item.findAll.mockResolvedValue([])
 
         await goalController.getProgress(req, res, next)
@@ -289,7 +297,7 @@ describe('goalController unit tests', () => {
         expect(next).not.toHaveBeenCalled()
         expect(res.json).toHaveBeenCalledWith({ progress: 0 })
 
-        Goal.findByPk.mockResolvedValue(mockGoal)
+        Goal.findOne.mockResolvedValue(mockGoal)
         Goal_item.findAll.mockResolvedValue(mockSubgoals)
 
         await goalController.getProgress(req, res, next)
@@ -348,7 +356,7 @@ describe('goalController unit tests', () => {
     })
 
     test('Delete goal which does not exist, should return 404', async () => {
-        Goal.findByPk.mockResolvedValue(null)
+        Goal.findOne.mockResolvedValue(null)
         Goal_item.findAll.mockResolvedValue(mockSubgoals)
 
         await goalController.delete(req, res, next)
@@ -361,7 +369,7 @@ describe('goalController unit tests', () => {
     })
 
     test('Delete goal with unexpected error, should return 500', async () => {
-        Goal.findByPk.mockRejectedValue(new Error('Unexpected error'))
+        Goal.findOne.mockRejectedValue(new Error('Unexpected error'))
         Goal_item.findAll.mockResolvedValue(mockSubgoals)
 
         await goalController.delete(req, res, next)
@@ -382,7 +390,7 @@ describe('goalController unit tests', () => {
             ...item,
             destroy: jest.fn().mockResolvedValue(item)
         }))
-        Goal.findByPk.mockResolvedValue(deletedGoal)
+        Goal.findOne.mockResolvedValue(deletedGoal)
         Goal_item.findAll.mockResolvedValue(deletedSubgoals)
 
         await goalController.delete(req, res, next)
